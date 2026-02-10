@@ -36,6 +36,7 @@ export default function ChatTicket({
   const [objective, setObjective] = useState<string>("");
   const [timeline, setTimeline] = useState<string>("");
   const [contact, setContact] = useState<string>("");
+  const [notes, setNotes] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<null | "ok" | "err">(null);
 
@@ -52,10 +53,10 @@ export default function ChatTicket({
       `Contact (email ou téléphone): ${contact || "—"}`,
       "",
       "Contexte / notes (optionnel):",
-      "- ",
+      notes ? notes : "- ",
     ];
     return lines.join("\n");
-  }, [type, objective, timeline, contact]);
+  }, [type, objective, timeline, contact, notes]);
 
   function nextFrom0(v: string) {
     setType(v);
@@ -89,6 +90,7 @@ export default function ChatTicket({
           objective,
           timeline,
           contact,
+          notes,
           ticket,
         }),
       });
@@ -149,6 +151,15 @@ export default function ChatTicket({
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <div className="text-sm font-medium">Dernière étape</div>
             <div className="mt-1 text-xs text-white/60">Entrez votre email ou votre numéro pour être recontacté au plus vite.</div>
+
+            <textarea
+              className="mt-3 w-full resize-none rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(var(--jbs-yellow))]/40"
+              placeholder="Contexte / note (optionnel, 300 caractères max)"
+              maxLength={300}
+              rows={3}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
             <input
               className="mt-3 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm outline-none placeholder:text-white/30 focus:ring-2 focus:ring-[hsl(var(--jbs-yellow))]/40"
               placeholder="Email ou téléphone"

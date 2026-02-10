@@ -101,18 +101,9 @@ export default function Home() {
               </a>
             </div>
 
-            {/* horizontal main row */}
-            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-              <div className="lg:col-span-2">
-                <ChatTicket recipientEmail="fnr.vincent.pro@gmail.com" />
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-black/20 p-6">
-                <div className="text-sm font-semibold">Aperçu ticket</div>
-                <div className="mt-2 text-xs text-white/60">Copiable, prêt à envoyer.</div>
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-white/60">
-                  Destinataire: <span className="text-white/80">fnr.vincent.pro@gmail.com</span>
-                </div>
-              </div>
+            {/* main row */}
+            <div className="mt-6">
+              <ChatTicket recipientEmail="fnr.vincent.pro@gmail.com" />
             </div>
 
             {/* what you receive BELOW */}
