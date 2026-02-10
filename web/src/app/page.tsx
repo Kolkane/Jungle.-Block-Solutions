@@ -33,61 +33,54 @@ export default function Home() {
         </Container>
       </header>
 
-      {/* HERO */}
-      <section className="pt-14 md:pt-20">
+      {/* HERO (centered + slightly smaller for 1st scroll) */}
+      <section className="pt-12 md:pt-16">
         <Container>
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:items-start">
-            <div>
-              <Badge>Décrivez votre besoin en 30 secondes.</Badge>
-              <h1 className="mt-6 text-center text-5xl font-semibold leading-[1.05] tracking-tight md:text-left md:text-6xl">
-                Audit tech & produit.
-                <br />
-                Build sur-mesure.
-                <br />
-                IA intégrée.
-              </h1>
-              <p className="mt-6 max-w-xl text-center text-base leading-relaxed text-white/70 md:text-left">
-                Jungle.Block Solutions conçoit et livre des solutions digitales premium : diagnostic 360°, prototypes rapides,
-                développement sur-mesure, agents IA, SaaS complets. Une exécution rapide, propre, orientée ROI.
-              </p>
+          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+            <Badge>Décrivez votre besoin en 30 secondes.</Badge>
+            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight md:text-5xl">
+              Audit tech & produit. Build sur-mesure. IA intégrée.
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-white/70 md:text-base">
+              Jungle.Block Solutions conçoit et livre des solutions digitales premium : diagnostic 360°, prototypes rapides,
+              développement sur-mesure, agents IA, SaaS complets. Une exécution rapide, propre, orientée ROI.
+            </p>
 
-              <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm text-white/60 md:justify-start">
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Audit stratégique</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Développement sur mesure</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Agents IA</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">SaaS complets</span>
-              </div>
-
-              <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
-                <a
-                  href="#chat"
-                  className="rounded-xl bg-[hsl(var(--jbs-blue))] px-5 py-3 text-sm font-medium hover:brightness-110"
-                >
-                  Démarrer (ticket)
-                </a>
-                <a
-                  href="#process"
-                  className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
-                >
-                  Voir le process
-                </a>
-              </div>
-
-              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-center md:text-left">
-                <div className="text-xs uppercase tracking-[0.18em] text-white/50">Positionnement</div>
-                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <MiniKpi label="Prototype" value="72h → 7j" />
-                  <MiniKpi label="Exploration" value="20 min" />
-                  <MiniKpi label="Livraison" value="MVP → produit" />
-                </div>
-              </div>
+            <div className="mt-5 flex flex-wrap justify-center gap-2 text-xs text-white/60 md:text-sm">
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Audit stratégique</span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Développement sur mesure</span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Agents IA</span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">SaaS complets</span>
             </div>
 
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <a
+                href="#chat"
+                className="rounded-xl bg-[hsl(var(--jbs-blue))] px-5 py-3 text-sm font-medium hover:brightness-110"
+              >
+                Démarrer (ticket)
+              </a>
+              <a
+                href="#process"
+                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
+              >
+                Voir le process
+              </a>
+            </div>
+
+            <div className="mt-8 w-full rounded-3xl border border-white/10 bg-white/5 p-5">
+              <div className="text-xs uppercase tracking-[0.18em] text-white/50">Positionnement</div>
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <MiniKpi label="Prototype" value="72h → 7j" />
+                <MiniKpi label="Exploration" value="20 min" />
+                <MiniKpi label="Livraison" value="MVP → produit" />
+              </div>
+            </div>
           </div>
         </Container>
       </section>
 
-      {/* TICKET (horizontal, visible right after hero) */}
+      {/* TICKET (more horizontal + subtler UI) */}
       <section id="chat" className="mt-10 scroll-mt-24 md:mt-12">
         <Container>
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
@@ -96,7 +89,7 @@ export default function Home() {
                 <div className="text-xs uppercase tracking-[0.18em] text-white/50">Ticket projet</div>
                 <div className="mt-2 text-xl font-semibold">Générez un ticket en 30 secondes</div>
                 <div className="mt-2 text-sm text-white/70">
-                  Répondez aux 3 questions. À la fin, vous laissez votre email ou téléphone pour être recontacté rapidement.
+                  3 questions. Ensuite email ou téléphone pour être recontacté dans les plus brefs délais.
                 </div>
               </div>
               <a
@@ -107,22 +100,29 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <ChatTicket recipientEmail="fnr.vincent.pro@gmail.com" />
+            {/* horizontal main row */}
+            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <ChatTicket recipientEmail="fnr.vincent.pro@gmail.com" />
+              </div>
               <div className="rounded-3xl border border-white/10 bg-black/20 p-6">
-                <div className="text-sm font-semibold">Ce que vous recevez</div>
-                <p className="mt-2 text-sm text-white/70">
-                  Un ticket clair (type, objectif, timing, contact) prêt à être envoyé.
-                </p>
-                <ul className="mt-4 space-y-2 text-sm text-white/70">
-                  <li className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Cadrage rapide</li>
-                  <li className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Estimation</li>
-                  <li className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Proposition de prochaine étape</li>
-                </ul>
-                <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-white/60">
+                <div className="text-sm font-semibold">Aperçu ticket</div>
+                <div className="mt-2 text-xs text-white/60">Copiable, prêt à envoyer.</div>
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-white/60">
                   Destinataire: <span className="text-white/80">fnr.vincent.pro@gmail.com</span>
                 </div>
               </div>
+            </div>
+
+            {/* what you receive BELOW */}
+            <div className="mt-4 rounded-3xl border border-white/10 bg-black/15 p-6">
+              <div className="text-sm font-semibold">Ce que vous recevez</div>
+              <p className="mt-2 text-sm text-white/70">Un ticket clair (type, objectif, timing, contact) + une prochaine étape.</p>
+              <ul className="mt-4 flex flex-col gap-2 text-sm text-white/70 md:flex-row md:flex-wrap">
+                <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Cadrage rapide</li>
+                <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Estimation</li>
+                <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Proposition de prochaine étape</li>
+              </ul>
             </div>
           </div>
         </Container>
@@ -176,30 +176,6 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* TYPES */}
-      <section className="mt-20">
-        <Container>
-          <SectionTitle eyebrow="Portée" title="Types de projets possibles" />
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {[
-              "Plateformes SaaS",
-              "Dashboards & outils internes",
-              "Agents IA (automatisation / support / data)",
-              "Sites vitrines premium",
-              "Configurateurs / formulaires intelligents",
-              "Solutions métiers (CGP, immobilier, industrie, retail…)",
-              "Automatisation process + backoffice",
-            ].map((t) => (
-              <div key={t} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <div className="text-sm font-semibold">{t}</div>
-                <div className="mt-2 text-xs text-white/60">Conception, itération rapide, livraison en production.</div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
       {/* WHY */}
       <section className="mt-20">
         <Container>
@@ -229,7 +205,7 @@ export default function Home() {
             <div className="text-xs uppercase tracking-[0.18em] text-white/50">Contact</div>
             <div className="mt-3 text-3xl font-semibold tracking-tight">On avance ?</div>
             <p className="mt-3 max-w-2xl text-sm text-white/70">
-              Utilisez le chatbot pour générer un ticket projet. Ou contactez-nous directement.
+              Utilisez le chatbot pour générer un ticket projet. Ou contactez-moi directement.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -240,10 +216,10 @@ export default function Home() {
                 Utiliser le chatbot
               </a>
               <a
-                href="mailto:contact@jungleblocksolutions.com"
+                href="mailto:fnr.vincent.pro@gmail.com"
                 className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
               >
-                contact@jungleblocksolutions.com
+                fnr.vincent.pro@gmail.com
               </a>
               <a
                 href="https://www.linkedin.com/in/vincent-fournier-939021170/"
@@ -285,6 +261,31 @@ function Card({ title, subtitle, children }: { title: string; subtitle: string; 
 }
 
 function StepCard({ n, title, desc }: { n: string; title: string; desc: string }) {
+  const icon =
+    n === "01" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ) : n === "02" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M4 4h16v16H4z" />
+        <path d="M8 12h8" />
+        <path d="M12 8v8" />
+      </svg>
+    ) : n === "03" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M4 19h16" />
+        <path d="M7 16V7h10v9" />
+        <path d="M9 10h6" />
+      </svg>
+    ) : (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M20 7l-9 9-4-4" />
+        <path d="M4 4h16v16H4z" />
+      </svg>
+    );
+
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
       <div className="flex items-start justify-between gap-4">
@@ -293,7 +294,9 @@ function StepCard({ n, title, desc }: { n: string; title: string; desc: string }
           <div className="mt-2 text-lg font-semibold">{title}</div>
           <div className="mt-2 text-sm text-white/70">{desc}</div>
         </div>
-        <div className="h-10 w-10 rounded-2xl bg-[hsl(var(--jbs-blue))]/20 ring-1 ring-[hsl(var(--jbs-blue))]/30" />
+        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+          {icon}
+        </div>
       </div>
     </div>
   );

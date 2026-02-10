@@ -167,14 +167,16 @@ function Bubble({ who, children }: { who: "Vous" | "JBS"; children: React.ReactN
   return (
     <div className={`flex ${isYou ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+        className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
           isYou
             ? "bg-[hsl(var(--jbs-blue))]/25 border border-[hsl(var(--jbs-blue))]/30"
-            : "bg-white/5 border border-white/10"
+            : "bg-white/5 border border-[hsl(var(--jbs-yellow))]/25 shadow-[0_0_0_1px_rgba(251,191,36,.08)]"
         }`}
       >
-        <div className="text-[11px] uppercase tracking-wide text-white/50">{who}</div>
-        <div className="mt-0.5">{children}</div>
+        <div className={`text-[11px] uppercase tracking-wide ${isYou ? "text-white/50" : "text-[hsl(var(--jbs-yellow))]/80"}`}>
+          {who}
+        </div>
+        <div className="mt-0.5 font-medium">{children}</div>
       </div>
     </div>
   );
