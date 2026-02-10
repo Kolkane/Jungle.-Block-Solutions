@@ -10,8 +10,9 @@ export default function Home() {
         <Container>
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-white/5 ring-1 ring-white/10">
-                <div className="h-2.5 w-2.5 rounded-sm bg-[hsl(var(--jbs-yellow))] shadow-[0_0_20px_rgba(251,191,36,.55)]" />
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="Jungle.Block Solutions" className="h-9 w-9 object-contain" />
               </div>
               <div className="font-semibold tracking-tight">Jungle.Block Solutions</div>
             </div>

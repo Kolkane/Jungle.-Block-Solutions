@@ -24,12 +24,20 @@ const OBJECTIVES = [
 
 const TIMELINES = ["Urgent", "1–3 mois", "Plus tard"] as const;
 
-export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com" }: { recipientEmail?: string }) {
+export default function ChatTicket({
+  recipientEmail = "fnr.vincent.pro@gmail.com",
+  formspreeEndpoint = "https://formspree.io/f/xojnjvpe",
+}: {
+  recipientEmail?: string;
+  formspreeEndpoint?: string;
+}) {
   const [step, setStep] = useState<Step>(0);
   const [type, setType] = useState<string>("");
   const [objective, setObjective] = useState<string>("");
   const [timeline, setTimeline] = useState<string>("");
   const [contact, setContact] = useState<string>("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState<null | "ok" | "err">(null);
 
   const readyForContact = step >= 3;
 
@@ -66,11 +74,32 @@ export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com
 
   const canSend = Boolean(type && objective && timeline && contact);
 
-  const mailto = useMemo(() => {
-    const subject = encodeURIComponent("[JBS] Nouveau ticket projet");
-    const body = encodeURIComponent(ticket);
-    return `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
-  }, [ticket, recipientEmail]);
+  async function submitTicket() {
+    if (!canSend || sending) return;
+    setSending(true);
+    setSent(null);
+    try {
+      const res = await fetch(formspreeEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: "[JBS] Nouveau ticket projet",
+          recipient: recipientEmail,
+          type,
+          objective,
+          timeline,
+          contact,
+          ticket,
+        }),
+      });
+      if (!res.ok) throw new Error("bad_status");
+      setSent("ok");
+    } catch {
+      setSent("err");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
@@ -128,16 +157,17 @@ export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com
             />
 
             <div className="mt-3 flex flex-wrap gap-2">
-              <a
+              <button
                 className={`inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition ${
-                  canSend
+                  canSend && !sending
                     ? "bg-[hsl(var(--jbs-yellow))] text-black hover:brightness-95"
-                    : "bg-white/10 text-white/40 pointer-events-none"
+                    : "bg-white/10 text-white/40"
                 }`}
-                href={mailto}
+                disabled={!canSend || sending}
+                onClick={submitTicket}
               >
-                Générer mon ticket projet
-              </a>
+                {sending ? "Envoi…" : "Valider et envoyer"}
+              </button>
               <button
                 className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10"
                 onClick={() => navigator.clipboard.writeText(ticket)}
@@ -146,8 +176,18 @@ export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com
               </button>
             </div>
 
+            {sent === "ok" ? (
+              <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-xs text-emerald-100">
+                Ticket envoyé. Merci — réponse rapide.
+              </div>
+            ) : sent === "err" ? (
+              <div className="mt-3 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-xs text-red-100">
+                Envoi impossible. Copiez le ticket et contactez-nous par email.
+              </div>
+            ) : null}
+
             <div className="mt-3 text-xs text-white/50">
-              En cliquant, votre ticket sera préparé par email (vous pourrez l’envoyer en 1 clic). Réponse rapide.
+              En validant, le ticket est envoyé automatiquement à {recipientEmail}.
             </div>
           </div>
         ) : null}

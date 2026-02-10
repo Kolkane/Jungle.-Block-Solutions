@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Jungle.Block Solutions",
   description:
     "Studio d’audit tech & produit. Développement sur mesure. Agents IA. SaaS complets. Exécution rapide, UI premium.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
