@@ -11,9 +11,12 @@ body {
 }
 
 body {
+  /* Continuous background (avoid “cut” between sections) */
   background: radial-gradient(1200px 700px at 70% 10%, rgba(37, 99, 235, 0.22), transparent 55%),
     radial-gradient(900px 600px at 15% 25%, rgba(251, 191, 36, 0.14), transparent 55%),
+    radial-gradient(900px 600px at 80% 85%, rgba(37, 99, 235, 0.18), transparent 55%),
     linear-gradient(to bottom, #050816, #070a18 40%, #050816);
+  background-attachment: fixed;
 }
 
 ::selection {

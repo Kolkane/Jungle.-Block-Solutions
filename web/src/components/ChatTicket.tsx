@@ -24,7 +24,7 @@ const OBJECTIVES = [
 
 const TIMELINES = ["Urgent", "1–3 mois", "Plus tard"] as const;
 
-export default function ChatTicket({ recipientEmail = "contact@jungleblocksolutions.com" }: { recipientEmail?: string }) {
+export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com" }: { recipientEmail?: string }) {
   const [step, setStep] = useState<Step>(0);
   const [type, setType] = useState<string>("");
   const [objective, setObjective] = useState<string>("");

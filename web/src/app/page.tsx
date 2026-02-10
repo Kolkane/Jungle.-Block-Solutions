@@ -39,26 +39,26 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:items-start">
             <div>
               <Badge>Décrivez votre besoin en 30 secondes.</Badge>
-              <h1 className="mt-6 text-5xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
+              <h1 className="mt-6 text-center text-5xl font-semibold leading-[1.05] tracking-tight md:text-left md:text-6xl">
                 Audit tech & produit.
                 <br />
                 Build sur-mesure.
                 <br />
                 IA intégrée.
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70">
+              <p className="mt-6 max-w-xl text-center text-base leading-relaxed text-white/70 md:text-left">
                 Jungle.Block Solutions conçoit et livre des solutions digitales premium : diagnostic 360°, prototypes rapides,
                 développement sur-mesure, agents IA, SaaS complets. Une exécution rapide, propre, orientée ROI.
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-2 text-sm text-white/60">
+              <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm text-white/60 md:justify-start">
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Audit stratégique</span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Développement sur mesure</span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Agents IA</span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">SaaS complets</span>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
                 <a
                   href="#chat"
                   className="rounded-xl bg-[hsl(var(--jbs-blue))] px-5 py-3 text-sm font-medium hover:brightness-110"
@@ -73,7 +73,7 @@ export default function Home() {
                 </a>
               </div>
 
-              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5">
+              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 text-center md:text-left">
                 <div className="text-xs uppercase tracking-[0.18em] text-white/50">Positionnement</div>
                 <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <MiniKpi label="Prototype" value="72h → 7j" />
@@ -83,12 +83,51 @@ export default function Home() {
               </div>
             </div>
 
-            <div id="chat" className="scroll-mt-24">
-              <ChatTicket />
+          </div>
+        </Container>
+      </section>
+
+      {/* TICKET (horizontal, visible right after hero) */}
+      <section id="chat" className="mt-10 scroll-mt-24 md:mt-12">
+        <Container>
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+              <div>
+                <div className="text-xs uppercase tracking-[0.18em] text-white/50">Ticket projet</div>
+                <div className="mt-2 text-xl font-semibold">Générez un ticket en 30 secondes</div>
+                <div className="mt-2 text-sm text-white/70">
+                  Répondez aux 3 questions. À la fin, vous laissez votre email ou téléphone pour être recontacté rapidement.
+                </div>
+              </div>
+              <a
+                href="#contact"
+                className="rounded-xl bg-[hsl(var(--jbs-yellow))] px-5 py-3 text-sm font-medium text-black hover:brightness-95"
+              >
+                Contact direct
+              </a>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <ChatTicket recipientEmail="fnr.vincent.pro@gmail.com" />
+              <div className="rounded-3xl border border-white/10 bg-black/20 p-6">
+                <div className="text-sm font-semibold">Ce que vous recevez</div>
+                <p className="mt-2 text-sm text-white/70">
+                  Un ticket clair (type, objectif, timing, contact) prêt à être envoyé.
+                </p>
+                <ul className="mt-4 space-y-2 text-sm text-white/70">
+                  <li className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Cadrage rapide</li>
+                  <li className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Estimation</li>
+                  <li className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Proposition de prochaine étape</li>
+                </ul>
+                <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-white/60">
+                  Destinataire: <span className="text-white/80">fnr.vincent.pro@gmail.com</span>
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
+
 
       {/* OFFER */}
       <section className="mt-20">
@@ -207,16 +246,12 @@ export default function Home() {
                 contact@jungleblocksolutions.com
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/vincent-fournier-939021170/"
+                target="_blank"
+                rel="noreferrer"
                 className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
               >
                 LinkedIn
-              </a>
-              <a
-                href="#"
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
-              >
-                Téléphone
               </a>
             </div>
 
