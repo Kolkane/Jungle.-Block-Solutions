@@ -76,7 +76,7 @@ export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com
     <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <div className="text-sm font-semibold">Mini-chatbot</div>
+          <div className="text-sm font-semibold">Décrivez votre besoin en 30 secondes.</div>
           <div className="mt-1 text-xs text-white/60">3 questions → ticket projet</div>
         </div>
         <button
@@ -94,7 +94,6 @@ export default function ChatTicket({ recipientEmail = "fnr.vincent.pro@gmail.com
       </div>
 
       <div className="mt-4 space-y-4">
-        <Bubble who="Vous">Décrivez votre besoin en 30 secondes.</Bubble>
         <Bubble who="JBS">Quel type de solution souhaitez-vous développer ?</Bubble>
 
         {step === 0 ? (
