@@ -152,57 +152,11 @@ export default function Home() {
             desc="4 étapes, du cadrage à la livraison. Exécution rapide, décisions claires."
           />
 
-          {/* Desktop: horizontal roadmap. Mobile: stacked cards */}
-          <div className="hidden md:block">
-            <div className="relative rounded-3xl border border-white/10 bg-white/5 p-8 glass-hover">
-              <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-r from-[hsl(var(--jbs-yellow))]/10 via-transparent to-[hsl(var(--jbs-blue))]/10" />
-
-              <div className="relative">
-                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2">
-                  <div className="h-[2px] w-full bg-gradient-to-r from-white/0 via-white/20 to-white/0" />
-                </div>
-
-                <div className="grid grid-cols-4 gap-6">
-                  <RoadStep
-                    n="01"
-                    title="Exploration"
-                    desc="Clarification + cadrage + estimation."
-                    icon="clock"
-                    align="top"
-                  />
-                  <RoadStep
-                    n="02"
-                    title="Prototype"
-                    desc="Version interactive pour valider la direction."
-                    icon="spark"
-                    align="bottom"
-                  />
-                  <RoadStep
-                    n="03"
-                    title="Build"
-                    desc="UI/UX, data, IA, intégrations, production."
-                    icon="stack"
-                    align="top"
-                  />
-                  <RoadStep
-                    n="04"
-                    title="Livraison"
-                    desc="Tests, itérations, handover GitHub."
-                    icon="check"
-                    align="bottom"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="md:hidden">
-            <div className="grid grid-cols-1 gap-4">
-              <ProcessCard n="01" title="Exploration" desc="Clarification + cadrage + estimation." icon="clock" />
-              <ProcessCard n="02" title="Prototype" desc="Version interactive pour valider la direction." icon="spark" />
-              <ProcessCard n="03" title="Build" desc="UI/UX, data, IA, intégrations, production." icon="stack" />
-              <ProcessCard n="04" title="Livraison" desc="Tests, itérations, handover GitHub." icon="check" />
-            </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <ProcessCard n="01" title="Exploration" desc="Clarification + cadrage + estimation." icon="clock" />
+            <ProcessCard n="02" title="Prototype" desc="Version interactive pour valider la direction." icon="spark" />
+            <ProcessCard n="03" title="Build" desc="UI/UX, data, IA, intégrations, production." icon="stack" />
+            <ProcessCard n="04" title="Livraison" desc="Tests, itérations, handover GitHub." icon="check" />
           </div>
         </Container>
       </section>
@@ -212,49 +166,36 @@ export default function Home() {
         <Container>
           <SectionTitle eyebrow="Différence" title="Pourquoi Jungle.Block Solutions ?" />
 
-          {/* Coherent layout: 2 wide cards, then 3 equal cards, then 1 full-width */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-fr">
-            <div className="md:col-span-3">
-              <FeatureCard
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <FeatureLine
                 title="Vision produit + stratégie"
-                desc="On challenge le besoin, on simplifie, on priorise. Décisions claires, roadmap actionnable."
+                desc="On challenge le besoin, on simplifie, on priorise. Roadmap actionnable."
                 icon="compass"
               />
-            </div>
-            <div className="md:col-span-3">
-              <FeatureCard
+              <FeatureLine
                 title="Exécution rapide & propre"
-                desc="Ship vite sans casser la qualité : base solide, dette maîtrisée, mise en prod propre."
+                desc="Ship vite sans casser la qualité : base solide, dette maîtrisée, prod propre."
                 icon="bolt"
               />
-            </div>
-
-            <div className="md:col-span-2">
-              <FeatureCard
+              <FeatureLine
                 title="UI/UX premium"
-                desc="Interfaces nettes, micro-interactions, détails soignés. Une expérience qui convertit."
+                desc="Micro-interactions, détails soignés, expérience qui convertit."
                 icon="spark"
               />
-            </div>
-            <div className="md:col-span-2">
-              <FeatureCard
+              <FeatureLine
                 title="Du prototype au produit"
                 desc="Du test rapide à la mise en production + itérations."
                 icon="stack"
               />
-            </div>
-            <div className="md:col-span-2">
-              <FeatureCard
+              <FeatureLine
                 title="IA & automatisation"
                 desc="Agents, workflows, intégrations — gain de temps concret."
                 icon="robot"
               />
-            </div>
-
-            <div className="md:col-span-6">
-              <FeatureCard
+              <FeatureLine
                 title="Exécution orientée ROI"
-                desc="On mesure l’impact, on industrialise ce qui marche. Handover GitHub + itérations si besoin."
+                desc="On mesure l’impact et on industrialise ce qui marche."
                 icon="target"
               />
             </div>
@@ -316,7 +257,7 @@ function MiniKpi({ label, value }: { label: string; value: string }) {
 
 function Card({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
       <div className="text-lg font-semibold">{title}</div>
       <div className="mt-1 text-xs uppercase tracking-[0.18em] text-white/50">{subtitle}</div>
       <p className="mt-4 text-sm leading-relaxed text-white/70">{children}</p>
@@ -328,67 +269,6 @@ function Card({ title, subtitle, children }: { title: string; subtitle: string; 
 
 
 
-function RoadStep({
-  n,
-  title,
-  desc,
-  icon,
-  align,
-}: {
-  n: string;
-  title: string;
-  desc: string;
-  icon: "clock" | "spark" | "stack" | "check";
-  align: "top" | "bottom";
-}) {
-  const Icon =
-    icon === "clock" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        <path d="M12 7v5l3 2" />
-      </svg>
-    ) : icon === "spark" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
-      </svg>
-    ) : icon === "stack" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2l9 5-9 5-9-5 9-5z" />
-        <path d="M3 12l9 5 9-5" />
-      </svg>
-    ) : (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M20 7l-9 9-4-4" />
-      </svg>
-    );
-
-  const isTop = align === "top";
-
-  return (
-    <div className={`relative ${isTop ? "pb-20" : "pt-20"}`}>
-      {/* node on the line (small, no overlap) */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="h-3.5 w-3.5 rounded-full bg-[hsl(var(--jbs-yellow))] shadow-[0_0_18px_rgba(251,191,36,.55)] ring-4 ring-black/20" />
-      </div>
-
-      {/* card */}
-      <div className={`mx-auto w-[92%] ${isTop ? "-translate-y-2" : "translate-y-2"}`}>
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-4 shadow-[0_0_0_1px_rgba(255,255,255,.04)]">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Étape {n}</div>
-              <div className="mt-2 text-base font-semibold">{title}</div>
-              <div className="mt-1 text-sm text-white/70">{desc}</div>
-            </div>
-            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/18 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-              {Icon}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function ProcessCard({
   n,
@@ -402,7 +282,7 @@ function ProcessCard({
   icon: "clock" | "spark" | "stack" | "check";
 }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-xs uppercase tracking-[0.18em] text-white/50">Étape {n}</div>
@@ -439,7 +319,9 @@ function ProcessCard({
 }
 
 
-function FeatureCard({
+
+
+function FeatureLine({
   title,
   desc,
   icon,
@@ -483,25 +365,18 @@ function FeatureCard({
     );
 
   return (
-    <div className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[hsl(var(--jbs-blue))]/12 blur-3xl" />
-      <div className="pointer-events-none absolute -left-14 -bottom-14 h-44 w-44 rounded-full bg-[hsl(var(--jbs-yellow))]/10 blur-3xl" />
-
-      <div className="flex items-start justify-between gap-4">
-        {/* pill header */}
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="inline-flex w-fit items-center gap-3 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-            <span className="inline-flex h-4 w-7 items-center rounded-full bg-emerald-400/25 ring-1 ring-emerald-300/20">
-              <span className="ml-[2px] h-3 w-3 rounded-full bg-emerald-200/90" />
-            </span>
-            <span className="truncate text-sm font-semibold">{title}</span>
-          </div>
-          <div className="mt-3 text-sm text-white/70">{desc}</div>
+    <div className="flex min-h-[130px] items-start gap-4 border-t border-white/10 p-5 first:border-t-0">
+      <div className="mt-0.5 grid h-11 w-11 flex-none place-items-center rounded-2xl bg-black/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-white/10">
+        {Icon}
+      </div>
+      <div className="min-w-0">
+        <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
+          <span className="inline-flex h-4 w-7 items-center rounded-full bg-emerald-400/25 ring-1 ring-emerald-300/20">
+            <span className="ml-[2px] h-3 w-3 rounded-full bg-emerald-200/90" />
+          </span>
+          <span className="truncate text-sm font-semibold">{title}</span>
         </div>
-
-        <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-black/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-white/10">
-          {Icon}
-        </div>
+        <div className="mt-3 text-sm text-white/70">{desc}</div>
       </div>
     </div>
   );
