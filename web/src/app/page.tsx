@@ -144,7 +144,7 @@ export default function Home() {
       </section></Reveal>
 
       <Reveal delayMs={140}>{/* PROCESS */}
-      <section id="process" className="mt-20 scroll-mt-24">
+      <section id="process" className="section-divider mt-20 scroll-mt-24">
         <Container>
           <SectionTitle
             eyebrow="Méthode"
@@ -152,46 +152,87 @@ export default function Home() {
             desc="4 étapes, du cadrage à la livraison. Exécution rapide, décisions claires."
           />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <StepCard
-              n="01"
-              title="Exploration (20 minutes)"
-              desc="Clarification du besoin + cadrage + estimation."
-            />
-            <StepCard n="02" title="Prototype (72h → 7 jours)" desc="Version interactive pour valider la direction." />
-            <StepCard
-              n="03"
-              title="Build (MVP → produit complet)"
-              desc="UI/UX, base de données, IA, intégrations, production."
-            />
-            <StepCard n="04" title="Livraison + itérations" desc="Tests, debug, optimisation, handover GitHub." />
+          <div className="relative">
+            {/* vertical line */}
+            <div className="pointer-events-none absolute left-4 top-0 hidden h-full w-px bg-gradient-to-b from-transparent via-white/15 to-transparent md:block" />
+
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
+              <TimelineItem
+                n="01"
+                title="Exploration (20 minutes)"
+                desc="Clarification du besoin + cadrage + estimation."
+                icon="clock"
+              />
+              <TimelineItem
+                n="02"
+                title="Prototype (72h → 7 jours)"
+                desc="Version interactive pour valider la direction."
+                icon="spark"
+              />
+              <TimelineItem
+                n="03"
+                title="Build (MVP → produit complet)"
+                desc="UI/UX, base de données, IA, intégrations, production."
+                icon="stack"
+              />
+              <TimelineItem
+                n="04"
+                title="Livraison + itérations"
+                desc="Tests, debug, optimisation, handover GitHub."
+                icon="check"
+              />
+            </div>
           </div>
         </Container>
-      </section></Reveal>
+      </section>
 
-      <Reveal delayMs={160}>{/* WHY */}
-      <section className="mt-20">
+{/* WHY */}
+      <section className="section-divider mt-20">
         <Container>
           <SectionTitle eyebrow="Différence" title="Pourquoi Jungle.Block Solutions ?" />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {[
-              "Vision produit + stratégie, pas juste du code",
-              "Développement rapide & propre",
-              "Capacité à livrer de l’idée au produit",
-              "Spécialiste UI/UX premium",
-              "Exécution orientée ROI & industrialisation",
-              "Expertise multi-projets (SaaS, IA, outils internes)",
-            ].map((p) => (
-              <div key={p} className="rounded-3xl border border-white/10 bg-white/5 p-5 glass-hover">
-                <div className="text-sm font-semibold">{p}</div>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
+            <Bento
+              className="md:col-span-3"
+              title="Vision produit + stratégie"
+              desc="On challenge le besoin, on simplifie, on priorise. Pas juste du code."
+              icon="compass"
+            />
+            <Bento
+              className="md:col-span-3"
+              title="Développement rapide & propre"
+              desc="Ship vite, architecture saine, dette maîtrisée."
+              icon="bolt"
+            />
+            <Bento
+              className="md:col-span-2"
+              title="UI/UX premium"
+              desc="Interfaces nettes, micro-interactions, attention au détail."
+              icon="spark"
+            />
+            <Bento
+              className="md:col-span-2"
+              title="Du prototype au produit"
+              desc="Du test rapide à la mise en production + itérations."
+              icon="layers"
+            />
+            <Bento
+              className="md:col-span-2"
+              title="IA & automatisation"
+              desc="Agents, workflows, intégrations — gain de temps concret."
+              icon="robot"
+            />
+            <Bento
+              className="md:col-span-6"
+              title="Exécution orientée ROI"
+              desc="On mesure l’impact, on industrialise ce qui marche."
+              icon="target"
+            />
           </div>
         </Container>
-      </section></Reveal>
+      </section>
 
-      <Reveal delayMs={180}>{/* CONTACT */}
+{/* CONTACT */}
       <section id="contact" className="mt-20 pb-20 scroll-mt-24">
         <Container>
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 glass-hover">
@@ -253,43 +294,131 @@ function Card({ title, subtitle, children }: { title: string; subtitle: string; 
   );
 }
 
-function StepCard({ n, title, desc }: { n: string; title: string; desc: string }) {
-  const icon =
-    n === "01" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        <path d="M12 7v5l3 2" />
-      </svg>
-    ) : n === "02" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M4 4h16v16H4z" />
-        <path d="M8 12h8" />
-        <path d="M12 8v8" />
-      </svg>
-    ) : n === "03" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M4 19h16" />
-        <path d="M7 16V7h10v9" />
-        <path d="M9 10h6" />
-      </svg>
-    ) : (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M20 7l-9 9-4-4" />
-        <path d="M4 4h16v16H4z" />
-      </svg>
-    );
+
+function TimelineItem({
+  n,
+  title,
+  desc,
+  icon,
+}: {
+  n: string;
+  title: string;
+  desc: string;
+  icon: "clock" | "spark" | "stack" | "check";
+}) {
+  const Icon = icon === "clock" ? (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  ) : icon === "spark" ? (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
+    </svg>
+  ) : icon === "stack" ? (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M12 2l9 5-9 5-9-5 9-5z" />
+      <path d="M3 12l9 5 9-5" />
+      <path d="M3 17l9 5 9-5" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M20 7l-9 9-4-4" />
+    </svg>
+  );
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
+    <div className="relative rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
+      <div className="hidden md:absolute md:left-0 md:top-7 md:-translate-x-[7px]">
+        <div className="h-3.5 w-3.5 rounded-full bg-[hsl(var(--jbs-yellow))] shadow-[0_0_18px_rgba(251,191,36,.55)]" />
+      </div>
+
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-xs uppercase tracking-[0.18em] text-white/50">Étape {n}</div>
           <div className="mt-2 text-lg font-semibold">{title}</div>
           <div className="mt-2 text-sm text-white/70">{desc}</div>
         </div>
-        <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-          {icon}
+        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+          {Icon}
         </div>
+      </div>
+
+      <div className="mt-5 flex flex-wrap gap-2 text-xs text-white/60">
+        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Clarté</span>
+        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Vitesse</span>
+        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Qualité</span>
+      </div>
+    </div>
+  );
+}
+
+function Bento({
+  className = "",
+  title,
+  desc,
+  icon,
+}: {
+  className?: string;
+  title: string;
+  desc: string;
+  icon: "compass" | "bolt" | "spark" | "layers" | "robot" | "target";
+}) {
+  const Icon =
+    icon === "compass" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 21a9 9 0 110-18 9 9 0 010 18z" />
+        <path d="M14.5 9.5l-1.5 5-5 1.5 1.5-5 5-1.5z" />
+      </svg>
+    ) : icon === "bolt" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
+      </svg>
+    ) : icon === "spark" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
+      </svg>
+    ) : icon === "layers" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l9 5-9 5-9-5 9-5z" />
+        <path d="M3 12l9 5 9-5" />
+      </svg>
+    ) : icon === "robot" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 3v3" />
+        <path d="M8 6h8" />
+        <rect x="5" y="8" width="14" height="12" rx="3" />
+        <path d="M9 14h.01" />
+        <path d="M15 14h.01" />
+      </svg>
+    ) : (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    );
+
+  return (
+    <div
+      className={`relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover ${className}`}
+    >
+      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[hsl(var(--jbs-blue))]/15 blur-3xl" />
+      <div className="pointer-events-none absolute -left-14 -bottom-14 h-44 w-44 rounded-full bg-[hsl(var(--jbs-yellow))]/10 blur-3xl" />
+
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-sm font-semibold">{title}</div>
+          <div className="mt-2 text-sm text-white/70">{desc}</div>
+        </div>
+        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-black/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-white/10">
+          {Icon}
+        </div>
+      </div>
+
+      <div className="mt-5 flex flex-wrap gap-2 text-xs text-white/60">
+        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Premium</span>
+        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Clair</span>
+        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Livrable</span>
       </div>
     </div>
   );
