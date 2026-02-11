@@ -341,47 +341,50 @@ function RoadStep({
   icon: "clock" | "spark" | "stack" | "check";
   align: "top" | "bottom";
 }) {
-  const Icon = icon === "clock" ? (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      <path d="M12 7v5l3 2" />
-    </svg>
-  ) : icon === "spark" ? (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
-    </svg>
-  ) : icon === "stack" ? (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M12 2l9 5-9 5-9-5 9-5z" />
-      <path d="M3 12l9 5 9-5" />
-      <path d="M3 17l9 5 9-5" />
-    </svg>
-  ) : (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M20 7l-9 9-4-4" />
-    </svg>
-  );
+  const Icon =
+    icon === "clock" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ) : icon === "spark" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
+      </svg>
+    ) : icon === "stack" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l9 5-9 5-9-5 9-5z" />
+        <path d="M3 12l9 5 9-5" />
+      </svg>
+    ) : (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M20 7l-9 9-4-4" />
+      </svg>
+    );
 
   const isTop = align === "top";
 
   return (
-    <div className={`relative ${isTop ? "pb-16" : "pt-16"}`}>
-      {/* node */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30 shadow-[0_0_30px_rgba(37,99,235,.15)]">
-          {Icon}
-        </div>
+    <div className={`relative ${isTop ? "pb-20" : "pt-20"}`}>
+      {/* node on the line (small, no overlap) */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="h-3.5 w-3.5 rounded-full bg-[hsl(var(--jbs-yellow))] shadow-[0_0_18px_rgba(251,191,36,.55)] ring-4 ring-black/20" />
       </div>
 
       {/* card */}
-      <div
-        className={`mx-auto w-[92%] rounded-2xl border border-white/10 bg-black/20 p-4 shadow-[0_0_0_1px_rgba(255,255,255,.04)] ${
-          isTop ? "-translate-y-2" : "translate-y-2"
-        }`}
-      >
-        <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Étape {n}</div>
-        <div className="mt-2 text-base font-semibold">{title}</div>
-        <div className="mt-1 text-sm text-white/70">{desc}</div>
+      <div className={`mx-auto w-[92%] ${isTop ? "-translate-y-2" : "translate-y-2"}`}>
+        <div className="rounded-2xl border border-white/10 bg-black/25 p-4 shadow-[0_0_0_1px_rgba(255,255,255,.04)]">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="text-[11px] uppercase tracking-[0.18em] text-white/50">Étape {n}</div>
+              <div className="mt-2 text-base font-semibold">{title}</div>
+              <div className="mt-1 text-sm text-white/70">{desc}</div>
+            </div>
+            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/18 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+              {Icon}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -435,6 +438,7 @@ function ProcessCard({
   );
 }
 
+
 function FeatureCard({
   title,
   desc,
@@ -484,11 +488,18 @@ function FeatureCard({
       <div className="pointer-events-none absolute -left-14 -bottom-14 h-44 w-44 rounded-full bg-[hsl(var(--jbs-yellow))]/10 blur-3xl" />
 
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-base font-semibold">{title}</div>
-          <div className="mt-2 text-sm text-white/70">{desc}</div>
+        {/* pill header */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="inline-flex w-fit items-center gap-3 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
+            <span className="inline-flex h-4 w-7 items-center rounded-full bg-emerald-400/25 ring-1 ring-emerald-300/20">
+              <span className="ml-[2px] h-3 w-3 rounded-full bg-emerald-200/90" />
+            </span>
+            <span className="truncate text-sm font-semibold">{title}</span>
+          </div>
+          <div className="mt-3 text-sm text-white/70">{desc}</div>
         </div>
-        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-black/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-white/10">
+
+        <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-black/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-white/10">
           {Icon}
         </div>
       </div>
