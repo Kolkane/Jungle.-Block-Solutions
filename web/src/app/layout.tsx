@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
   title: "Jungle.Block Solutions",
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <body className="min-h-screen text-white antialiased">{children}</body>
+      <body className="min-h-screen text-white antialiased">
+        <ScrollProgress />
+        {children}
+      </body>
     </html>
   );
 }

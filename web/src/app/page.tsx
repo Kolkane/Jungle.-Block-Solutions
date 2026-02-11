@@ -1,6 +1,7 @@
 import Badge from "@/components/Badge";
 import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
+import Reveal from "@/components/Reveal";
 import { SectionTitle } from "@/components/SectionTitle";
 
 export default function Home() {
@@ -34,7 +35,7 @@ export default function Home() {
         </Container>
       </header>
 
-      {/* HERO (centered + slightly smaller for 1st scroll) */}
+      <Reveal>{/* HERO (centered + slightly smaller for 1st scroll) */}
       <section className="pt-12 md:pt-16">
         <Container>
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
@@ -79,9 +80,9 @@ export default function Home() {
             </div>
           </div>
         </Container>
-      </section>
+      </section></Reveal>
 
-      {/* TICKET (more horizontal + subtler UI) */}
+      <Reveal delayMs={80}>{/* TICKET (more horizontal + subtler UI) */}
       <section id="chat" className="mt-10 scroll-mt-24 md:mt-12">
         <Container>
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
@@ -140,9 +141,9 @@ export default function Home() {
             </Card>
           </div>
         </Container>
-      </section>
+      </section></Reveal>
 
-      {/* PROCESS */}
+      <Reveal delayMs={140}>{/* PROCESS */}
       <section id="process" className="mt-20 scroll-mt-24">
         <Container>
           <SectionTitle
@@ -166,9 +167,9 @@ export default function Home() {
             <StepCard n="04" title="Livraison + itérations" desc="Tests, debug, optimisation, handover GitHub." />
           </div>
         </Container>
-      </section>
+      </section></Reveal>
 
-      {/* WHY */}
+      <Reveal delayMs={160}>{/* WHY */}
       <section className="mt-20">
         <Container>
           <SectionTitle eyebrow="Différence" title="Pourquoi Jungle.Block Solutions ?" />
@@ -182,18 +183,18 @@ export default function Home() {
               "Exécution orientée ROI & industrialisation",
               "Expertise multi-projets (SaaS, IA, outils internes)",
             ].map((p) => (
-              <div key={p} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <div key={p} className="rounded-3xl border border-white/10 bg-white/5 p-5 glass-hover">
                 <div className="text-sm font-semibold">{p}</div>
               </div>
             ))}
           </div>
         </Container>
-      </section>
+      </section></Reveal>
 
-      {/* CONTACT */}
+      <Reveal delayMs={180}>{/* CONTACT */}
       <section id="contact" className="mt-20 pb-20 scroll-mt-24">
         <Container>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 glass-hover">
             <div className="text-xs uppercase tracking-[0.18em] text-white/50">Contact</div>
             <div className="mt-3 text-3xl font-semibold tracking-tight">On avance ?</div>
             <p className="mt-3 max-w-2xl text-sm text-white/70">
@@ -228,7 +229,7 @@ export default function Home() {
             </div>
           </div>
         </Container>
-      </section>
+      </section></Reveal>
     </div>
   );
 }
@@ -244,7 +245,7 @@ function MiniKpi({ label, value }: { label: string; value: string }) {
 
 function Card({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
       <div className="text-lg font-semibold">{title}</div>
       <div className="mt-1 text-xs uppercase tracking-[0.18em] text-white/50">{subtitle}</div>
       <p className="mt-4 text-sm leading-relaxed text-white/70">{children}</p>
@@ -279,7 +280,7 @@ function StepCard({ n, title, desc }: { n: string; title: string; desc: string }
     );
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-xs uppercase tracking-[0.18em] text-white/50">Étape {n}</div>

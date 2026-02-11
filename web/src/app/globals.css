@@ -19,6 +19,31 @@ body {
   background-attachment: fixed;
 }
 
+/* Subtle SaaS-style section dividers */
+.section-divider {
+  position: relative;
+}
+.section-divider:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: min(980px, calc(100% - 48px));
+  transform: translateX(-50%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+}
+
+/* Glass hover */
+.glass-hover {
+  transition: transform 200ms ease, background-color 200ms ease, border-color 200ms ease;
+}
+.glass-hover:hover {
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
 ::selection {
   background: rgba(251, 191, 36, 0.25);
 }
