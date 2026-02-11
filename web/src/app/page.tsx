@@ -212,48 +212,51 @@ export default function Home() {
         <Container>
           <SectionTitle eyebrow="Différence" title="Pourquoi Jungle.Block Solutions ?" />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FeatureCard
-              title="Vision produit + stratégie"
-              desc="On challenge le besoin, on simplifie, on priorise. Décisions claires, roadmap actionnable."
-              icon="compass"
-            />
-            <FeatureCard
-              title="Exécution rapide & propre"
-              desc="Ship vite sans casser la qualité : base solide, dette maîtrisée, mise en prod propre."
-              icon="bolt"
-            />
-            <FeatureCard
-              title="UI/UX premium"
-              desc="Interfaces nettes, micro-interactions, détails soignés. Une expérience qui convertit."
-              icon="spark"
-            />
-            <FeatureCard
-              title="IA intégrée (agents)"
-              desc="Automatisations, agents IA, intégrations. Gain de temps concret et mesurable."
-              icon="robot"
-            />
-          </div>
+          {/* Coherent layout: 2 wide cards, then 3 equal cards, then 1 full-width */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-fr">
+            <div className="md:col-span-3">
+              <FeatureCard
+                title="Vision produit + stratégie"
+                desc="On challenge le besoin, on simplifie, on priorise. Décisions claires, roadmap actionnable."
+                icon="compass"
+              />
+            </div>
+            <div className="md:col-span-3">
+              <FeatureCard
+                title="Exécution rapide & propre"
+                desc="Ship vite sans casser la qualité : base solide, dette maîtrisée, mise en prod propre."
+                icon="bolt"
+              />
+            </div>
 
-          <div className="mt-4 rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <div className="text-sm font-semibold">Handover GitHub + itérations</div>
-                <div className="mt-1 text-sm text-white/70">Livrables clairs, suivi, et optimisation continue si besoin.</div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "Roadmap",
-                  "Prototype",
-                  "Production",
-                  "Observabilité",
-                  "Sécurité",
-                ].map((t) => (
-                  <span key={t} className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70">
-                    {t}
-                  </span>
-                ))}
-              </div>
+            <div className="md:col-span-2">
+              <FeatureCard
+                title="UI/UX premium"
+                desc="Interfaces nettes, micro-interactions, détails soignés. Une expérience qui convertit."
+                icon="spark"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <FeatureCard
+                title="Du prototype au produit"
+                desc="Du test rapide à la mise en production + itérations."
+                icon="stack"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <FeatureCard
+                title="IA & automatisation"
+                desc="Agents, workflows, intégrations — gain de temps concret."
+                icon="robot"
+              />
+            </div>
+
+            <div className="md:col-span-6">
+              <FeatureCard
+                title="Exécution orientée ROI"
+                desc="On mesure l’impact, on industrialise ce qui marche. Handover GitHub + itérations si besoin."
+                icon="target"
+              />
             </div>
           </div>
         </Container>
@@ -439,7 +442,7 @@ function FeatureCard({
 }: {
   title: string;
   desc: string;
-  icon: "compass" | "bolt" | "spark" | "robot";
+  icon: "compass" | "bolt" | "spark" | "robot" | "stack" | "target";
 }) {
   const Icon =
     icon === "compass" ? (
@@ -455,7 +458,7 @@ function FeatureCard({
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
       </svg>
-    ) : (
+    ) : icon === "robot" ? (
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M12 3v3" />
         <path d="M8 6h8" />
@@ -463,10 +466,20 @@ function FeatureCard({
         <path d="M9 14h.01" />
         <path d="M15 14h.01" />
       </svg>
+    ) : icon === "stack" ? (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l9 5-9 5-9-5 9-5z" />
+        <path d="M3 12l9 5 9-5" />
+      </svg>
+    ) : (
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" />
+        <path d="M12 7v5l3 2" />
+      </svg>
     );
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
+    <div className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover">
       <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[hsl(var(--jbs-blue))]/12 blur-3xl" />
       <div className="pointer-events-none absolute -left-14 -bottom-14 h-44 w-44 rounded-full bg-[hsl(var(--jbs-yellow))]/10 blur-3xl" />
 
