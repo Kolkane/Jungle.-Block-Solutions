@@ -24,20 +24,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "name": "Jungle.Block Solutions",
-              "url": "https://jungleblocksolutions.com",
-              "email": "contact@jungleblocksolutions.com",
+              "url": "https://jungleblocksolutions.com/",
+              "name": "Jungle Block Solutions",
+              "@type": "LocalBusiness",
+              "email": "fnr.vincent.pro@gmail.com",
               "address": {
                 "@type": "PostalAddress",
-                "addressLocality": "Paris",
                 "addressCountry": "FR",
+                "addressLocality": "Bayonne"
               },
-              "description":
-                "Agence spécialisée en développement web et solutions digitales pour entreprises.",
-              "sameAs": [],
-            }),
+              "@context": "https://schema.org",
+              "telephone": "0681285433",
+              "description": "Jungle Block Solutions est une entreprise française spécialisée dans les solutions technologiques innovantes et le développement de projets blockchain. Nous accompagnons les entreprises dans leur transformation digitale avec des services sur mesure."
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@type": "FAQPage",
+              "@context": "https://schema.org",
+              "mainEntity": [
+                {
+                  "name": "Quels services propose Jungle Block Solutions ?",
+                  "@type": "Question",
+                  "acceptedAnswer": {
+                    "text": "Jungle Block Solutions propose des services de conseil et développement en technologies blockchain, des solutions digitales innovantes pour les entreprises, ainsi qu'un accompagnement personnalisé dans la transformation numérique et l'intégration de nouvelles technologies.",
+                    "@type": "Answer"
+                  }
+                },
+                {
+                  "name": "À qui s'adressent les solutions de Jungle Block Solutions ?",
+                  "@type": "Question",
+                  "acceptedAnswer": {
+                    "text": "Nos solutions s'adressent aux PME, startups et grandes entreprises souhaitant innover grâce aux technologies blockchain et digitales. Nous travaillons avec des clients de tous secteurs cherchant à optimiser leurs processus ou créer de nouveaux services numériques.",
+                    "@type": "Answer"
+                  }
+                },
+                {
+                  "name": "Comment contacter Jungle Block Solutions pour un projet ?",
+                  "@type": "Question",
+                  "acceptedAnswer": {
+                    "text": "Vous pouvez nous contacter directement via notre site web jungleblocksolutions.com pour discuter de votre projet. Notre équipe analyse vos besoins et vous propose une solution adaptée à vos objectifs et votre budget.",
+                    "@type": "Answer"
+                  }
+                }
+              ]
+            })
           }}
         />
       </head>
