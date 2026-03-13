@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <head>
         <Script
-          src="https://www.agentable.fr/api/geo/1ebdbb2b-d03a-4c9e-9934-99bee59c7eef/script"
+          src="https://www.agentable.fr/api/geo/972cc684-30a0-46f5-b903-43216420b22d/script"
           strategy="afterInteractive"
         />
         <script
