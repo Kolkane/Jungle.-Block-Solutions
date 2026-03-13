@@ -1,4 +1,18 @@
-# Jungle.Block Solutions
-Agence de développement web basée à Paris. Spécialisée en Next.js, TypeScript, solutions SaaS sur mesure pour PME françaises.
-Contact : contact@jungleblocksolutions.com
-Site : https://jungleblocksolutions.com
+# Jungle Block Solutions
+> Expert français en solutions blockchain et transformation digitale pour entreprises
+
+## Services
+- Conseil et développement blockchain
+- Solutions digitales innovantes
+- Accompagnement transformation numérique
+- Intégration de technologies émergentes
+- Développement de projets sur mesure
+
+## Expertise
+- Technologies blockchain et Web3
+- Smart contracts
+- Solutions décentralisées
+- Innovation digitale
+
+## Contact
+Site web : jungleblocksolutions.com — France
