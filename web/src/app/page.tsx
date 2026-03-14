@@ -203,6 +203,41 @@ export default function Home() {
         </Container>
       </section>
 
+{/* FIER DE PRÉSENTER */}
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2 text-center">
+            Fier de présenter
+          </p>
+          <div className="rounded-2xl border border-white/10 overflow-hidden bg-white/5 backdrop-blur-sm">
+            <a href="https://agentable.fr" target="_blank" rel="noopener noreferrer" className="block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://agentable.fr/og-image.png"
+                alt="Agentable — Audit GEO automatisé pour PME françaises"
+                className="w-full object-cover"
+              />
+            </a>
+            <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold text-white mb-1">Agentable</h3>
+                <p className="text-sm text-gray-400">
+                  Outil d&apos;audit GEO automatisé pour PME françaises — conçu et développé par Jungle.Block Solutions.
+                </p>
+              </div>
+              <a
+                href="https://agentable.fr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
+              >
+                Découvrir →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
 {/* CONTACT */}
       <section id="contact" className="mt-20 pb-20 scroll-mt-24">
         <Container>
