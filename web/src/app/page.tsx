@@ -274,6 +274,11 @@ export default function Home() {
             <div className="mt-8 text-xs text-white/40">
               © {new Date().getFullYear()} Jungle.Block Solutions. Audit & build premium.
             </div>
+            <div className="flex flex-wrap gap-4 justify-center text-xs text-gray-500 mt-4">
+              <a href="/mentions-legales" className="hover:text-gray-300 transition-colors">Mentions légales</a>
+              <a href="/confidentialite" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
+              <a href="/cgu" className="hover:text-gray-300 transition-colors">CGU</a>
+            </div>
           </div>
         </Container>
       </section></Reveal>
