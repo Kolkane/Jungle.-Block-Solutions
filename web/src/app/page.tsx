@@ -203,39 +203,103 @@ export default function Home() {
         </Container>
       </section>
 
-{/* FIER DE PRÉSENTER */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2 text-center">
-            Fier de présenter
-          </p>
-          <div className="rounded-2xl border border-white/10 overflow-hidden bg-white/5 backdrop-blur-sm">
-            <a href="https://agentable.fr" target="_blank" rel="noopener noreferrer" className="block">
+{/* FIER DE PRÉSENTER — AGENTABLE */}
+      <section className="section-divider mt-20">
+        <Container>
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3">
+              Fier de présenter
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+              Un produit conçu et lancé par Jungle.Block Solutions
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-sm text-white/60 leading-relaxed">
+              Au-delà des missions clients, nous concevons et lançons nos propres produits. Agentable est la preuve
+              concrète de notre capacité à aller de l&apos;idée au produit live — rapidement, proprement, avec impact.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-indigo-500/20 bg-indigo-950/30 backdrop-blur-sm overflow-hidden ring-1 ring-white/5">
+            {/* Image */}
+            <a href="https://agentable.fr" target="_blank" rel="noopener noreferrer" className="block relative group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://agentable.fr/og-image.png"
                 alt="Agentable — Audit GEO automatisé pour PME françaises"
-                className="w-full object-cover"
+                className="w-full object-cover max-h-[380px] transition-transform duration-500 group-hover:scale-[1.01]"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent" />
             </a>
-            <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-bold text-white mb-1">Agentable</h3>
-                <p className="text-sm text-gray-400">
-                  Outil d&apos;audit GEO automatisé pour PME françaises — conçu et développé par Jungle.Block Solutions.
-                </p>
+
+            {/* Content */}
+            <div className="p-8 md:p-10">
+              {/* Header row */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-indigo-500/20 ring-1 ring-indigo-400/30 grid place-items-center">
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white leading-tight">Agentable</h3>
+                    <p className="text-xs text-indigo-400 font-medium tracking-wide">agentable.fr</p>
+                  </div>
+                </div>
+                <a
+                  href="https://agentable.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-900/40"
+                >
+                  Découvrir le produit
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
-              <a
-                href="https://agentable.fr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
-              >
-                Découvrir →
-              </a>
+
+              {/* Description */}
+              <p className="text-sm text-white/70 leading-relaxed mb-8 max-w-2xl">
+                Le <strong className="text-white font-semibold">GEO (Generative Engine Optimization)</strong> est le
+                nouveau SEO : il s&apos;agit d&apos;optimiser sa présence dans les réponses des IA comme ChatGPT, Perplexity
+                ou Gemini. Agentable automatise l&apos;audit GEO pour les PME françaises — analyse de visibilité IA,
+                recommandations actionnables, rapport détaillé — en quelques minutes.
+              </p>
+
+              {/* Feature pills */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-indigo-400 mb-2">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M12 7v5l3 2"/>
+                    </svg>
+                  </div>
+                  <div className="text-xs font-semibold text-white mb-1">Audit en quelques minutes</div>
+                  <div className="text-xs text-white/50">Analyse automatisée de votre visibilité dans les LLMs.</div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-indigo-400 mb-2">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                  </div>
+                  <div className="text-xs font-semibold text-white mb-1">Score de visibilité IA</div>
+                  <div className="text-xs text-white/50">Mesurez où vous en êtes face à vos concurrents.</div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="text-indigo-400 mb-2">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 7l-9 9-4-4"/>
+                    </svg>
+                  </div>
+                  <div className="text-xs font-semibold text-white mb-1">Recommandations actionnables</div>
+                  <div className="text-xs text-white/50">Rapport clair avec les actions prioritaires à mener.</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
 {/* CONTACT */}
