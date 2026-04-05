@@ -388,6 +388,87 @@ export default function Home() {
         </Container>
       </section>
 
+{/* RADAR IMMOBILIER */}
+      <section className="section-divider mt-20">
+        <Container>
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[hsl(var(--jbs-yellow))]/70 mb-3">
+              Outil propriétaire
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+              Intelligence territoriale. Décision avant le marché.
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-sm text-white/60 leading-relaxed">
+              Un outil de radar immobilier conçu sur-mesure — scoring de biens, analyse du marché actuel, carte thermique des opportunités. Déployable en white-label chez les agences et promoteurs.
+            </p>
+          </div>
+
+          {/* 2 Cards côte à côte */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            {/* Bloc 1 */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Analyse en temps réel</div>
+                  <div className="text-lg font-semibold text-white">Marché actuel</div>
+                  <div className="mt-2 text-sm text-white/70">
+                    Annonces actives, nouvelles entrées, baisses de prix, particuliers détectés. Une lecture instantanée du territoire.
+                  </div>
+                </div>
+                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Bloc 2 */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Détection algorithmique</div>
+                  <div className="text-lg font-semibold text-white">Scoring d&apos;opportunités</div>
+                  <div className="mt-2 text-sm text-white/70">
+                    7 700+ biens scorés. Carte thermique HOT/CHAUD/NEUTRE. Top 10 opportunités du jour, CRM intégré, alertes automatiques.
+                  </div>
+                </div>
+                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bloc stats + phrase finale */}
+          <div className="rounded-3xl border border-white/10 bg-black/30 p-8 md:p-10">
+            {/* 3 stats */}
+            <div className="grid grid-cols-3 gap-4 mb-8 divide-x divide-white/10">
+              <div className="text-center px-4">
+                <div className="text-2xl md:text-3xl font-bold text-white">7 700+</div>
+                <div className="mt-1 text-xs text-white/50 uppercase tracking-wide">Biens scorés</div>
+              </div>
+              <div className="text-center px-4">
+                <div className="text-2xl md:text-3xl font-bold text-white">324</div>
+                <div className="mt-1 text-xs text-white/50 uppercase tracking-wide">Secteurs analysés</div>
+              </div>
+              <div className="text-center px-4">
+                <div className="text-2xl md:text-3xl font-bold text-white">Score /100</div>
+                <div className="mt-1 text-xs text-white/50 uppercase tracking-wide">Par bien, par IA</div>
+              </div>
+            </div>
+
+            {/* Phrase finale */}
+            <p className="text-center text-lg md:text-xl font-semibold text-white/90 italic">
+              &ldquo;Property intelligence first.&rdquo;
+            </p>
+          </div>
+        </Container>
+      </section>
+
 {/* CONTACT */}
       <section id="contact" className="mt-20 pb-20 scroll-mt-24">
         <Container>
