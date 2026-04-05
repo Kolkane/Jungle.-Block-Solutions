@@ -302,6 +302,92 @@ export default function Home() {
         </Container>
       </section>
 
+{/* VEILLOR_LAYER */}
+      <section className="section-divider mt-20">
+        <Container>
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[hsl(var(--jbs-yellow))]/70 mb-3">
+              Système propriétaire
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+              Données asymétriques. Avantage structurel.
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-sm text-white/60 leading-relaxed">
+              Veillor_Layer est un système de renseignement patrimonial conçu pour les cabinets CGP — détection de signaux faibles, scoring IA, brief confidentiel livré chaque semaine.
+            </p>
+          </div>
+
+          {/* 3 Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            {/* Card 1 */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Signal</div>
+                  <div className="text-lg font-semibold text-white">Signaux avant le marché</div>
+                  <div className="mt-2 text-sm text-white/70">
+                    9 800+ annonces analysées chaque semaine. Seules les opportunités à potentiel patrimonial réel remontent.
+                  </div>
+                </div>
+                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M17.66 6.34l-1.41 1.41M6.34 17.66l-1.41 1.41"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">IA</div>
+                  <div className="text-lg font-semibold text-white">Scoring IA par cabinet</div>
+                  <div className="mt-2 text-sm text-white/70">
+                    Chaque signal est scoré et narrativisé par l&apos;IA. Le brief est personnalisé, pas générique.
+                  </div>
+                </div>
+                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Exclusivité</div>
+                  <div className="text-lg font-semibold text-white">Exclusivité par zone</div>
+                  <div className="mt-2 text-sm text-white/70">
+                    Une zone = un cabinet. Une fois attribuée, elle n&apos;est plus disponible.
+                  </div>
+                </div>
+                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bloc différenciateur — citation */}
+          <div className="rounded-3xl border border-white/10 bg-black/30 p-8 md:p-10 text-center">
+            <blockquote className="text-lg md:text-xl font-semibold text-white/90 italic leading-relaxed max-w-2xl mx-auto">
+              &ldquo;Veillor n&apos;identifie pas une cession.<br className="hidden sm:block" />
+              Veillor identifie des situations où une cession devient probable.&rdquo;
+            </blockquote>
+            <p className="mt-5 text-sm text-white/40 tracking-wide">
+              1 000€/mois · Zone exclusive · Brief confidentiel chaque semaine
+            </p>
+          </div>
+        </Container>
+      </section>
+
 {/* CONTACT */}
       <section id="contact" className="mt-20 pb-20 scroll-mt-24">
         <Container>
