@@ -1,654 +1,667 @@
-import Badge from "@/components/Badge";
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
-import Reveal from "@/components/Reveal";
-import { SectionTitle } from "@/components/SectionTitle";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { MotionReveal, MotionStagger, MotionItem } from "@/components/MotionReveal";
+
+const CALENDLY = "https://calendly.com/fnr-vincent-pro/audit-strategique";
+const LINKEDIN_COMPANY = "https://www.linkedin.com/company/jungle-block-solutions";
+const EMAIL = "fnr.vincent.pro@gmail.com";
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Home() {
   return (
     <div>
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur">
-        <Container>
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logo.png" alt="Jungle.Block Solutions" className="h-9 w-9 object-contain" />
-              </div>
-              <div className="font-semibold tracking-tight">Jungle.Block Solutions</div>
-            </div>
-            <div className="flex items-center gap-3">
-              <a
-                href="#chat"
-                className="rounded-xl bg-[hsl(var(--jbs-yellow))] px-4 py-2 text-sm font-medium text-black hover:brightness-95"
-              >
-                Créer un ticket
-              </a>
-              <a
-                href="#contact"
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 hover:bg-white/10"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
-        </Container>
-      </header>
+      <SiteHeader />
+      <Hero />
+      <Methodology />
+      <Values />
+      <Realizations />
+      <LinkedInBridge />
+      <TicketSection />
+      <ContactSection />
+    </div>
+  );
+}
 
-      <Reveal>{/* HERO (centered + slightly smaller for 1st scroll) */}
-      <section className="pt-12 md:pt-16">
-        <Container>
-          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <Badge>Décrivez votre besoin en 30 secondes.</Badge>
-            <h1 className="mt-5 text-4xl font-semibold leading-[1.05] tracking-tight md:text-5xl">
-              Audit tech & produit. Build sur-mesure. IA intégrée.
-            </h1>
-            <p className="mt-4 text-sm leading-relaxed text-white/70 md:text-base">
-              Jungle.Block Solutions conçoit et livre des solutions digitales premium : diagnostic 360°, prototypes rapides,
-              développement sur-mesure, agents IA, SaaS complets. Une exécution rapide, propre, orientée ROI.
-            </p>
+/* ─────────────────────────────  HEADER  ───────────────────────────── */
 
-            <div className="mt-5 flex flex-wrap justify-center gap-2 text-xs text-white/60 md:text-sm">
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Audit stratégique</span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Développement sur mesure</span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Agents IA</span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">SaaS complets</span>
-            </div>
-
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <a
-                href="#chat"
-                className="rounded-xl bg-[hsl(var(--jbs-blue))] px-5 py-3 text-sm font-medium hover:brightness-110"
-              >
-                Démarrer (ticket)
-              </a>
-              <a
-                href="#process"
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
-              >
-                Voir le process
-              </a>
-            </div>
-
-            <div className="mt-8 w-full rounded-3xl border border-white/10 bg-white/5 p-5">
-              <div className="text-xs uppercase tracking-[0.18em] text-white/50">Positionnement</div>
-              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <MiniKpi label="Prototype" value="72h → 7j" />
-                <MiniKpi label="Exploration" value="20 min" />
-                <MiniKpi label="Livraison" value="MVP → produit" />
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section></Reveal>
-
-      <Reveal delayMs={80}>{/* TICKET (more horizontal + subtler UI) */}
-      <section id="chat" className="mt-10 scroll-mt-24 md:mt-12">
-        <Container>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-              <div>
-                <div className="text-xs uppercase tracking-[0.18em] text-white/50">Ticket projet</div>
-                <div className="mt-2 text-xl font-semibold">Générez un ticket en 30 secondes</div>
-                <div className="mt-2 text-sm text-white/70">
-                  3 questions. Ensuite email ou téléphone pour être recontacté dans les plus brefs délais.
-                </div>
-              </div>
-              <a
-                href="#contact"
-                className="rounded-xl bg-[hsl(var(--jbs-yellow))] px-5 py-3 text-sm font-medium text-black hover:brightness-95"
-              >
-                Contact direct
-              </a>
-            </div>
-
-            {/* main row */}
-            <div className="mt-6">
-              <ChatTicket recipientEmail="fnr.vincent.pro@gmail.com" />
-            </div>
-
-            {/* what you receive BELOW */}
-            <div className="mt-4 rounded-3xl border border-white/10 bg-black/15 p-6">
-              <div className="text-sm font-semibold">Ce que vous recevez</div>
-              <p className="mt-2 text-sm text-white/70">Un ticket clair (type, objectif, timing, contact) + une prochaine étape.</p>
-              <ul className="mt-4 flex flex-col gap-2 text-sm text-white/70 md:flex-row md:flex-wrap">
-                <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Cadrage rapide</li>
-                <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Estimation</li>
-                <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--jbs-yellow))]" />Proposition de prochaine étape</li>
-              </ul>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-
-      {/* OFFER */}
-      <section className="mt-20">
-        <Container>
-          <SectionTitle
-            eyebrow="Offre"
-            title="Ce que propose Jungle.Block Solutions"
-            desc="Deux blocs simples. Une approche premium, orientée solutions."
-          />
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Card title="Audit stratégique" subtitle="Diagnostic 360°">
-              Clarification du besoin, cartographie des flux, analyse de la stack, risques, opportunités, priorisation, roadmap.
-              Un livrable qui permet de décider vite et bien.
-            </Card>
-            <Card title="Développement sur mesure" subtitle="Build propre, rapide, scalable">
-              UI/UX premium, base de données, IA, intégrations, mise en production, observabilité. Du prototype au produit.
-            </Card>
-          </div>
-        </Container>
-      </section></Reveal>
-
-      <Reveal delayMs={140}>{/* PROCESS */}
-      <section id="process" className="section-divider mt-20 scroll-mt-24">
-        <Container>
-          <SectionTitle
-            eyebrow="Méthode"
-            title="Process de travail"
-            desc="4 étapes, du cadrage à la livraison. Exécution rapide, décisions claires."
-          />
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <ProcessCard n="01" title="Exploration" desc="Clarification + cadrage + estimation." icon="clock" />
-            <ProcessCard n="02" title="Prototype" desc="Version interactive pour valider la direction." icon="spark" />
-            <ProcessCard n="03" title="Build" desc="UI/UX, data, IA, intégrations, production." icon="stack" />
-            <ProcessCard n="04" title="Livraison" desc="Tests, itérations, handover GitHub." icon="check" />
-          </div>
-        </Container>
-      </section>
-
-{/* WHY */}
-      <section className="section-divider mt-20">
-        <Container>
-          <SectionTitle eyebrow="Différence" title="Pourquoi Jungle.Block Solutions ?" />
-
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-2 backdrop-blur">
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <FeatureLine
-                title="Vision produit + stratégie"
-                desc="On challenge le besoin, on simplifie, on priorise. Roadmap actionnable."
-                icon="compass"
-              />
-              <FeatureLine
-                title="Exécution rapide & propre"
-                desc="Ship vite sans casser la qualité : base solide, dette maîtrisée, prod propre."
-                icon="bolt"
-              />
-              <FeatureLine
-                title="UI/UX premium"
-                desc="Micro-interactions, détails soignés, expérience qui convertit."
-                icon="spark"
-              />
-              <FeatureLine
-                title="Du prototype au produit"
-                desc="Du test rapide à la mise en production + itérations."
-                icon="stack"
-              />
-              <FeatureLine
-                title="IA & automatisation"
-                desc="Agents, workflows, intégrations — gain de temps concret."
-                icon="robot"
-              />
-              <FeatureLine
-                title="Exécution orientée ROI"
-                desc="On mesure l’impact et on industrialise ce qui marche."
-                icon="target"
-              />
-            </div>
-          </div>
-        </Container>
-      </section>
-
-{/* FIER DE PRÉSENTER — AGENTABLE */}
-      <section className="section-divider mt-20">
-        <Container>
-          <div className="text-center mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3">
-              Fier de présenter
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-              Un produit conçu et lancé par Jungle.Block Solutions
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-sm text-white/60 leading-relaxed">
-              Au-delà des missions clients, nous concevons et lançons nos propres produits. Agentable est la preuve
-              concrète de notre capacité à aller de l&apos;idée au produit live — rapidement, proprement, avec impact.
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-indigo-500/20 bg-indigo-950/30 backdrop-blur-sm overflow-hidden ring-1 ring-white/5">
-            {/* Image */}
-            <a href="https://agentable.fr" target="_blank" rel="noopener noreferrer" className="block relative group">
+function SiteHeader() {
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur-xl">
+      <Container>
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-center gap-3">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-white/5 ring-1 ring-white/10 overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://agentable.fr/og-image.png"
-                alt="Agentable — Audit GEO automatisé pour PME françaises"
-                className="w-full object-cover max-h-[380px] transition-transform duration-500 group-hover:scale-[1.01]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent" />
+              <img src="/logo.png" alt="Jungle.Block Solutions" className="h-9 w-9 object-contain" />
+            </div>
+            <div className="font-semibold tracking-tight">Jungle.Block Solutions</div>
+          </div>
+          <div className="flex items-center gap-2">
+            <a
+              href="#methode"
+              className="hidden rounded-xl px-3 py-2 text-sm text-white/70 hover:text-white md:inline-block"
+            >
+              Méthode
             </a>
-
-            {/* Content */}
-            <div className="p-8 md:p-10">
-              {/* Header row */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-indigo-500/20 ring-1 ring-indigo-400/30 grid place-items-center">
-                    <svg viewBox="0 0 24 24" className="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white leading-tight">Agentable</h3>
-                    <p className="text-xs text-indigo-400 font-medium tracking-wide">agentable.fr</p>
-                  </div>
-                </div>
-                <a
-                  href="https://agentable.fr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-900/40"
-                >
-                  Découvrir le produit
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-
-              {/* Description */}
-              <p className="text-sm text-white/70 leading-relaxed mb-8 max-w-2xl">
-                Le <strong className="text-white font-semibold">GEO (Generative Engine Optimization)</strong> est le
-                nouveau SEO : il s&apos;agit d&apos;optimiser sa présence dans les réponses des IA comme ChatGPT, Perplexity
-                ou Gemini. Agentable automatise l&apos;audit GEO pour les PME françaises — analyse de visibilité IA,
-                recommandations actionnables, rapport détaillé — en quelques minutes.
-              </p>
-
-              {/* Feature pills */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-indigo-400 mb-2">
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M12 7v5l3 2"/>
-                    </svg>
-                  </div>
-                  <div className="text-xs font-semibold text-white mb-1">Audit en quelques minutes</div>
-                  <div className="text-xs text-white/50">Analyse automatisée de votre visibilité dans les LLMs.</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-indigo-400 mb-2">
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                    </svg>
-                  </div>
-                  <div className="text-xs font-semibold text-white mb-1">Score de visibilité IA</div>
-                  <div className="text-xs text-white/50">Mesurez où vous en êtes face à vos concurrents.</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-indigo-400 mb-2">
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 7l-9 9-4-4"/>
-                    </svg>
-                  </div>
-                  <div className="text-xs font-semibold text-white mb-1">Recommandations actionnables</div>
-                  <div className="text-xs text-white/50">Rapport clair avec les actions prioritaires à mener.</div>
-                </div>
-              </div>
-            </div>
+            <a
+              href="#realisations"
+              className="hidden rounded-xl px-3 py-2 text-sm text-white/70 hover:text-white md:inline-block"
+            >
+              Réalisations
+            </a>
+            <a
+              href="#contact"
+              className="hidden rounded-xl px-3 py-2 text-sm text-white/70 hover:text-white md:inline-block"
+            >
+              Contact
+            </a>
+            <a
+              href={CALENDLY}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-xl bg-[hsl(var(--jbs-yellow))] px-4 py-2 text-sm font-semibold text-black transition hover:brightness-95"
+            >
+              Réserver un audit
+              <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
-        </Container>
-      </section>
-
-{/* VEILLOR_LAYER */}
-      <section className="section-divider mt-20">
-        <Container>
-          {/* Header */}
-          <div className="text-center mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[hsl(var(--jbs-yellow))]/70 mb-3">
-              Système propriétaire
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-              Données asymétriques. Avantage structurel.
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-sm text-white/60 leading-relaxed">
-              Veillor_Layer est un système de renseignement patrimonial conçu pour les cabinets CGP — détection de signaux faibles, scoring IA, brief confidentiel livré chaque semaine.
-            </p>
-          </div>
-
-          {/* 3 Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            {/* Card 1 */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Signal</div>
-                  <div className="text-lg font-semibold text-white">Signaux avant le marché</div>
-                  <div className="mt-2 text-sm text-white/70">
-                    9 800+ annonces analysées chaque semaine. Seules les opportunités à potentiel patrimonial réel remontent.
-                  </div>
-                </div>
-                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M17.66 6.34l-1.41 1.41M6.34 17.66l-1.41 1.41"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">IA</div>
-                  <div className="text-lg font-semibold text-white">Scoring IA par cabinet</div>
-                  <div className="mt-2 text-sm text-white/70">
-                    Chaque signal est scoré et narrativisé par l&apos;IA. Le brief est personnalisé, pas générique.
-                  </div>
-                </div>
-                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Exclusivité</div>
-                  <div className="text-lg font-semibold text-white">Exclusivité par zone</div>
-                  <div className="mt-2 text-sm text-white/70">
-                    Une zone = un cabinet. Une fois attribuée, elle n&apos;est plus disponible.
-                  </div>
-                </div>
-                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bloc différenciateur — citation */}
-          <div className="rounded-3xl border border-white/10 bg-black/30 p-8 md:p-10 text-center">
-            <blockquote className="text-lg md:text-xl font-semibold text-white/90 italic leading-relaxed max-w-2xl mx-auto">
-              &ldquo;Veillor n&apos;identifie pas une cession.<br className="hidden sm:block" />
-              Veillor identifie des situations où une cession devient probable.&rdquo;
-            </blockquote>
-            <p className="mt-5 text-sm text-white/40 tracking-wide">
-              1 000€/mois · Zone exclusive · Brief confidentiel chaque semaine
-            </p>
-          </div>
-        </Container>
-      </section>
-
-{/* RADAR IMMOBILIER */}
-      <section className="section-divider mt-20">
-        <Container>
-          {/* Header */}
-          <div className="text-center mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[hsl(var(--jbs-yellow))]/70 mb-3">
-              Outil propriétaire
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-              Intelligence territoriale. Décision avant le marché.
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-sm text-white/60 leading-relaxed">
-              Un outil de radar immobilier conçu sur-mesure — scoring de biens, analyse du marché actuel, carte thermique des opportunités. Déployable en white-label chez les agences et promoteurs.
-            </p>
-          </div>
-
-          {/* 2 Cards côte à côte */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            {/* Bloc 1 */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Analyse en temps réel</div>
-                  <div className="text-lg font-semibold text-white">Marché actuel</div>
-                  <div className="mt-2 text-sm text-white/70">
-                    Annonces actives, nouvelles entrées, baisses de prix, particuliers détectés. Une lecture instantanée du territoire.
-                  </div>
-                </div>
-                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Bloc 2 */}
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/50 mb-2">Détection algorithmique</div>
-                  <div className="text-lg font-semibold text-white">Scoring d&apos;opportunités</div>
-                  <div className="mt-2 text-sm text-white/70">
-                    7 700+ biens scorés. Carte thermique HOT/CHAUD/NEUTRE. Top 10 opportunités du jour, CRM intégré, alertes automatiques.
-                  </div>
-                </div>
-                <div className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bloc stats + phrase finale */}
-          <div className="rounded-3xl border border-white/10 bg-black/30 p-8 md:p-10">
-            {/* 3 stats */}
-            <div className="grid grid-cols-3 gap-4 mb-8 divide-x divide-white/10">
-              <div className="text-center px-4">
-                <div className="text-2xl md:text-3xl font-bold text-white">7 700+</div>
-                <div className="mt-1 text-xs text-white/50 uppercase tracking-wide">Biens scorés</div>
-              </div>
-              <div className="text-center px-4">
-                <div className="text-2xl md:text-3xl font-bold text-white">324</div>
-                <div className="mt-1 text-xs text-white/50 uppercase tracking-wide">Secteurs analysés</div>
-              </div>
-              <div className="text-center px-4">
-                <div className="text-2xl md:text-3xl font-bold text-white">Score /100</div>
-                <div className="mt-1 text-xs text-white/50 uppercase tracking-wide">Par bien, par IA</div>
-              </div>
-            </div>
-
-            {/* Phrase finale */}
-            <p className="text-center text-lg md:text-xl font-semibold text-white/90 italic">
-              &ldquo;Property intelligence first.&rdquo;
-            </p>
-          </div>
-        </Container>
-      </section>
-
-{/* CONTACT */}
-      <section id="contact" className="mt-20 pb-20 scroll-mt-24">
-        <Container>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 glass-hover">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/50">Contact</div>
-            <div className="mt-3 text-3xl font-semibold tracking-tight">On avance ?</div>
-            <p className="mt-3 max-w-2xl text-sm text-white/70">
-              Utilisez le chatbot pour générer un ticket projet. Ou contactez-moi directement.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="#chat"
-                className="rounded-xl bg-[hsl(var(--jbs-yellow))] px-5 py-3 text-sm font-medium text-black hover:brightness-95"
-              >
-                Utiliser le chatbot
-              </a>
-              <a
-                href="mailto:fnr.vincent.pro@gmail.com"
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
-              >
-                fnr.vincent.pro@gmail.com
-              </a>
-              <a
-                href="https://www.linkedin.com/in/vincent-fournier-939021170/"
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white/80 hover:bg-white/10"
-              >
-                LinkedIn
-              </a>
-            </div>
-
-            <div className="mt-8 text-xs text-white/40">
-              © {new Date().getFullYear()} Jungle.Block Solutions. Audit & build premium.
-            </div>
-            <div className="flex flex-wrap gap-4 justify-center text-xs text-gray-500 mt-4">
-              <a href="/mentions-legales" className="hover:text-gray-300 transition-colors">Mentions légales</a>
-              <a href="/confidentialite" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
-              <a href="/cgu" className="hover:text-gray-300 transition-colors">CGU</a>
-            </div>
-          </div>
-        </Container>
-      </section></Reveal>
-    </div>
+        </div>
+      </Container>
+    </header>
   );
 }
 
-function MiniKpi({ label, value }: { label: string; value: string }) {
+/* ─────────────────────────────  HERO  ───────────────────────────── */
+
+function Hero() {
+  const reduce = useReducedMotion();
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-      <div className="text-[11px] uppercase tracking-wide text-white/50">{label}</div>
-      <div className="mt-1 text-sm font-semibold">{value}</div>
-    </div>
+    <section className="relative pt-20 md:pt-28">
+      <HeroBackdrop />
+      <Container>
+        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE }}
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70 backdrop-blur"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[hsl(var(--jbs-yellow))] opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[hsl(var(--jbs-yellow))]" />
+            </span>
+            Audit · Stratégie · IA sur-mesure
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
+            className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl"
+          >
+            Des solutions sur-mesure
+            <br className="hidden md:block" />{" "}
+            <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+              pour décider mieux, livrer plus vite.
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.25, ease: EASE }}
+            className="mt-6 max-w-2xl text-base leading-relaxed text-white/65 md:text-lg"
+          >
+            J&apos;audite votre activité, j&apos;identifie les leviers d&apos;impact, puis je conçois
+            et déploie la solution stratégique ou technologique qui résout votre problème.
+            Aucun template — uniquement de l&apos;ingénierie sur-mesure.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
+            className="mt-9 flex flex-wrap items-center justify-center gap-3"
+          >
+            <a
+              href={CALENDLY}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-xl bg-[hsl(var(--jbs-yellow))] px-6 py-3 text-sm font-semibold text-black shadow-[0_0_0_1px_rgba(251,191,36,0.4),0_20px_60px_-20px_rgba(251,191,36,0.5)] transition hover:brightness-95"
+            >
+              Réserver un audit stratégique
+              <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+            <a
+              href="#methode"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white/85 backdrop-blur transition hover:bg-white/10"
+            >
+              Voir la méthode
+            </a>
+          </motion.div>
+
+          {/* KPI strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
+            className="mt-16 w-full rounded-3xl border border-white/10 bg-white/[0.03] p-1 backdrop-blur"
+          >
+            <div className="grid grid-cols-1 divide-white/10 sm:grid-cols-3 sm:divide-x">
+              <KpiCell label="Premier livrable" value="72 h — 7 j" />
+              <KpiCell label="Audit stratégique" value="30 min offerts" />
+              <KpiCell label="Spécialité" value="IA · Automatisation · Produit" />
+            </div>
+          </motion.div>
+
+          {!reduce && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+              className="mt-12 flex flex-col items-center gap-2 text-xs text-white/40"
+            >
+              <span>Scroller pour découvrir la méthode</span>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="h-6 w-px bg-gradient-to-b from-white/40 to-transparent"
+              />
+            </motion.div>
+          )}
+        </div>
+      </Container>
+    </section>
   );
 }
 
-function Card({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+function KpiCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-      <div className="text-lg font-semibold">{title}</div>
-      <div className="mt-1 text-xs uppercase tracking-[0.18em] text-white/50">{subtitle}</div>
-      <p className="mt-4 text-sm leading-relaxed text-white/70">{children}</p>
+    <div className="px-4 py-5 text-center">
+      <div className="text-[11px] uppercase tracking-[0.18em] text-white/45">{label}</div>
+      <div className="mt-2 text-sm font-semibold md:text-base">{value}</div>
     </div>
   );
 }
 
+/* ─────────────────────────────  MÉTHODE  ───────────────────────────── */
 
+function Methodology() {
+  const steps = [
+    {
+      n: "01",
+      title: "Audit",
+      desc: "Je m'immerge dans votre activité, vos flux et votre stack pour comprendre vos enjeux réels.",
+      bullets: ["Cartographie", "Diagnostic 360°", "Risques & opportunités"],
+    },
+    {
+      n: "02",
+      title: "Identification",
+      desc: "J'isole les points de friction et identifie les leviers d'impact prioritaires sur le ROI.",
+      bullets: ["Priorisation", "Hypothèses business", "Roadmap actionnable"],
+    },
+    {
+      n: "03",
+      title: "Mise en œuvre",
+      desc: "Je conçois et livre la solution sur-mesure — IA, automatisation, produit digital, intégrations.",
+      bullets: ["Build rapide", "Itérations", "Mise en production"],
+    },
+  ];
 
+  return (
+    <section id="methode" className="relative mt-32 scroll-mt-24 md:mt-40">
+      <Container>
+        <MotionReveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="text-xs uppercase tracking-[0.22em] text-[hsl(var(--jbs-yellow))]/80">
+              Méthode
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+              Trois étapes. Aucune improvisation.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-white/65">
+              Une démarche structurée pour transformer un besoin flou en livrable précis,
+              utile, et mesurable. Vous décidez à chaque étape.
+            </p>
+          </div>
+        </MotionReveal>
 
+        <MotionStagger className="mt-16 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {steps.map((s) => (
+            <MotionItem key={s.n}>
+              <StepCard {...s} />
+            </MotionItem>
+          ))}
+        </MotionStagger>
+      </Container>
+    </section>
+  );
+}
 
-
-function ProcessCard({
+function StepCard({
   n,
   title,
   desc,
-  icon,
+  bullets,
 }: {
   n: string;
   title: string;
   desc: string;
-  icon: "clock" | "spark" | "stack" | "check";
+  bullets: string[];
 }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 glass-hover min-h-[140px]">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-xs uppercase tracking-[0.18em] text-white/50">Étape {n}</div>
-          <div className="mt-2 text-lg font-semibold">{title}</div>
-          <div className="mt-2 text-sm text-white/70">{desc}</div>
+    <motion.div
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.25, ease: EASE }}
+      className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-7 backdrop-blur"
+    >
+      {/* subtle top accent */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[hsl(var(--jbs-blue))]/40 to-transparent" />
+
+      <div className="flex items-baseline justify-between">
+        <div className="font-mono text-xs tracking-[0.2em] text-[hsl(var(--jbs-yellow))]/80">
+          ÉTAPE {n}
         </div>
-        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[hsl(var(--jbs-blue))]/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-[hsl(var(--jbs-blue))]/30">
-          {
-            icon === "clock" ? (
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                <path d="M12 7v5l3 2" />
-              </svg>
-            ) : icon === "spark" ? (
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
-              </svg>
-            ) : icon === "stack" ? (
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2l9 5-9 5-9-5 9-5z" />
-                <path d="M3 12l9 5 9-5" />
-                <path d="M3 17l9 5 9-5" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 7l-9 9-4-4" />
-              </svg>
-            )
-          }
+        <div className="text-5xl font-semibold leading-none text-white/[0.06] transition group-hover:text-white/[0.10]">
+          {n}
         </div>
       </div>
-    </div>
+
+      <h3 className="mt-4 text-2xl font-semibold tracking-tight">{title}</h3>
+      <p className="mt-3 text-sm leading-relaxed text-white/70">{desc}</p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {bullets.map((b) => (
+          <span
+            key={b}
+            className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[11px] text-white/60"
+          >
+            {b}
+          </span>
+        ))}
+      </div>
+    </motion.div>
   );
 }
 
+/* ─────────────────────────────  VALEURS  ───────────────────────────── */
 
+function Values() {
+  return (
+    <section className="mt-32 md:mt-40">
+      <Container>
+        <MotionReveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="text-xs uppercase tracking-[0.22em] text-[hsl(var(--jbs-yellow))]/80">
+              Valeurs
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+              Ce qui guide chaque mission.
+            </h2>
+          </div>
+        </MotionReveal>
 
+        <MotionStagger className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
+          <MotionItem>
+            <ValueCard
+              eyebrow="Sur-mesure"
+              title="Pas de template, jamais."
+              desc="Chaque mission est unique. Je refuse les solutions copiées-collées. Je passe du temps à comprendre votre contexte avant de proposer quoi que ce soit — et je conçois des solutions innovantes qui répondent précisément à vos enjeux."
+              points={[
+                "Diagnostic propre à votre contexte",
+                "Architecture pensée pour vous",
+                "Recommandations défendables",
+              ]}
+              accent="blue"
+            />
+          </MotionItem>
+          <MotionItem>
+            <ValueCard
+              eyebrow="ROI mesurable"
+              title="L’impact business avant la techno."
+              desc="J’aime réfléchir et mettre en œuvre — mais seulement si l’impact est mesurable. Pas de techno pour la techno. Chaque décision est justifiée par son retour sur investissement attendu, et chaque livrable s’évalue contre des indicateurs concrets."
+              points={[
+                "Hypothèses business explicites",
+                "Indicateurs définis dès le cadrage",
+                "Itérations guidées par la donnée",
+              ]}
+              accent="yellow"
+            />
+          </MotionItem>
+        </MotionStagger>
+      </Container>
+    </section>
+  );
+}
 
-function FeatureLine({
+function ValueCard({
+  eyebrow,
   title,
   desc,
-  icon,
+  points,
+  accent,
 }: {
+  eyebrow: string;
   title: string;
   desc: string;
-  icon: "compass" | "bolt" | "spark" | "robot" | "stack" | "target";
+  points: string[];
+  accent: "blue" | "yellow";
 }) {
-  const Icon =
-    icon === "compass" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 21a9 9 0 110-18 9 9 0 010 18z" />
-        <path d="M14.5 9.5l-1.5 5-5 1.5 1.5-5 5-1.5z" />
-      </svg>
-    ) : icon === "bolt" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
-      </svg>
-    ) : icon === "spark" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" />
-      </svg>
-    ) : icon === "robot" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 3v3" />
-        <path d="M8 6h8" />
-        <rect x="5" y="8" width="14" height="12" rx="3" />
-        <path d="M9 14h.01" />
-        <path d="M15 14h.01" />
-      </svg>
-    ) : icon === "stack" ? (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2l9 5-9 5-9-5 9-5z" />
-        <path d="M3 12l9 5 9-5" />
-      </svg>
-    ) : (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" />
-        <path d="M12 7v5l3 2" />
-      </svg>
-    );
+  const accentClass =
+    accent === "blue"
+      ? "from-[hsl(var(--jbs-blue))]/30 via-transparent"
+      : "from-[hsl(var(--jbs-yellow))]/25 via-transparent";
+  const dotClass = accent === "blue" ? "bg-[hsl(var(--jbs-blue))]" : "bg-[hsl(var(--jbs-yellow))]";
 
   return (
-    <div className="flex min-h-[130px] items-start gap-4 border-t border-white/10 p-5 first:border-t-0">
-      <div className="mt-0.5 grid h-11 w-11 flex-none place-items-center rounded-2xl bg-black/20 text-[hsl(var(--jbs-yellow))] ring-1 ring-white/10">
-        {Icon}
+    <motion.div
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.25, ease: EASE }}
+      className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur md:p-10"
+    >
+      <div className={`pointer-events-none absolute -top-32 right-0 h-64 w-64 rounded-full bg-gradient-to-br ${accentClass} to-transparent blur-3xl`} />
+
+      <div className="text-xs uppercase tracking-[0.22em] text-white/45">{eyebrow}</div>
+      <h3 className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">{title}</h3>
+      <p className="mt-5 text-sm leading-relaxed text-white/70 md:text-base">{desc}</p>
+
+      <ul className="mt-7 space-y-3">
+        {points.map((p) => (
+          <li key={p} className="flex items-start gap-3 text-sm text-white/80">
+            <span className={`mt-1.5 h-1.5 w-1.5 flex-none rounded-full ${dotClass}`} />
+            <span>{p}</span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────  RÉALISATIONS  ───────────────────────────── */
+
+type Product = {
+  name: string;
+  tag: string;
+  desc: string;
+  href: string;
+  metric?: { value: string; label: string };
+  accent: "indigo" | "yellow" | "emerald";
+};
+
+const PRODUCTS: Product[] = [
+  {
+    name: "Agentable",
+    tag: "GEO · IA",
+    desc: "Audit GEO automatisé pour PME : mesure de visibilité dans les LLM (ChatGPT, Perplexity, Gemini) et recommandations actionnables.",
+    href: "https://agentable.fr",
+    metric: { value: "10 min", label: "Audit complet" },
+    accent: "indigo",
+  },
+  {
+    name: "Veillor_Layer",
+    tag: "Renseignement · CGP",
+    desc: "Système de signaux faibles patrimoniaux pour cabinets CGP. Détection IA, scoring narratif, brief confidentiel hebdomadaire.",
+    href: "#contact",
+    metric: { value: "9 800+", label: "Annonces / semaine" },
+    accent: "yellow",
+  },
+  {
+    name: "Radar Immobilier",
+    tag: "Intelligence territoriale",
+    desc: "Scoring algorithmique de biens, carte thermique des opportunités, alertes temps réel. Déployable en white-label.",
+    href: "#contact",
+    metric: { value: "7 700+", label: "Biens scorés" },
+    accent: "emerald",
+  },
+];
+
+function Realizations() {
+  return (
+    <section id="realisations" className="mt-32 scroll-mt-24 md:mt-40">
+      <Container>
+        <MotionReveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="text-xs uppercase tracking-[0.22em] text-[hsl(var(--jbs-yellow))]/80">
+              Réalisations
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+              Des produits livrés, pas des slides.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-white/65">
+              Au-delà des missions clients, j&apos;ai conçu et lancé mes propres produits.
+              Voici trois preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
+            </p>
+          </div>
+        </MotionReveal>
+
+        <MotionStagger className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {PRODUCTS.map((p) => (
+            <MotionItem key={p.name}>
+              <ProductCard {...p} />
+            </MotionItem>
+          ))}
+        </MotionStagger>
+      </Container>
+    </section>
+  );
+}
+
+function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
+  const isExternal = href.startsWith("http");
+  const accentMap = {
+    indigo: { bg: "bg-indigo-500/15", ring: "ring-indigo-400/30", text: "text-indigo-300" },
+    yellow: { bg: "bg-amber-400/15", ring: "ring-amber-300/30", text: "text-amber-300" },
+    emerald: { bg: "bg-emerald-500/15", ring: "ring-emerald-400/30", text: "text-emerald-300" },
+  }[accent];
+
+  return (
+    <motion.a
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.25, ease: EASE }}
+      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-7 backdrop-blur transition-colors hover:border-white/20"
+    >
+      {/* glow */}
+      <div className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full ${accentMap.bg} blur-3xl opacity-60 transition-opacity group-hover:opacity-100`} />
+
+      <div className="flex items-center justify-between">
+        <span className={`inline-flex items-center gap-2 rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium ${accentMap.text} ring-1 ${accentMap.ring}`}>
+          <span className={`h-1.5 w-1.5 rounded-full ${accentMap.text.replace("text-", "bg-")}`} />
+          {tag}
+        </span>
+        {isExternal && (
+          <svg
+            viewBox="0 0 24 24"
+            className="h-4 w-4 text-white/40 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M7 17L17 7M9 7h8v8" />
+          </svg>
+        )}
       </div>
-      <div className="min-w-0">
-        <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/25 px-3 py-1.5">
-          <span className="inline-flex h-4 w-7 items-center rounded-full bg-emerald-400/25 ring-1 ring-emerald-300/20">
-            <span className="ml-[2px] h-3 w-3 rounded-full bg-emerald-200/90" />
-          </span>
-          <span className="truncate text-sm font-semibold">{title}</span>
+
+      <h3 className="mt-5 text-2xl font-semibold tracking-tight">{name}</h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-white/65">{desc}</p>
+
+      {metric && (
+        <div className="mt-6 flex items-end justify-between border-t border-white/10 pt-5">
+          <div>
+            <div className="text-2xl font-semibold tracking-tight">{metric.value}</div>
+            <div className="mt-1 text-[11px] uppercase tracking-wide text-white/45">
+              {metric.label}
+            </div>
+          </div>
+          <div className="text-xs text-white/40 group-hover:text-white/70 transition-colors">
+            {isExternal ? "Visiter →" : "En savoir plus →"}
+          </div>
         </div>
-        <div className="mt-3 text-sm text-white/70">{desc}</div>
-      </div>
-    </div>
+      )}
+    </motion.a>
+  );
+}
+
+/* ─────────────────────────────  LINKEDIN BRIDGE  ───────────────────────────── */
+
+function LinkedInBridge() {
+  return (
+    <section className="mt-20 md:mt-24">
+      <Container>
+        <MotionReveal>
+          <a
+            href={LINKEDIN_COMPANY}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex flex-col items-start gap-6 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-[hsl(var(--jbs-blue))]/10 via-white/[0.02] to-white/[0.02] p-8 backdrop-blur transition hover:border-white/20 md:flex-row md:items-center md:justify-between md:p-10"
+          >
+            <div className="pointer-events-none absolute -right-32 -top-32 h-72 w-72 rounded-full bg-[hsl(var(--jbs-blue))]/20 blur-3xl transition-opacity group-hover:opacity-80" />
+
+            <div className="relative max-w-2xl">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#0A66C2]/15 ring-1 ring-[#0A66C2]/40">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#70B5F9]" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </div>
+                <div className="text-xs uppercase tracking-[0.22em] text-white/50">
+                  Aller plus loin
+                </div>
+              </div>
+              <h3 className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">
+                Découvrez le détail des missions et de l&apos;expertise sur LinkedIn.
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/65 md:text-base">
+                Cas d&apos;usage IA, retours d&apos;expérience, publications stratégiques —
+                la page entreprise complète ce que ce site ne peut pas dire.
+              </p>
+            </div>
+
+            <div className="relative shrink-0">
+              <span className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-white/90 transition group-hover:bg-white/10">
+                Voir la page LinkedIn
+                <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M7 17L17 7M9 7h8v8" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        </MotionReveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ─────────────────────────────  TICKET  ───────────────────────────── */
+
+function TicketSection() {
+  return (
+    <section id="ticket" className="mt-32 scroll-mt-24 md:mt-40">
+      <Container>
+        <MotionReveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="text-xs uppercase tracking-[0.22em] text-[hsl(var(--jbs-yellow))]/80">
+              Cadrage rapide
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+              Décrivez votre besoin en 30 secondes.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-white/65">
+              Trois questions, un ticket clair, une prochaine étape. Idéal si vous voulez
+              avancer sans encore décrocher le téléphone.
+            </p>
+          </div>
+        </MotionReveal>
+
+        <MotionReveal delay={0.1}>
+          <div className="mt-12 rounded-3xl border border-white/10 bg-white/[0.03] p-2 backdrop-blur md:p-3">
+            <ChatTicket recipientEmail={EMAIL} />
+          </div>
+        </MotionReveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ─────────────────────────────  CONTACT  ───────────────────────────── */
+
+function ContactSection() {
+  return (
+    <section id="contact" className="mt-32 scroll-mt-24 pb-24 md:mt-40">
+      <Container>
+        <MotionReveal>
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-white/[0.02] p-10 backdrop-blur md:p-14">
+            <div className="pointer-events-none absolute -top-32 -left-20 h-72 w-72 rounded-full bg-[hsl(var(--jbs-yellow))]/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-32 right-0 h-72 w-72 rounded-full bg-[hsl(var(--jbs-blue))]/20 blur-3xl" />
+
+            <div className="relative">
+              <div className="text-xs uppercase tracking-[0.22em] text-[hsl(var(--jbs-yellow))]/80">
+                Contact
+              </div>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+                On en discute ?
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70">
+                30 minutes pour comprendre votre contexte et identifier si nous pouvons travailler
+                ensemble. Aucun engagement, juste une conversation utile.
+              </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                <a
+                  href={CALENDLY}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-[hsl(var(--jbs-yellow))] px-6 py-3 text-sm font-semibold text-black shadow-[0_0_0_1px_rgba(251,191,36,0.4),0_20px_60px_-20px_rgba(251,191,36,0.5)] transition hover:brightness-95"
+                >
+                  Réserver 30 min sur Calendly
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </a>
+                <a
+                  href={`mailto:${EMAIL}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white/85 transition hover:bg-white/10"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16v16H4z" /><path d="M4 4l8 8 8-8" />
+                  </svg>
+                  {EMAIL}
+                </a>
+                <a
+                  href={LINKEDIN_COMPANY}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white/85 transition hover:bg-white/10"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                  Page LinkedIn
+                </a>
+              </div>
+
+              <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
+                <div>© {new Date().getFullYear()} Jungle.Block Solutions — Bayonne, France</div>
+                <div className="flex flex-wrap gap-5">
+                  <a href="/mentions-legales" className="hover:text-white/70 transition">Mentions légales</a>
+                  <a href="/confidentialite" className="hover:text-white/70 transition">Confidentialité</a>
+                  <a href="/cgu" className="hover:text-white/70 transition">CGU</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </MotionReveal>
+      </Container>
+    </section>
   );
 }
