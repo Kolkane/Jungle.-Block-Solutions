@@ -5,8 +5,8 @@ export default function Confidentialite() {
       <div className="space-y-6 text-gray-300 text-sm leading-relaxed">
         <section>
           <h2 className="text-white font-semibold text-base mb-2">Responsable du traitement</h2>
-          <p>Vincent Raymond Jacques Fournier — Jungle.Block Solutions<br/>
-          SIRET : 99521609000010 — Bayonne, France<br/>
+          <p>Vincent Raymond Jacques Fournier · Jungle.Block Solutions<br/>
+          SIRET : 99521609000010 · Bayonne, France<br/>
           Email : fnr.vincent.pro@gmail.com</p>
         </section>
         <section>

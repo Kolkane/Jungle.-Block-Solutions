@@ -44,13 +44,13 @@ export default function ChatTicket({
 
   const ticket = useMemo(() => {
     const lines = [
-      "Nouveau ticket projet — Jungle.Block Solutions",
+      "Nouveau ticket projet · Jungle.Block Solutions",
       "",
-      `Type de solution: ${type || "—"}`,
-      `Objectif principal: ${objective || "—"}`,
-      `Échéance idéale: ${timeline || "—"}`,
+      `Type de solution: ${type || "-"}`,
+      `Objectif principal: ${objective || "-"}`,
+      `Échéance idéale: ${timeline || "-"}`,
       "",
-      `Contact (email ou téléphone): ${contact || "—"}`,
+      `Contact (email ou téléphone): ${contact || "-"}`,
       "",
       "Contexte / notes (optionnel):",
       notes ? notes : "- ",
@@ -189,7 +189,7 @@ export default function ChatTicket({
 
             {sent === "ok" ? (
               <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-xs text-emerald-100">
-                Ticket envoyé. Merci — réponse rapide.
+                Ticket envoyé. Merci, réponse rapide.
               </div>
             ) : sent === "err" ? (
               <div className="mt-3 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-xs text-red-100">

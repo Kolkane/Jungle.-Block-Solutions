@@ -120,7 +120,7 @@ function Hero() {
           >
             J&apos;audite votre activité, j&apos;identifie les leviers d&apos;impact, puis je conçois
             et déploie la solution stratégique ou technologique qui résout votre problème.
-            Aucun template — uniquement de l&apos;ingénierie sur-mesure.
+            Aucun template, uniquement de l&apos;ingénierie sur-mesure.
           </motion.p>
 
           <motion.div
@@ -156,7 +156,7 @@ function Hero() {
             className="mt-16 w-full rounded-3xl border border-white/10 bg-white/[0.03] p-1 backdrop-blur"
           >
             <div className="grid grid-cols-1 divide-white/10 sm:grid-cols-3 sm:divide-x">
-              <KpiCell label="Premier livrable" value="72 h — 7 j" />
+              <KpiCell label="Premier livrable" value="72 h à 7 j" />
               <KpiCell label="Audit stratégique" value="30 min offerts" />
               <KpiCell label="Spécialité" value="IA · Automatisation · Produit" />
             </div>
@@ -211,7 +211,7 @@ function Methodology() {
     {
       n: "03",
       title: "Mise en œuvre",
-      desc: "Je conçois et livre la solution sur-mesure — IA, automatisation, produit digital, intégrations.",
+      desc: "Je conçois et livre la solution sur-mesure : IA, automatisation, produit digital, intégrations.",
       bullets: ["Build rapide", "Itérations", "Mise en production"],
     },
   ];
@@ -314,7 +314,7 @@ function Values() {
             <ValueCard
               eyebrow="Sur-mesure"
               title="Pas de template, jamais."
-              desc="Chaque mission est unique. Je refuse les solutions copiées-collées. Je passe du temps à comprendre votre contexte avant de proposer quoi que ce soit — et je conçois des solutions innovantes qui répondent précisément à vos enjeux."
+              desc="Chaque mission est unique. Je refuse les solutions copiées-collées. Je passe du temps à comprendre votre contexte avant de proposer quoi que ce soit, puis je conçois des solutions innovantes qui répondent précisément à vos enjeux."
               points={[
                 "Diagnostic propre à votre contexte",
                 "Architecture pensée pour vous",
@@ -327,7 +327,7 @@ function Values() {
             <ValueCard
               eyebrow="ROI mesurable"
               title="L’impact business avant la techno."
-              desc="J’aime réfléchir et mettre en œuvre — mais seulement si l’impact est mesurable. Pas de techno pour la techno. Chaque décision est justifiée par son retour sur investissement attendu, et chaque livrable s’évalue contre des indicateurs concrets."
+              desc="J’aime réfléchir et mettre en œuvre, mais seulement si l’impact est mesurable. Pas de techno pour la techno. Chaque décision est justifiée par son retour sur investissement attendu, et chaque livrable s’évalue contre des indicateurs concrets."
               points={[
                 "Hypothèses business explicites",
                 "Indicateurs définis dès le cadrage",
@@ -542,7 +542,7 @@ function LinkedInBridge() {
                 Découvrez le détail des missions et de l&apos;expertise sur LinkedIn.
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-white/65 md:text-base">
-                Cas d&apos;usage IA, retours d&apos;expérience, publications stratégiques —
+                Cas d&apos;usage IA, retours d&apos;expérience, publications stratégiques :
                 la page entreprise complète ce que ce site ne peut pas dire.
               </p>
             </div>
@@ -651,7 +651,7 @@ function ContactSection() {
               </div>
 
               <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
-                <div>© {new Date().getFullYear()} Jungle.Block Solutions — Bayonne, France</div>
+                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Bayonne, France</div>
                 <div className="flex flex-wrap gap-5">
                   <a href="/mentions-legales" className="hover:text-white/70 transition">Mentions légales</a>
                   <a href="/confidentialite" className="hover:text-white/70 transition">Confidentialité</a>
