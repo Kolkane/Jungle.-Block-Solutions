@@ -1,3 +1,8 @@
+export const metadata = {
+  title: "Mentions légales",
+  description: "Mentions légales de Jungle.Block Solutions, société française basée à Bayonne.",
+};
+
 export default function MentionsLegales() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-20 text-white">
