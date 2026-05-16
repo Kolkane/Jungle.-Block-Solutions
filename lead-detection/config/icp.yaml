@@ -1,0 +1,64 @@
+# ICP — Ideal Customer Profile pour Jungle.Block Solutions
+# Cible : PME françaises ayant un besoin latent d'audit, IA sur-mesure, automatisation ou produit digital.
+
+# Filtres durs appliqués à la collecte Sirene (avant scoring IA).
+hard_filters:
+  effectif_min: 10
+  effectif_max: 500
+  age_minimum_annees: 2
+  etat_administratif: "A"  # A = active
+
+# Codes NAF exclus : concurrents directs ou activités sans fit.
+naf_exclude_prefixes:
+  - "62"   # Programmation, conseil et autres activités informatiques (SSII, éditeurs)
+  - "63"   # Services d'information
+  - "84"   # Administration publique
+  - "85"   # Enseignement
+  - "94"   # Activités d'organisations associatives
+  - "97"   # Activités des ménages employeurs
+  - "99"   # Activités des organisations extra-territoriales
+
+# Géographies bonus pour le scoring (départements).
+geo_bonus:
+  nouvelle_aquitaine:
+    departments: ["64", "33", "40", "47", "24", "87", "19", "23", "16", "17", "79", "86"]
+    bonus: 10
+  ile_de_france:
+    departments: ["75", "77", "78", "91", "92", "93", "94", "95"]
+    bonus: 7
+
+# Mots-clés dans les offres d'emploi = signal d'achat fort.
+job_signal_keywords:
+  - "ia"
+  - "intelligence artificielle"
+  - "automatisation"
+  - "automation"
+  - "data"
+  - "digital"
+  - "transformation"
+  - "process"
+  - "ops"
+  - "operations"
+  - "growth"
+  - "scale"
+  - "chief of staff"
+  - "head of"
+  - "rpa"
+  - "no-code"
+  - "no code"
+  - "n8n"
+  - "zapier"
+  - "make.com"
+
+# Pondérations du scoring (utilisées dans le prompt Claude).
+weights:
+  fit_secteur: 25
+  taille_et_maturite: 15
+  signal_achat: 30
+  geo: 10
+  accessibilite_decideur: 20
+
+# Volume de sortie
+output:
+  top_n: 100
+  min_score: 50
