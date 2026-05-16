@@ -475,8 +475,7 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
       <div className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full ${accentMap.bg} blur-3xl opacity-60 transition-opacity group-hover:opacity-100`} />
 
       <div className="flex items-center justify-between">
-        <span className={`inline-flex items-center gap-2 rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium ${accentMap.text} ring-1 ${accentMap.ring}`}>
-          <span className={`h-1.5 w-1.5 rounded-full ${accentMap.text.replace("text-", "bg-")}`} />
+        <span className={`inline-flex items-center justify-center rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium tracking-wide ${accentMap.text} ring-1 ${accentMap.ring}`}>
           {tag}
         </span>
         {isExternal && (
