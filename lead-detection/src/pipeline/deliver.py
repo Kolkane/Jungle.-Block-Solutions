@@ -1,4 +1,4 @@
-"""Livraison : CSV + email."""
+"""Livraison : CSV final + email."""
 
 from __future__ import annotations
 
@@ -9,51 +9,72 @@ import smtplib
 from datetime import datetime
 from email.message import EmailMessage
 from pathlib import Path
+from urllib.parse import quote_plus
 
 log = logging.getLogger(__name__)
 
 CSV_FIELDS = [
     "score",
-    "name",
+    "nom",
+    "activite",
+    "description",
+    "effectif_estime",
+    "adresse",
+    "code_postal",
+    "ville",
+    "departement",
+    "telephone",
+    "email",
+    "site_web",
+    "linkedin_entreprise",
+    "linkedin_recherche_decideur",
+    "angle_attaque",
+    "raison_score",
+    "signaux_recrutement",
+    "offres_emploi_30j",
     "siren",
     "siret",
     "naf_code",
-    "effectif_estime",
-    "city",
-    "department",
     "date_creation",
-    "n_offers_30d",
-    "matched_signal_keywords",
-    "sample_job_titles",
-    "reason",
-    "hook",
-    "linkedin_search",
 ]
 
 
 def _flatten(row: dict) -> dict:
-    jobs = row.get("jobs", {})
-    name = row["name"].replace(" ", "+")
+    jobs = row.get("jobs") or {}
+    web = row.get("web") or {}
+    name = row["name"]
+    city = row["city"]
+    linkedin_search = (
+        f"https://www.linkedin.com/search/results/people/"
+        f"?keywords={quote_plus(name + ' ' + city)}"
+    )
     return {
         "score": row.get("score", 0),
-        "name": row["name"],
+        "nom": name,
+        "activite": row.get("naf_code", ""),
+        "description": row.get("description", "") or (web.get("description", "")[:200] if web else ""),
+        "effectif_estime": row.get("effectif_estime", ""),
+        "adresse": row.get("address", ""),
+        "code_postal": row.get("postal_code", ""),
+        "ville": city,
+        "departement": row.get("department", ""),
+        "telephone": " / ".join(web.get("phones") or []),
+        "email": " / ".join(web.get("emails") or []),
+        "site_web": web.get("site_url", ""),
+        "linkedin_entreprise": web.get("linkedin_url", ""),
+        "linkedin_recherche_decideur": linkedin_search,
+        "angle_attaque": row.get("hook", ""),
+        "raison_score": row.get("reason", ""),
+        "signaux_recrutement": ", ".join(jobs.get("matched_signal_keywords", [])),
+        "offres_emploi_30j": jobs.get("n_offers_30d", 0),
         "siren": row["siren"],
         "siret": row["siret"],
         "naf_code": row["naf_code"],
-        "effectif_estime": row["effectif_estime"],
-        "city": row["city"],
-        "department": row["department"],
         "date_creation": row["date_creation"],
-        "n_offers_30d": jobs.get("n_offers_30d", 0),
-        "matched_signal_keywords": ", ".join(jobs.get("matched_signal_keywords", [])),
-        "sample_job_titles": " | ".join(jobs.get("sample_titles", [])),
-        "reason": row.get("reason", ""),
-        "hook": row.get("hook", ""),
-        "linkedin_search": f"https://www.linkedin.com/search/results/people/?keywords={name}",
     }
 
 
-def write_csv(rows: list[dict], top_n: int, min_score: int, out_dir: Path) -> Path:
+def write_csv(rows: list[dict], top_n: int, min_score: int, out_dir: Path) -> tuple[Path, int]:
     out_dir.mkdir(parents=True, exist_ok=True)
     selected = [r for r in rows if r.get("score", 0) >= min_score]
     selected.sort(key=lambda r: r.get("score", 0), reverse=True)
@@ -61,13 +82,13 @@ def write_csv(rows: list[dict], top_n: int, min_score: int, out_dir: Path) -> Pa
 
     ts = datetime.utcnow().strftime("%Y-%m-%d")
     path = out_dir / f"leads-{ts}.csv"
-    with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+    with path.open("w", encoding="utf-8-sig", newline="") as f:  # BOM pour Excel FR
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, delimiter=";")
         writer.writeheader()
         for row in selected:
             writer.writerow(_flatten(row))
     log.info("Wrote %d leads to %s", len(selected), path)
-    return path
+    return path, len(selected)
 
 
 def send_email(csv_path: Path, n_leads: int) -> None:
@@ -81,23 +102,26 @@ def send_email(csv_path: Path, n_leads: int) -> None:
         log.warning("SMTP credentials missing, skipping email")
         return
 
+    today = datetime.utcnow().strftime("%d/%m/%Y")
     msg = EmailMessage()
-    msg["Subject"] = f"[Jungle.Block] {n_leads} leads — {datetime.utcnow().strftime('%d/%m/%Y')}"
+    msg["Subject"] = f"[Jungle.Block] {n_leads} leads PME — {today}"
     msg["From"] = user
     msg["To"] = recipient
     msg.set_content(
         f"""Bonjour Vincent,
 
-Voici la liste hebdomadaire de {n_leads} PME françaises à fort potentiel,
-détectées et scorées par le pipeline Jungle.Block lead detection.
+Voici les {n_leads} leads PME de la semaine, triés par score décroissant.
 
-Le CSV en pièce jointe est trié par score décroissant. Pour chaque ligne :
-- le score IA /100 et la raison du match
-- un hook personnalisé à adapter
-- un lien LinkedIn pré-rempli pour identifier le décideur
-- les signaux d'achat détectés (offres d'emploi récentes, mots-clés)
+Le CSV en pièce jointe (séparateur ";", encodage UTF-8 BOM, ouvrable direct dans Excel) contient pour chaque lead :
 
-Bonnes prospections.
+  • Nom, activité, description courte de l'activité
+  • Coordonnées : adresse, téléphone, email, site web, LinkedIn entreprise
+  • Lien de recherche LinkedIn pré-rempli pour identifier le décideur
+  • Score IA /100 et raison du match
+  • Angle d'attaque personnalisé prêt à adapter
+  • Signaux de recrutement détectés (offres d'emploi récentes, mots-clés)
+
+Bonne semaine de prospection.
 """
     )
     with csv_path.open("rb") as f:

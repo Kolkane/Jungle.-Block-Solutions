@@ -1,4 +1,4 @@
-"""Scoring IA via Claude."""
+"""Scoring final IA via Claude — appelé sur le top pré-scoré et enrichi web."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from anthropic import Anthropic
 log = logging.getLogger(__name__)
 
 MODEL = "claude-sonnet-4-6"
-BATCH_SIZE = 25  # entreprises par appel Claude
+BATCH_SIZE = 15
 
 
 def _load_prompt() -> str:
@@ -20,6 +20,7 @@ def _load_prompt() -> str:
 
 
 def _format_company(row: dict) -> dict:
+    web = row.get("web", {}) or {}
     return {
         "siret": row["siret"],
         "siren": row["siren"],
@@ -33,6 +34,11 @@ def _format_company(row: dict) -> dict:
         "offres_emploi_30j": row["jobs"]["n_offers_30d"],
         "mots_cles_signal": row["jobs"]["matched_signal_keywords"],
         "exemples_titres_postes": row["jobs"]["sample_titles"],
+        "site_web": web.get("site_url", ""),
+        "description_site": (web.get("description") or "")[:400],
+        "linkedin_entreprise": web.get("linkedin_url", ""),
+        "emails_trouves": web.get("emails", []),
+        "telephones_trouves": web.get("phones", []),
     }
 
 
@@ -52,7 +58,7 @@ def score_batch(client: Anthropic, system_prompt: str, batch: list[dict]) -> lis
     )
     resp = client.messages.create(
         model=MODEL,
-        max_tokens=4096,
+        max_tokens=6000,
         system=[
             {
                 "type": "text",
@@ -66,8 +72,11 @@ def score_batch(client: Anthropic, system_prompt: str, batch: list[dict]) -> lis
     try:
         return _parse_response(text)
     except Exception as exc:
-        log.error("Claude response parse failed: %s\nRaw: %s", exc, text[:500])
-        return [{"siret": r["siret"], "score": 0, "reason": "parse error", "hook": ""} for r in batch]
+        log.error("Claude response parse failed: %s\nRaw start: %s", exc, text[:500])
+        return [
+            {"siret": r["siret"], "score": 0, "description": "", "reason": "parse error", "hook": ""}
+            for r in batch
+        ]
 
 
 def score_all(enriched: list[dict]) -> list[dict]:
@@ -85,10 +94,14 @@ def score_all(enriched: list[dict]) -> list[dict]:
             if "siret" in r:
                 scored[r["siret"]] = r
 
-    # Merge scoring with enriched data
     out: list[dict] = []
     for row in enriched:
-        s = scored.get(row["siret"], {"score": 0, "reason": "no score", "hook": ""})
-        merged = {**row, "score": s.get("score", 0), "reason": s.get("reason", ""), "hook": s.get("hook", "")}
-        out.append(merged)
+        s = scored.get(row["siret"], {})
+        out.append({
+            **row,
+            "score": s.get("score", 0),
+            "description": s.get("description", ""),
+            "reason": s.get("reason", ""),
+            "hook": s.get("hook", ""),
+        })
     return out
