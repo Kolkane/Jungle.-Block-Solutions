@@ -78,6 +78,8 @@ def _query_sirene(api_key: str, q: str, nombre: int, debut: int) -> dict:
         log.warning("Sirene rate limit, sleeping 5s")
         time.sleep(5)
         r.raise_for_status()
+    if r.status_code >= 400:
+        log.error("Sirene %d on q=%r → body: %s", r.status_code, q, r.text[:1000])
     r.raise_for_status()
     return r.json()
 
@@ -87,11 +89,12 @@ def _build_query(
     effectif_max_tranche: str,
     age_min_years: int,
 ) -> str:
-    """Construit une query Sirene minimale et robuste.
+    """Construit une query Sirene v3.11.
 
-    Le filtre d'exclusion NAF est fait côté Python dans fetch_sample :
-    la syntaxe `-periode(activitePrincipaleEtablissement:62*)` est instable
-    sur l'API v3.11 (400 sur certaines combinaisons de wildcard + négation).
+    Sur Sirene v3.11, les champs "historisés" (état admin, NAF, tranche d'effectif…)
+    doivent être encapsulés dans `periode(...)`. Les champs non historisés
+    (etablissementSiege, dateCreationEtablissement) restent au niveau racine.
+    Source: https://www.sirene.fr/static-resources/htm/v_sommaire_311.html
     """
     cutoff = datetime.utcnow().year - age_min_years
 
@@ -101,9 +104,9 @@ def _build_query(
 
     parts = [
         "etablissementSiege:true",
-        "etatAdministratifEtablissement:A",
-        f"({tranche_or})",
         f"dateCreationEtablissement:[1900-01-01 TO {cutoff}-12-31]",
+        "periode(etatAdministratifEtablissement:A)",
+        f"periode({tranche_or})",
     ]
     return " AND ".join(parts)
 
