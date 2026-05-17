@@ -1,29 +1,21 @@
 # Lead Detection System — Jungle.Block Solutions
 
-Pipeline hebdomadaire qui produit chaque **lundi matin un fichier de 100 PME françaises** prêtes à contacter, avec coordonnées, description d'activité et angle d'attaque personnalisé.
+Pipeline hebdomadaire qui produit chaque **lundi matin un fichier de 100 PME françaises** prêtes à appeler à froid, avec un **script d'appel personnalisé** prêt à lire à l'oral.
 
 ## Ce que tu reçois
 
-Un CSV (séparateur `,`, UTF-8 BOM, importable directement dans Google Sheets / Excel / Numbers), disponible en téléchargement dans l'onglet **Actions** du repo, contenant pour chaque lead :
+Un CSV (séparateur `,`, UTF-8 BOM, importable directement dans Google Sheets / Excel / Numbers), disponible en téléchargement dans l'onglet **Actions** du repo, **8 colonnes** focalisées cold call :
 
 | Colonne | Description |
 |---|---|
 | `score` | Score IA /100 (probabilité de devenir client à 6 mois) |
-| `nom` | Nom commercial / raison sociale |
-| `activite` | Code NAF |
-| `description` | Description courte rédigée par l'IA à partir du site et du NAF |
-| `effectif_estime` | Effectif estimé (milieu de tranche INSEE) |
-| `adresse` / `code_postal` / `ville` / `departement` | Adresse postale du siège |
-| `telephone` | Téléphone(s) scrapé(s) sur le site officiel |
-| `email` | Email(s) scrapé(s) (priorité au domaine de l'entreprise) |
-| `site_web` | URL du site officiel |
-| `linkedin_entreprise` | Page LinkedIn entreprise (si trouvée) |
-| `linkedin_recherche_decideur` | Lien LinkedIn pré-rempli pour identifier le décideur |
-| `angle_attaque` | Message d'approche personnalisé (2 phrases max) prêt à adapter |
-| `raison_score` | Pourquoi l'IA a donné ce score |
-| `signaux_recrutement` | Mots-clés détectés dans les offres d'emploi récentes |
-| `offres_emploi_30j` | Nombre d'annonces publiées les 30 derniers jours |
-| `siren` / `siret` / `date_creation` | Identifiants légaux |
+| `entreprise` | Nom commercial / raison sociale |
+| `secteur` | Description claire en 1 phrase de ce que fait l'entreprise (pas le code NAF) |
+| `ville` | Pour personnaliser l'accroche |
+| `telephone` | Numéro(s) scrapé(s) sur le site — c'est ce que tu composes |
+| `site_web` | À ouvrir 30s avant l'appel pour briefing rapide |
+| `script_appel` | Script complet en 4 blocs : accroche / pitch / 2 idées concrètes / closing — prêt à lire |
+| `email` | Backup si pas de tel ou pour relance après l'appel |
 
 ## Architecture
 

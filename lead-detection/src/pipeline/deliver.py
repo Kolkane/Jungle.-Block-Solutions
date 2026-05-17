@@ -1,4 +1,4 @@
-"""Livraison : CSV optimisé pour import Google Sheets / Excel."""
+"""Livraison : CSV minimal orienté cold call."""
 
 from __future__ import annotations
 
@@ -6,68 +6,32 @@ import csv
 import logging
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import quote_plus
 
 log = logging.getLogger(__name__)
 
 CSV_FIELDS = [
     "score",
-    "nom",
-    "activite",
-    "description",
-    "effectif_estime",
-    "adresse",
-    "code_postal",
+    "entreprise",
+    "secteur",
     "ville",
-    "departement",
     "telephone",
-    "email",
     "site_web",
-    "linkedin_entreprise",
-    "linkedin_recherche_decideur",
-    "angle_attaque",
-    "raison_score",
-    "signaux_recrutement",
-    "offres_emploi_30j",
-    "siren",
-    "siret",
-    "naf_code",
-    "date_creation",
+    "script_appel",
+    "email",
 ]
 
 
 def _flatten(row: dict) -> dict:
-    jobs = row.get("jobs") or {}
     web = row.get("web") or {}
-    name = row["name"]
-    city = row["city"]
-    linkedin_search = (
-        f"https://www.linkedin.com/search/results/people/"
-        f"?keywords={quote_plus(name + ' ' + city)}"
-    )
     return {
         "score": row.get("score", 0),
-        "nom": name,
-        "activite": row.get("naf_code", ""),
-        "description": row.get("description", "") or (web.get("description", "")[:200] if web else ""),
-        "effectif_estime": row.get("effectif_estime", ""),
-        "adresse": row.get("address", ""),
-        "code_postal": row.get("postal_code", ""),
-        "ville": city,
-        "departement": row.get("department", ""),
+        "entreprise": row["name"],
+        "secteur": row.get("secteur", ""),
+        "ville": row["city"],
         "telephone": " / ".join(web.get("phones") or []),
-        "email": " / ".join(web.get("emails") or []),
         "site_web": web.get("site_url", ""),
-        "linkedin_entreprise": web.get("linkedin_url", ""),
-        "linkedin_recherche_decideur": linkedin_search,
-        "angle_attaque": row.get("hook", ""),
-        "raison_score": row.get("reason", ""),
-        "signaux_recrutement": ", ".join(jobs.get("matched_signal_keywords", [])),
-        "offres_emploi_30j": jobs.get("n_offers_30d", 0),
-        "siren": row["siren"],
-        "siret": row["siret"],
-        "naf_code": row["naf_code"],
-        "date_creation": row["date_creation"],
+        "script_appel": row.get("script_appel", ""),
+        "email": " / ".join(web.get("emails") or []),
     }
 
 

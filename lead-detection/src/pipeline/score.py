@@ -74,7 +74,7 @@ def score_batch(client: Anthropic, system_prompt: str, batch: list[dict]) -> lis
     except Exception as exc:
         log.error("Claude response parse failed: %s\nRaw start: %s", exc, text[:500])
         return [
-            {"siret": r["siret"], "score": 0, "description": "", "reason": "parse error", "hook": ""}
+            {"siret": r["siret"], "score": 0, "secteur": "", "script_appel": "parse error"}
             for r in batch
         ]
 
@@ -100,8 +100,7 @@ def score_all(enriched: list[dict]) -> list[dict]:
         out.append({
             **row,
             "score": s.get("score", 0),
-            "description": s.get("description", ""),
-            "reason": s.get("reason", ""),
-            "hook": s.get("hook", ""),
+            "secteur": s.get("secteur", ""),
+            "script_appel": s.get("script_appel", ""),
         })
     return out
