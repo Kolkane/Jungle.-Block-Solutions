@@ -86,17 +86,25 @@ def _build_query(
     effectif_min_tranche: str,
     effectif_max_tranche: str,
     age_min_years: int,
-    excluded_naf_prefixes: list[str],
 ) -> str:
+    """Construit une query Sirene minimale et robuste.
+
+    Le filtre d'exclusion NAF est fait côté Python dans fetch_sample :
+    la syntaxe `-periode(activitePrincipaleEtablissement:62*)` est instable
+    sur l'API v3.11 (400 sur certaines combinaisons de wildcard + négation).
+    """
     cutoff = datetime.utcnow().year - age_min_years
+
+    all_tranches = ["01", "02", "03", "11", "12", "21", "22", "31", "32", "41", "42", "51", "52", "53"]
+    selected = [t for t in all_tranches if effectif_min_tranche <= t <= effectif_max_tranche]
+    tranche_or = " OR ".join(f"trancheEffectifsEtablissement:{t}" for t in selected)
+
     parts = [
         "etablissementSiege:true",
         "etatAdministratifEtablissement:A",
-        f"trancheEffectifsEtablissement:[{effectif_min_tranche} TO {effectif_max_tranche}]",
-        f"dateCreationEtablissement:[* TO {cutoff}-12-31]",
+        f"({tranche_or})",
+        f"dateCreationEtablissement:[1900-01-01 TO {cutoff}-12-31]",
     ]
-    for prefix in excluded_naf_prefixes:
-        parts.append(f"-periode(activitePrincipaleEtablissement:{prefix}*)")
     return " AND ".join(parts)
 
 
@@ -174,7 +182,6 @@ def fetch_sample(
         _effectif_to_tranche(effectif_min),
         _effectif_to_tranche(effectif_max),
         age_min_years,
-        excluded_naf_prefixes,
     )
     log.info("Sirene query: %s", q)
 
