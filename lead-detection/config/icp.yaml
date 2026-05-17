@@ -61,4 +61,4 @@ weights:
 # Volume de sortie
 output:
   top_n: 100
-  min_score: 50
+  min_score: 30  # seuil bas pour tolérer les runs où un signal (jobs, web) manque partiellement

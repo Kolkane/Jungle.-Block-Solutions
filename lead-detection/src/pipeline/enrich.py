@@ -6,7 +6,7 @@ import logging
 import os
 import time
 
-from ..sources.france_travail import offers_for_siren, summarize_offers
+from ..sources.france_travail import FranceTravailAuthError, offers_for_siren, summarize_offers
 from ..sources.sirene import Company
 from ..sources.web_enrich import enrich_one
 
@@ -23,14 +23,22 @@ def enrich_jobs(companies: list[Company], config: dict) -> list[dict]:
         log.warning("France Travail credentials missing, skipping job signal enrichment")
 
     enriched: list[dict] = []
+    auth_dead = False
+    auth_dead_logged = False
     for i, c in enumerate(companies, 1):
         row = c.to_dict()
-        if skip_jobs:
+        if skip_jobs or auth_dead:
             row["jobs"] = {"n_offers_30d": 0, "matched_signal_keywords": [], "sample_titles": []}
         else:
             try:
                 offers = offers_for_siren(client_id, client_secret, c.siren, days_back=30)
                 row["jobs"] = summarize_offers(offers, keywords)
+            except FranceTravailAuthError as exc:
+                if not auth_dead_logged:
+                    log.error("France Travail auth dead, skipping remaining %d: %s", len(companies) - i + 1, exc)
+                    auth_dead_logged = True
+                auth_dead = True
+                row["jobs"] = {"n_offers_30d": 0, "matched_signal_keywords": [], "sample_titles": []}
             except Exception as exc:
                 log.warning("France Travail failed for %s: %s", c.siren, exc)
                 row["jobs"] = {"n_offers_30d": 0, "matched_signal_keywords": [], "sample_titles": []}

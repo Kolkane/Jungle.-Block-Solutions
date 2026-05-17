@@ -20,23 +20,39 @@ TOKEN_URL = "https://entreprise.francetravail.fr/connexion/oauth2/access_token?r
 OFFERS_URL = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search"
 
 
-_token_cache: dict[str, Any] = {"token": None, "expires_at": 0.0}
+_token_cache: dict[str, Any] = {"token": None, "expires_at": 0.0, "failed": False}
+
+
+class FranceTravailAuthError(RuntimeError):
+    pass
 
 
 def _get_token(client_id: str, client_secret: str) -> str:
+    # Une fois que l'auth a échoué, on n'essaie plus de la régénérer pour chaque SIREN.
+    if _token_cache["failed"]:
+        raise FranceTravailAuthError("auth previously failed, skipping")
     if _token_cache["token"] and time.time() < _token_cache["expires_at"] - 30:
         return _token_cache["token"]
+
+    # France Travail attend un scope qui inclut explicitement application_<client_id>
+    # en plus des scopes API demandés. Doc :
+    # https://francetravail.io/data/documentation/comprendre-dispositif-acces-aux-api/generer-access-token
+    scope = f"application_{client_id} api_offresdemploiv2 o2dsoffre"
     r = requests.post(
         TOKEN_URL,
         data={
             "grant_type": "client_credentials",
             "client_id": client_id,
             "client_secret": client_secret,
-            "scope": "api_offresdemploiv2 o2dsoffre",
+            "scope": scope,
         },
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
         timeout=15,
     )
-    r.raise_for_status()
+    if r.status_code >= 400:
+        _token_cache["failed"] = True
+        log.error("France Travail auth %d: %s", r.status_code, r.text[:500])
+        raise FranceTravailAuthError(f"{r.status_code}: {r.text[:200]}")
     payload = r.json()
     _token_cache["token"] = payload["access_token"]
     _token_cache["expires_at"] = time.time() + payload.get("expires_in", 1500)
