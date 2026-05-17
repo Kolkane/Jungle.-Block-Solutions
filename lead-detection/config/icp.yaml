@@ -18,6 +18,25 @@ naf_exclude_prefixes:
   - "97"   # Activités des ménages employeurs
   - "99"   # Activités des organisations extra-territoriales
 
+# Secteurs cibles : on tire un mix équilibré entre ces buckets pour éviter
+# la sur-représentation industrie/BTP du tirage aléatoire pur.
+# Chaque bucket reçoit un quota = sample_size / nombre de buckets.
+target_sectors:
+  industrie_manufacturiere:
+    naf_prefixes: ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33"]
+  commerce_distribution:
+    naf_prefixes: ["45", "46", "47"]
+  services_pro:
+    naf_prefixes: ["69", "70", "71", "73", "74", "75"]
+  sante_medico_social:
+    naf_prefixes: ["86", "87", "88"]
+  construction_btp:
+    naf_prefixes: ["41", "42", "43"]
+  finance_assurance:
+    naf_prefixes: ["64", "65", "66"]
+  immobilier:
+    naf_prefixes: ["68"]
+
 # Géographies bonus pour le scoring (départements).
 geo_bonus:
   nouvelle_aquitaine:

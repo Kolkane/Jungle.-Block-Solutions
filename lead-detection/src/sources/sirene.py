@@ -163,6 +163,15 @@ def _is_active(et: dict) -> bool:
     return periodes[0].get("etatAdministratifEtablissement") == "A"
 
 
+def _match_sector(naf_code: str, sector_quotas: dict | None) -> str | None:
+    if not sector_quotas:
+        return "_default"
+    for name, info in sector_quotas.items():
+        if any(naf_code.startswith(p) for p in info["prefixes"]):
+            return name
+    return None
+
+
 def fetch_sample(
     api_key: str,
     effectif_min: int,
@@ -171,13 +180,13 @@ def fetch_sample(
     excluded_naf_prefixes: list[str],
     sample_size: int,
     page_size: int = 100,
+    sector_quotas: dict | None = None,
 ) -> Iterator[Company]:
-    """Stream un échantillon de PME depuis Sirene.
+    """Stream un échantillon de PME depuis Sirene avec quota par secteur.
 
-    Pour diversifier, on tire plusieurs pages à des offsets aléatoires plutôt que
-    tout en haut de l'index (qui serait toujours les mêmes entreprises).
-    Les filtres état actif / tranche d'effectif / NAF sont appliqués côté
-    Python car la query Sirene v3.11 est très sensible aux opérateurs.
+    Si `sector_quotas` est fourni, on continue à tirer des pages tant qu'un
+    secteur n'a pas atteint son quota — les entreprises hors secteurs cibles
+    sont jetées. Sans quotas, on tire jusqu'à `sample_size` toutes catégories.
     """
     q = _build_query(age_min_years)
     log.info("Sirene query: %s", q)
@@ -191,13 +200,19 @@ def fetch_sample(
     min_tranche = _effectif_to_tranche(effectif_min)
     max_tranche = _effectif_to_tranche(effectif_max)
 
+    sector_counts: dict[str, int] = {name: 0 for name in (sector_quotas or {})}
+
+    def all_quotas_met() -> bool:
+        if not sector_quotas:
+            return False
+        return all(sector_counts[name] >= info["quota"] for name, info in sector_quotas.items())
+
     yielded = 0
     seen: set[str] = set()
     pages_seen = 0
-    pages_max = 200  # garde-fou
-    # Sirene API limite debut+nombre à 10 000. On échantillonne dans cette fenêtre.
+    pages_max = 400  # garde-fou augmenté car beaucoup de tirages tombent hors secteurs cibles
     max_offset = min(total, 10_000) - page_size
-    while yielded < sample_size and pages_seen < pages_max:
+    while yielded < sample_size and pages_seen < pages_max and not all_quotas_met():
         offset = random.randint(0, max(0, max_offset))
         try:
             page = _query_sirene(api_key, q, page_size, offset)
@@ -227,10 +242,20 @@ def fetch_sample(
                 continue
             if any(company.naf_code.startswith(p) for p in excluded_naf_prefixes):
                 continue
+            sector = _match_sector(company.naf_code, sector_quotas)
+            if sector is None:
+                continue
+            if sector_quotas and sector_counts[sector] >= sector_quotas[sector]["quota"]:
+                continue
+            sector_counts[sector] = sector_counts.get(sector, 0) + 1
             yield company
             yielded += 1
-        time.sleep(2.1)  # respecter 30 req/min
-    log.info("fetch_sample done: %d kept after %d pages", yielded, pages_seen)
+        if pages_seen % 20 == 0:
+            log.info("fetch_sample progress: %d kept after %d pages, sectors=%s",
+                     yielded, pages_seen, sector_counts)
+        time.sleep(2.1)
+    log.info("fetch_sample done: %d kept after %d pages, sectors=%s",
+             yielded, pages_seen, sector_counts)
 
 
 if __name__ == "__main__":
