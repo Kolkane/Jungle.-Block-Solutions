@@ -4,7 +4,7 @@ Pipeline hebdomadaire qui produit chaque **lundi matin un fichier de 100 PME fra
 
 ## Ce que tu reçois
 
-Un CSV (séparateur `;`, UTF-8 BOM, ouvrable directement dans Excel/Numbers/Sheets), envoyé par email, contenant pour chaque lead :
+Un CSV (séparateur `,`, UTF-8 BOM, importable directement dans Google Sheets / Excel / Numbers), disponible en téléchargement dans l'onglet **Actions** du repo, contenant pour chaque lead :
 
 | Colonne | Description |
 |---|---|
@@ -46,7 +46,7 @@ Pipeline en 2 passes pour économiser les coûts (on n'enrichit/score finement q
 │  6. Claude Sonnet 4.6         → score + description + raison + hook     │
 └─────────────────────────────────────────────────────────────────────────┘
                                   ↓
-                          CSV trié top 100 → email
+                          CSV trié top 100 → artifact GitHub Actions
 ```
 
 Temps d'exécution typique : **30-45 min** sur GitHub Actions.
@@ -80,8 +80,6 @@ python -m src.main
 | `INSEE_API_KEY` | https://api.insee.fr → créer une app Sirene V3.11 | Gratuit, 30 req/min |
 | `FRANCE_TRAVAIL_CLIENT_ID` / `_SECRET` | https://francetravail.io → API "Offres d'emploi v2", scopes `api_offresdemploiv2 o2dsoffre` | Gratuit |
 | `ANTHROPIC_API_KEY` | https://console.anthropic.com | ~$0.50-1.50 / run hebdo |
-| `SMTP_USER` / `SMTP_PASS` | Gmail → compte → sécurité → "Mots de passe d'application" | Gratuit |
-| `RECIPIENT_EMAIL` | Email destinataire du CSV | — |
 
 ## Exécution automatique
 
@@ -92,11 +90,26 @@ Secrets à configurer dans GitHub → Settings → Secrets and variables → Act
 - `FRANCE_TRAVAIL_CLIENT_ID`
 - `FRANCE_TRAVAIL_SECRET`
 - `ANTHROPIC_API_KEY`
-- `SMTP_USER`
-- `SMTP_PASS`
-- `RECIPIENT_EMAIL`
 
 Test manuel : onglet **Actions** → "Weekly leads detection" → **Run workflow**.
+
+## Récupérer le CSV
+
+Le CSV est uploadé comme **artifact GitHub Actions** à chaque run (rétention 90 jours).
+
+1. Va sur l'onglet **Actions** du repo
+2. Clic sur le dernier run "Weekly leads detection" (le plus récent en haut)
+3. En bas de la page, section **Artifacts** → clic sur `leads-<run_id>` → téléchargement d'un `.zip`
+4. Décompresse → tu obtiens `leads-YYYY-MM-DD.csv`
+
+## Importer dans Google Sheets
+
+1. Ouvre une nouvelle Google Sheet
+2. **Fichier → Importer → Insérer un fichier** → upload le `leads-YYYY-MM-DD.csv`
+3. Type de séparateur : **Détecter automatiquement** (le CSV utilise la virgule)
+4. **Importer les données**
+
+Les colonnes s'auto-formatent : score numérique trié, hyperliens cliquables pour `site_web` / `linkedin_*`, etc.
 
 ## Structure
 
@@ -112,7 +125,7 @@ lead-detection/
 │   │   ├── enrich.py           # France Travail + web
 │   │   ├── prescore.py         # filtre heuristique sans LLM
 │   │   ├── score.py            # scoring Claude final
-│   │   └── deliver.py          # CSV + email
+│   │   └── deliver.py          # écriture CSV
 │   ├── prompts/scoring.md      # brief Claude
 │   └── main.py
 ├── config/icp.yaml             # règles ICP, pondérations, géo bonus

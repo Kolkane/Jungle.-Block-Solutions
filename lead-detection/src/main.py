@@ -6,7 +6,7 @@ Flow :
   3. Pré-scoring heuristique → garder top N candidats (~200)
   4. Enrichissement web (site, email, tel, LinkedIn, description)
   5. Scoring final Claude → top 100 avec hook personnalisé
-  6. CSV + email
+  6. Écriture du CSV (téléchargeable depuis l'artifact GitHub Actions)
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ import yaml
 from dotenv import load_dotenv
 
 from .pipeline.collect import collect
-from .pipeline.deliver import send_email, write_csv
+from .pipeline.deliver import write_csv
 from .pipeline.enrich import enrich_jobs, enrich_web
 from .pipeline.prescore import prescore_and_filter
 from .pipeline.score import score_all
@@ -74,11 +74,10 @@ def main() -> int:
     scored = score_all(candidates)
     _save("04_scored.json", scored)
 
-    log.info("=== Step 6/6 : write CSV + email (top %d, min_score=%d) ===", top_n, min_score)
+    log.info("=== Step 6/6 : write CSV (top %d, min_score=%d) ===", top_n, min_score)
     csv_path, n_leads = write_csv(scored, top_n, min_score, DATA_DIR)
-    send_email(csv_path, n_leads)
 
-    log.info("Done. CSV: %s (%d leads)", csv_path, n_leads)
+    log.info("Done. %d leads written to %s — download from GitHub Actions artifact.", n_leads, csv_path)
     return 0
 
 

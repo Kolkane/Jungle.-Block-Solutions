@@ -1,13 +1,10 @@
-"""Livraison : CSV final + email."""
+"""Livraison : CSV optimisé pour import Google Sheets / Excel."""
 
 from __future__ import annotations
 
 import csv
 import logging
-import os
-import smtplib
 from datetime import datetime
-from email.message import EmailMessage
 from pathlib import Path
 from urllib.parse import quote_plus
 
@@ -75,6 +72,7 @@ def _flatten(row: dict) -> dict:
 
 
 def write_csv(rows: list[dict], top_n: int, min_score: int, out_dir: Path) -> tuple[Path, int]:
+    """Écrit un CSV virgule + UTF-8 BOM, importable direct dans Google Sheets et Excel."""
     out_dir.mkdir(parents=True, exist_ok=True)
     selected = [r for r in rows if r.get("score", 0) >= min_score]
     selected.sort(key=lambda r: r.get("score", 0), reverse=True)
@@ -82,55 +80,15 @@ def write_csv(rows: list[dict], top_n: int, min_score: int, out_dir: Path) -> tu
 
     ts = datetime.utcnow().strftime("%Y-%m-%d")
     path = out_dir / f"leads-{ts}.csv"
-    with path.open("w", encoding="utf-8-sig", newline="") as f:  # BOM pour Excel FR
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, delimiter=";")
+    with path.open("w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=CSV_FIELDS,
+            delimiter=",",
+            quoting=csv.QUOTE_MINIMAL,
+        )
         writer.writeheader()
         for row in selected:
             writer.writerow(_flatten(row))
     log.info("Wrote %d leads to %s", len(selected), path)
     return path, len(selected)
-
-
-def send_email(csv_path: Path, n_leads: int) -> None:
-    host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
-    port = int(os.environ.get("SMTP_PORT", "587"))
-    user = os.environ.get("SMTP_USER")
-    password = os.environ.get("SMTP_PASS")
-    recipient = os.environ.get("RECIPIENT_EMAIL")
-
-    if not (user and password and recipient):
-        log.warning("SMTP credentials missing, skipping email")
-        return
-
-    today = datetime.utcnow().strftime("%d/%m/%Y")
-    msg = EmailMessage()
-    msg["Subject"] = f"[Jungle.Block] {n_leads} leads PME — {today}"
-    msg["From"] = user
-    msg["To"] = recipient
-    msg.set_content(
-        f"""Bonjour Vincent,
-
-Voici les {n_leads} leads PME de la semaine, triés par score décroissant.
-
-Le CSV en pièce jointe (séparateur ";", encodage UTF-8 BOM, ouvrable direct dans Excel) contient pour chaque lead :
-
-  • Nom, activité, description courte de l'activité
-  • Coordonnées : adresse, téléphone, email, site web, LinkedIn entreprise
-  • Lien de recherche LinkedIn pré-rempli pour identifier le décideur
-  • Score IA /100 et raison du match
-  • Angle d'attaque personnalisé prêt à adapter
-  • Signaux de recrutement détectés (offres d'emploi récentes, mots-clés)
-
-Bonne semaine de prospection.
-"""
-    )
-    with csv_path.open("rb") as f:
-        msg.add_attachment(
-            f.read(), maintype="text", subtype="csv", filename=csv_path.name
-        )
-
-    with smtplib.SMTP(host, port) as s:
-        s.starttls()
-        s.login(user, password)
-        s.send_message(msg)
-    log.info("Email sent to %s", recipient)
