@@ -84,31 +84,18 @@ def _query_sirene(api_key: str, q: str, nombre: int, debut: int) -> dict:
     return r.json()
 
 
-def _build_query(
-    effectif_min_tranche: str,
-    effectif_max_tranche: str,
-    age_min_years: int,
-) -> str:
-    """Construit une query Sirene v3.11.
+def _build_query(age_min_years: int) -> str:
+    """Query Sirene v3.11 minimale qui passe sans erreur de syntaxe.
 
-    Sur Sirene v3.11, les champs "historisés" (état admin, NAF, tranche d'effectif…)
-    doivent être encapsulés dans `periode(...)`. Les champs non historisés
-    (etablissementSiege, dateCreationEtablissement) restent au niveau racine.
-    Source: https://www.sirene.fr/static-resources/htm/v_sommaire_311.html
+    On filtre juste sur les sièges créés avant le cutoff. Tout le reste
+    (état actif, tranche d'effectif, NAF) est filtré côté Python sur la
+    réponse — c'est moins économe en bande passante mais robuste.
     """
     cutoff = datetime.utcnow().year - age_min_years
-
-    all_tranches = ["01", "02", "03", "11", "12", "21", "22", "31", "32", "41", "42", "51", "52", "53"]
-    selected = [t for t in all_tranches if effectif_min_tranche <= t <= effectif_max_tranche]
-    tranche_or = " OR ".join(f"trancheEffectifsEtablissement:{t}" for t in selected)
-
-    parts = [
-        "etablissementSiege:true",
-        f"dateCreationEtablissement:[1900-01-01 TO {cutoff}-12-31]",
-        "periode(etatAdministratifEtablissement:A)",
-        f"periode({tranche_or})",
-    ]
-    return " AND ".join(parts)
+    return (
+        "etablissementSiege:true"
+        f" AND dateCreationEtablissement:[1900-01-01 TO {cutoff}-12-31]"
+    )
 
 
 def _effectif_to_tranche(eff: int) -> str:
@@ -167,6 +154,15 @@ def _parse_etablissement(et: dict) -> Company | None:
         return None
 
 
+def _is_active(et: dict) -> bool:
+    """Vrai si la période en cours porte etatAdministratifEtablissement = A."""
+    periodes = et.get("periodesEtablissement") or []
+    if not periodes:
+        return False
+    # La première période est la plus récente sur l'API v3.11
+    return periodes[0].get("etatAdministratifEtablissement") == "A"
+
+
 def fetch_sample(
     api_key: str,
     effectif_min: int,
@@ -180,12 +176,10 @@ def fetch_sample(
 
     Pour diversifier, on tire plusieurs pages à des offsets aléatoires plutôt que
     tout en haut de l'index (qui serait toujours les mêmes entreprises).
+    Les filtres état actif / tranche d'effectif / NAF sont appliqués côté
+    Python car la query Sirene v3.11 est très sensible aux opérateurs.
     """
-    q = _build_query(
-        _effectif_to_tranche(effectif_min),
-        _effectif_to_tranche(effectif_max),
-        age_min_years,
-    )
+    q = _build_query(age_min_years)
     log.info("Sirene query: %s", q)
 
     first = _query_sirene(api_key, q, 1, 0)
@@ -194,11 +188,16 @@ def fetch_sample(
     if total == 0:
         return
 
+    min_tranche = _effectif_to_tranche(effectif_min)
+    max_tranche = _effectif_to_tranche(effectif_max)
+
     yielded = 0
     seen: set[str] = set()
+    pages_seen = 0
+    pages_max = 200  # garde-fou
     # Sirene API limite debut+nombre à 10 000. On échantillonne dans cette fenêtre.
     max_offset = min(total, 10_000) - page_size
-    while yielded < sample_size:
+    while yielded < sample_size and pages_seen < pages_max:
         offset = random.randint(0, max(0, max_offset))
         try:
             page = _query_sirene(api_key, q, page_size, offset)
@@ -206,6 +205,7 @@ def fetch_sample(
             log.warning("page fetch failed at offset %d: %s", offset, exc)
             time.sleep(2)
             continue
+        pages_seen += 1
         ets = page.get("etablissements", [])
         if not ets:
             break
@@ -216,15 +216,21 @@ def fetch_sample(
             if not siret or siret in seen:
                 continue
             seen.add(siret)
+            if not _is_active(et):
+                continue
             company = _parse_etablissement(et)
             if not company:
                 continue
-            # Filtre NAF (le -periode dans la query ne filtre pas toujours strictement).
+            if not company.effectif_tranche or not (
+                min_tranche <= company.effectif_tranche <= max_tranche
+            ):
+                continue
             if any(company.naf_code.startswith(p) for p in excluded_naf_prefixes):
                 continue
             yield company
             yielded += 1
         time.sleep(2.1)  # respecter 30 req/min
+    log.info("fetch_sample done: %d kept after %d pages", yielded, pages_seen)
 
 
 if __name__ == "__main__":
