@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ScrollProgress from "@/components/ScrollProgress";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = "https://jungleblocksolutions.com";
 const SITE_NAME = "Jungle.Block Solutions";
@@ -295,6 +296,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen text-white antialiased">
         <ScrollProgress />
         {children}
+        <Analytics />
       </body>
     </html>
   );
