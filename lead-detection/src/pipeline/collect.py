@@ -13,24 +13,18 @@ log = logging.getLogger(__name__)
 def collect(config: dict, sample_size: int) -> list[Company]:
     api_key = os.environ["INSEE_API_KEY"]
     hf = config["hard_filters"]
-    excluded = config["naf_exclude_prefixes"]
-    sectors = config.get("target_sectors") or {}
-    sector_quotas = None
-    if sectors:
-        per_sector = max(1, sample_size // len(sectors))
-        sector_quotas = {name: {"prefixes": s["naf_prefixes"], "quota": per_sector}
-                         for name, s in sectors.items()}
-        log.info("Target sectors: %s (quota %d each)", list(sectors.keys()), per_sector)
     companies = list(
         fetch_sample(
             api_key=api_key,
             effectif_min=hf["effectif_min"],
             effectif_max=hf["effectif_max"],
             age_min_years=hf["age_minimum_annees"],
-            excluded_naf_prefixes=excluded,
+            excluded_naf_prefixes=config.get("naf_exclude_prefixes", []),
+            excluded_naf_exact=config.get("naf_exclude_exact", []),
+            dom_tom_departments=config.get("dom_tom_departments", []),
             sample_size=sample_size,
-            sector_quotas=sector_quotas,
+            naf_tiers=config.get("naf_tiers"),
         )
     )
-    log.info("Collected %d companies from Sirene", len(companies))
+    log.info("Collected %d companies from Sirene (passed tier filter)", len(companies))
     return companies

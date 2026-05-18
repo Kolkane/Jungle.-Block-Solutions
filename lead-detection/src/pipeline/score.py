@@ -1,4 +1,9 @@
-"""Scoring final IA via Claude — appelé sur le top pré-scoré et enrichi web."""
+"""Génération de copy Claude : secteur (1 phrase) + 2-3 idées concrètes.
+
+Le scoring est désormais 100% Python (cf. prescore.py). Claude n'évalue
+plus, il ne fait que produire le texte qui ira dans le CSV pour les
+leads qui ont déjà passé le filtre de score.
+"""
 
 from __future__ import annotations
 
@@ -12,7 +17,7 @@ from anthropic import Anthropic
 log = logging.getLogger(__name__)
 
 MODEL = "claude-sonnet-4-6"
-BATCH_SIZE = 15
+BATCH_SIZE = 10
 
 
 def _load_prompt() -> str:
@@ -23,22 +28,14 @@ def _format_company(row: dict) -> dict:
     web = row.get("web", {}) or {}
     return {
         "siret": row["siret"],
-        "siren": row["siren"],
         "nom": row["name"],
         "naf": row["naf_code"],
         "effectif_estime": row["effectif_estime"],
-        "tranche_effectif": row["effectif_tranche"],
-        "date_creation": row["date_creation"],
         "ville": row["city"],
         "departement": row["department"],
-        "offres_emploi_30j": row["jobs"]["n_offers_30d"],
-        "mots_cles_signal": row["jobs"]["matched_signal_keywords"],
-        "exemples_titres_postes": row["jobs"]["sample_titles"],
         "site_web": web.get("site_url", ""),
         "description_site": (web.get("description") or "")[:400],
-        "linkedin_entreprise": web.get("linkedin_url", ""),
-        "emails_trouves": web.get("emails", []),
-        "telephones_trouves": web.get("phones", []),
+        "tier": (row.get("score_breakdown") or {}).get("__tier__", ""),
     }
 
 
@@ -52,13 +49,13 @@ def _parse_response(text: str) -> list[dict]:
     return json.loads(text.strip())
 
 
-def score_batch(client: Anthropic, system_prompt: str, batch: list[dict]) -> list[dict]:
-    user_msg = "Voici le batch d'entreprises à scorer (JSON) :\n\n" + json.dumps(
+def _generate_batch(client: Anthropic, system_prompt: str, batch: list[dict]) -> list[dict]:
+    user_msg = "Voici le batch d'entreprises (JSON) :\n\n" + json.dumps(
         [_format_company(r) for r in batch], ensure_ascii=False, indent=2
     )
     resp = client.messages.create(
         model=MODEL,
-        max_tokens=6000,
+        max_tokens=4000,
         system=[
             {
                 "type": "text",
@@ -73,34 +70,29 @@ def score_batch(client: Anthropic, system_prompt: str, batch: list[dict]) -> lis
         return _parse_response(text)
     except Exception as exc:
         log.error("Claude response parse failed: %s\nRaw start: %s", exc, text[:500])
-        return [
-            {"siret": r["siret"], "score": 0, "secteur": "", "script_appel": "parse error"}
-            for r in batch
-        ]
+        return [{"siret": r["siret"], "secteur": "", "idees": ""} for r in batch]
 
 
-def score_all(enriched: list[dict]) -> list[dict]:
+def generate_copy(rows: list[dict]) -> list[dict]:
+    """Pour chaque row déjà scoré, ajoute `secteur` et `idees` via Claude."""
+    if not rows:
+        return rows
     api_key = os.environ["ANTHROPIC_API_KEY"]
     client = Anthropic(api_key=api_key)
     system_prompt = _load_prompt()
 
-    scored: dict[str, dict] = {}
-    total_batches = (len(enriched) + BATCH_SIZE - 1) // BATCH_SIZE
-    for i in range(0, len(enriched), BATCH_SIZE):
-        batch = enriched[i : i + BATCH_SIZE]
-        log.info("Scoring batch %d/%d (%d companies)", i // BATCH_SIZE + 1, total_batches, len(batch))
-        results = score_batch(client, system_prompt, batch)
+    generated: dict[str, dict] = {}
+    total_batches = (len(rows) + BATCH_SIZE - 1) // BATCH_SIZE
+    for i in range(0, len(rows), BATCH_SIZE):
+        batch = rows[i : i + BATCH_SIZE]
+        log.info("Generating copy batch %d/%d (%d companies)", i // BATCH_SIZE + 1, total_batches, len(batch))
+        results = _generate_batch(client, system_prompt, batch)
         for r in results:
             if "siret" in r:
-                scored[r["siret"]] = r
+                generated[r["siret"]] = r
 
-    out: list[dict] = []
-    for row in enriched:
-        s = scored.get(row["siret"], {})
-        out.append({
-            **row,
-            "score": s.get("score", 0),
-            "secteur": s.get("secteur", ""),
-            "script_appel": s.get("script_appel", ""),
-        })
-    return out
+    for row in rows:
+        g = generated.get(row["siret"], {})
+        row["secteur"] = g.get("secteur", "")
+        row["idees"] = g.get("idees", "")
+    return rows

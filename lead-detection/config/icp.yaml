@@ -1,83 +1,89 @@
 # ICP — Ideal Customer Profile pour Jungle.Block Solutions
-# Cible : PME françaises ayant un besoin latent d'audit, IA sur-mesure, automatisation ou produit digital.
+# Cible : PME françaises 35-150 salariés, France métropolitaine, secteurs ciblés.
 
-# Filtres durs appliqués à la collecte Sirene (avant scoring IA).
+# Filtres durs appliqués à la collecte Sirene.
 hard_filters:
-  effectif_min: 10
-  effectif_max: 500
+  effectif_min: 35
+  effectif_max: 150
   age_minimum_annees: 2
-  etat_administratif: "A"  # A = active
 
-# Codes NAF exclus : concurrents directs ou activités sans fit.
+# Codes NAF organisés en 3 tiers.
+# - Une entreprise hors de ces 3 tiers (et non exclue) est ignorée : on ne génère
+#   pas de copy Claude pour elle.
+# - tier_3 : score final doit être >= min_score pour être gardé.
+naf_tiers:
+  tier_1:
+    bonus: 15
+    naf_codes: ["46", "28", "25", "29", "52", "69.20Z", "49.41A", "49.41B"]
+  tier_2:
+    bonus: 8
+    naf_codes: ["21", "71.12B", "70.22Z", "46.73", "46.74", "47.74Z"]
+  tier_3:
+    bonus: 0
+    min_score: 53
+    naf_codes: ["68.31Z", "78", "45.11Z", "45.19Z"]
+
+# Refus immédiat : on ne fetch même pas ces entreprises au-delà du filtre Sirene.
 naf_exclude_prefixes:
+  - "41"   # Construction de bâtiments
+  - "42"   # Génie civil
+  - "43"   # Travaux de construction spécialisés
+  - "55"   # Hébergement
+  - "56"   # Restauration
+  - "64"   # Activités des services financiers
+  - "65"   # Assurance
+  - "66"   # Activités auxiliaires services financiers
+  - "85"   # Enseignement
+  - "86"   # Santé humaine
+  - "87"   # Action sociale avec hébergement
+  - "88"   # Action sociale sans hébergement
+  - "96"   # Autres services personnels
   - "62"   # Programmation, conseil et autres activités informatiques (SSII, éditeurs)
   - "63"   # Services d'information
   - "84"   # Administration publique
-  - "85"   # Enseignement
   - "94"   # Activités d'organisations associatives
   - "97"   # Activités des ménages employeurs
   - "99"   # Activités des organisations extra-territoriales
+naf_exclude_exact:
+  - "69.10Z"   # Activités juridiques (notaires, avocats)
 
-# Secteurs cibles : on tire un mix équilibré entre ces buckets pour éviter
-# la sur-représentation industrie/BTP du tirage aléatoire pur.
-# Chaque bucket reçoit un quota = sample_size / nombre de buckets.
-target_sectors:
-  industrie_manufacturiere:
-    naf_prefixes: ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33"]
-  commerce_distribution:
-    naf_prefixes: ["45", "46", "47"]
-  services_pro:
-    naf_prefixes: ["69", "70", "71", "73", "74", "75"]
-  sante_medico_social:
-    naf_prefixes: ["86", "87", "88"]
-  construction_btp:
-    naf_prefixes: ["41", "42", "43"]
-  finance_assurance:
-    naf_prefixes: ["64", "65", "66"]
-  immobilier:
-    naf_prefixes: ["68"]
+# DOM-TOM exclus : départements 971-976.
+dom_tom_departments: ["971", "972", "973", "974", "976"]
 
-# Géographies bonus pour le scoring (départements).
-geo_bonus:
-  nouvelle_aquitaine:
-    departments: ["64", "33", "40", "47", "24", "87", "19", "23", "16", "17", "79", "86"]
-    bonus: 10
-  ile_de_france:
-    departments: ["75", "77", "78", "91", "92", "93", "94", "95"]
-    bonus: 7
+# Signaux web utilisés par le pré-scoring (recherchés dans le HTML de la home + contact).
+web_signals:
+  pro_area_keywords:
+    - "espace pro"
+    - "espace client"
+    - "espace b2b"
+    - "espace partenaire"
+    - "extranet"
+    - "contact commercial"
+    - "service commercial"
+    - "espace revendeur"
+  commercial_email_prefixes:
+    - "commercial"
+    - "commerciale"
+    - "sales"
+    - "ventes"
+    - "vente"
+    - "contact"
+    - "info"
+    - "achats"
+    - "compta"
 
-# Mots-clés dans les offres d'emploi = signal d'achat fort.
-job_signal_keywords:
-  - "ia"
-  - "intelligence artificielle"
-  - "automatisation"
-  - "automation"
-  - "data"
-  - "digital"
-  - "transformation"
-  - "process"
-  - "ops"
-  - "operations"
-  - "growth"
-  - "scale"
-  - "chief of staff"
-  - "head of"
-  - "rpa"
-  - "no-code"
-  - "no code"
-  - "n8n"
-  - "zapier"
-  - "make.com"
-
-# Pondérations du scoring (utilisées dans le prompt Claude).
-weights:
-  fit_secteur: 25
-  taille_et_maturite: 15
-  signal_achat: 30
-  geo: 10
-  accessibilite_decideur: 20
+# Règles de scoring déterministe.
+scoring:
+  base: 40
+  bonus_pro_area: 5
+  bonus_effectif_sweet_spot: 5  # 50-100 salariés
+  bonus_phone: 3
+  bonus_commercial_email: 3
+  malus_no_site: -5
+  malus_dom_tom: -8
+  malus_effectif_hors_plage: -5
 
 # Volume de sortie
 output:
-  top_n: 100
-  min_score: 30  # seuil bas pour tolérer les runs où un signal (jobs, web) manque partiellement
+  top_n: 25
+  min_score: 45

@@ -163,12 +163,14 @@ def _is_active(et: dict) -> bool:
     return periodes[0].get("etatAdministratifEtablissement") == "A"
 
 
-def _match_sector(naf_code: str, sector_quotas: dict | None) -> str | None:
-    if not sector_quotas:
+def _match_tier(naf_code: str, tiers: dict | None) -> str | None:
+    """Retourne le nom du tier (tier_1/2/3) si le NAF y matche, sinon None."""
+    if not tiers:
         return "_default"
-    for name, info in sector_quotas.items():
-        if any(naf_code.startswith(p) for p in info["prefixes"]):
-            return name
+    for tier_name, info in tiers.items():
+        for code in info.get("naf_codes", []):
+            if naf_code.startswith(code):
+                return tier_name
     return None
 
 
@@ -178,15 +180,20 @@ def fetch_sample(
     effectif_max: int,
     age_min_years: int,
     excluded_naf_prefixes: list[str],
+    excluded_naf_exact: list[str],
+    dom_tom_departments: list[str],
     sample_size: int,
     page_size: int = 100,
-    sector_quotas: dict | None = None,
+    naf_tiers: dict | None = None,
 ) -> Iterator[Company]:
-    """Stream un échantillon de PME depuis Sirene avec quota par secteur.
+    """Stream un échantillon de PME ciblées par tier NAF.
 
-    Si `sector_quotas` est fourni, on continue à tirer des pages tant qu'un
-    secteur n'a pas atteint son quota — les entreprises hors secteurs cibles
-    sont jetées. Sans quotas, on tire jusqu'à `sample_size` toutes catégories.
+    Filtres appliqués côté Python (la query Sirene v3.11 reste minimale) :
+    - état administratif actif
+    - tranche d'effectif dans la plage
+    - NAF non exclu (préfixe ou exact)
+    - département pas DOM-TOM
+    - NAF dans un des tiers cibles (si fournis)
     """
     q = _build_query(age_min_years)
     log.info("Sirene query: %s", q)
@@ -200,19 +207,15 @@ def fetch_sample(
     min_tranche = _effectif_to_tranche(effectif_min)
     max_tranche = _effectif_to_tranche(effectif_max)
 
-    sector_counts: dict[str, int] = {name: 0 for name in (sector_quotas or {})}
-
-    def all_quotas_met() -> bool:
-        if not sector_quotas:
-            return False
-        return all(sector_counts[name] >= info["quota"] for name, info in sector_quotas.items())
+    tier_counts: dict[str, int] = {name: 0 for name in (naf_tiers or {})}
+    rejected = {"inactive": 0, "tranche": 0, "naf_excluded": 0, "dom_tom": 0, "no_tier": 0}
 
     yielded = 0
     seen: set[str] = set()
     pages_seen = 0
-    pages_max = 400  # garde-fou augmenté car beaucoup de tirages tombent hors secteurs cibles
+    pages_max = 400
     max_offset = min(total, 10_000) - page_size
-    while yielded < sample_size and pages_seen < pages_max and not all_quotas_met():
+    while yielded < sample_size and pages_seen < pages_max:
         offset = random.randint(0, max(0, max_offset))
         try:
             page = _query_sirene(api_key, q, page_size, offset)
@@ -232,6 +235,7 @@ def fetch_sample(
                 continue
             seen.add(siret)
             if not _is_active(et):
+                rejected["inactive"] += 1
                 continue
             company = _parse_etablissement(et)
             if not company:
@@ -239,23 +243,31 @@ def fetch_sample(
             if not company.effectif_tranche or not (
                 min_tranche <= company.effectif_tranche <= max_tranche
             ):
+                rejected["tranche"] += 1
                 continue
             if any(company.naf_code.startswith(p) for p in excluded_naf_prefixes):
+                rejected["naf_excluded"] += 1
                 continue
-            sector = _match_sector(company.naf_code, sector_quotas)
-            if sector is None:
+            if company.naf_code in (excluded_naf_exact or []):
+                rejected["naf_excluded"] += 1
                 continue
-            if sector_quotas and sector_counts[sector] >= sector_quotas[sector]["quota"]:
+            if company.department in (dom_tom_departments or []):
+                rejected["dom_tom"] += 1
                 continue
-            sector_counts[sector] = sector_counts.get(sector, 0) + 1
+            tier = _match_tier(company.naf_code, naf_tiers)
+            if tier is None:
+                rejected["no_tier"] += 1
+                continue
+            if naf_tiers:
+                tier_counts[tier] = tier_counts.get(tier, 0) + 1
             yield company
             yielded += 1
         if pages_seen % 20 == 0:
-            log.info("fetch_sample progress: %d kept after %d pages, sectors=%s",
-                     yielded, pages_seen, sector_counts)
+            log.info("fetch_sample progress: %d kept after %d pages, tiers=%s, rejected=%s",
+                     yielded, pages_seen, tier_counts, rejected)
         time.sleep(2.1)
-    log.info("fetch_sample done: %d kept after %d pages, sectors=%s",
-             yielded, pages_seen, sector_counts)
+    log.info("fetch_sample done: %d kept after %d pages, tiers=%s, rejected=%s",
+             yielded, pages_seen, tier_counts, rejected)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ CSV_FIELDS = [
     "ville",
     "telephone",
     "site_web",
-    "script_appel",
+    "idees",
     "email",
 ]
 
@@ -30,18 +30,15 @@ def _flatten(row: dict) -> dict:
         "ville": row["city"],
         "telephone": " / ".join(web.get("phones") or []),
         "site_web": web.get("site_url", ""),
-        "script_appel": row.get("script_appel", ""),
+        "idees": row.get("idees", ""),
         "email": " / ".join(web.get("emails") or []),
     }
 
 
-def write_csv(rows: list[dict], top_n: int, min_score: int, out_dir: Path) -> tuple[Path, int]:
-    """Écrit un CSV virgule + UTF-8 BOM, importable direct dans Google Sheets et Excel."""
+def write_csv(rows: list[dict], top_n: int, out_dir: Path) -> tuple[Path, int]:
+    """Écrit le CSV final, déjà filtré et trié par score décroissant."""
     out_dir.mkdir(parents=True, exist_ok=True)
-    selected = [r for r in rows if r.get("score", 0) >= min_score]
-    selected.sort(key=lambda r: r.get("score", 0), reverse=True)
-    selected = selected[:top_n]
-
+    selected = rows[:top_n]
     ts = datetime.utcnow().strftime("%Y-%m-%d")
     path = out_dir / f"leads-{ts}.csv"
     with path.open("w", encoding="utf-8-sig", newline="") as f:
