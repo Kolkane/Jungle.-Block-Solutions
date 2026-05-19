@@ -1,29 +1,33 @@
-# ICP — Ideal Customer Profile pour Jungle.Block Solutions
-# Cible : PME françaises 35-150 salariés, France métropolitaine, secteurs ciblés.
+# ICP — Ideal Customer Profile pour Jungle.Block Solutions (dev solo)
+# Cible : PME 30-80 salariés, France métropolitaine, secteurs à ROI IA évident,
+# sans DSI interne et sans stack SaaS lourde déjà en place.
 
-# Filtres durs appliqués à la collecte Sirene.
 hard_filters:
-  effectif_min: 35
-  effectif_max: 150
+  effectif_min: 30
+  effectif_max: 80
   age_minimum_annees: 2
 
-# Codes NAF organisés en 3 tiers.
-# - Une entreprise hors de ces 3 tiers (et non exclue) est ignorée : on ne génère
-#   pas de copy Claude pour elle.
-# - tier_3 : score final doit être >= min_score pour être gardé.
+# NAF organisés en 2 tiers (tier 3 retiré : trop équipés en SaaS métier).
 naf_tiers:
   tier_1:
     bonus: 15
-    naf_codes: ["46", "28", "25", "29", "52", "69.20Z", "49.41A", "49.41B"]
+    naf_codes:
+      - "46"        # Commerce de gros B2B (devis/réassort/relances manuels)
+      - "49.41A"    # Transport routier de fret interurbain
+      - "49.41B"    # Transport routier de fret de proximité
+      - "52"        # Entreposage et services auxiliaires des transports
+      - "69.20Z"    # Expertise comptable
+      - "70.22Z"    # Conseil pour les affaires et autres conseils de gestion
+      - "71.12B"    # Ingénierie et études techniques
   tier_2:
     bonus: 8
-    naf_codes: ["21", "71.12B", "70.22Z", "46.73", "46.74", "47.74Z"]
-  tier_3:
-    bonus: 0
-    min_score: 53
-    naf_codes: ["68.31Z", "78", "45.11Z", "45.19Z"]
+    naf_codes:
+      - "21"        # Industrie pharmaceutique
+      - "25"        # Travail des métaux
+      - "28"        # Fabrication de machines et équipements
+      - "47.74Z"    # Commerce de détail d'articles médicaux et orthopédiques
 
-# Refus immédiat : on ne fetch même pas ces entreprises au-delà du filtre Sirene.
+# Refus immédiat : on ne fetch même pas ces entreprises.
 naf_exclude_prefixes:
   - "41"   # Construction de bâtiments
   - "42"   # Génie civil
@@ -38,20 +42,51 @@ naf_exclude_prefixes:
   - "87"   # Action sociale avec hébergement
   - "88"   # Action sociale sans hébergement
   - "96"   # Autres services personnels
-  - "62"   # Programmation, conseil et autres activités informatiques (SSII, éditeurs)
+  - "62"   # Programmation informatique (SSII, éditeurs)
   - "63"   # Services d'information
   - "84"   # Administration publique
-  - "94"   # Activités d'organisations associatives
+  - "94"   # Organisations associatives
   - "97"   # Activités des ménages employeurs
-  - "99"   # Activités des organisations extra-territoriales
+  - "99"   # Organisations extra-territoriales
 naf_exclude_exact:
   - "69.10Z"   # Activités juridiques (notaires, avocats)
 
-# DOM-TOM exclus : départements 971-976.
 dom_tom_departments: ["971", "972", "973", "974", "976"]
 
-# Signaux web utilisés par le pré-scoring (recherchés dans le HTML de la home + contact).
+# Signaux web exploités par le pré-scoring.
 web_signals:
+  # Détecter "filiale de groupe" → exclusion (DSI groupe bloque).
+  subsidiary_keywords:
+    - "filiale de"
+    - "filiale du groupe"
+    - "appartient au groupe"
+    - "groupe coté"
+    - "subsidiary of"
+    - "member of the"
+    - "fait partie du groupe"
+    - "rejoint le groupe"
+    - "société du groupe"
+
+  # SaaS / ERP / CRM déjà installés → l'entreprise est mature, moins urgent.
+  # On cherche ces noms dans le HTML, footer, mentions légales, etc.
+  saas_heavy_signals:
+    - "salesforce"
+    - "hubspot"
+    - "sap.com"
+    - "ariba"
+    - "oracle"
+    - "microsoft dynamics"
+    - "pardot"
+    - "marketo"
+    - "pipedrive"
+    - "zendesk"
+    - "intercom"
+    - "workday"
+    - "sage business cloud"
+    - "cegid"
+    - "powered by odoo"
+
+  # Présence de "contact commercial" / "espace pro" → entreprise B2B mature.
   pro_area_keywords:
     - "espace pro"
     - "espace client"
@@ -61,6 +96,19 @@ web_signals:
     - "contact commercial"
     - "service commercial"
     - "espace revendeur"
+
+  # Vocabulaire qui signale des process manuels traditionnels (fit dev solo).
+  manual_process_signals:
+    - "depuis 19"           # "depuis 1985", "depuis 1999"…
+    - "savoir-faire"
+    - "tradition"
+    - "artisanal"
+    - "famille"
+    - "demande de devis"
+    - "nous consulter pour"
+    - "sur demande"
+    - "contactez-nous pour"
+
   commercial_email_prefixes:
     - "commercial"
     - "commerciale"
@@ -72,18 +120,22 @@ web_signals:
     - "achats"
     - "compta"
 
-# Règles de scoring déterministe.
+# Scoring déterministe.
 scoring:
   base: 40
   bonus_pro_area: 5
-  bonus_effectif_sweet_spot: 5  # 50-100 salariés
+  bonus_manual_signals: 5       # vocab traditionnel = process à automatiser
+  bonus_effectif_sweet_spot: 5  # 50-80 (cœur de cible dev solo)
   bonus_phone: 3
   bonus_commercial_email: 3
   malus_no_site: -5
+  malus_saas_heavy: -10         # déjà bien équipée
   malus_dom_tom: -8
-  malus_effectif_hors_plage: -5
 
-# Volume de sortie
+# Filtres durs basés sur signaux web : exclusion immédiate.
+hard_web_filters:
+  exclude_if_subsidiary: true
+
 output:
   top_n: 25
-  min_score: 45
+  min_score: 50

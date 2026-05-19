@@ -1,23 +1,4 @@
-"""Scoring déterministe selon les règles ICP.
-
-Le score est 100% calculé en Python — Claude ne note plus, il ne fait
-que générer le copy (secteur + idées).
-
-Règles :
-  base 40
-  + tier_1: +15 | tier_2: +8 | tier_3: 0
-  + bonus_pro_area: +5 (espace pro ou contact commercial sur le site)
-  + bonus_effectif_sweet_spot: +5 (50-100 salariés)
-  + bonus_phone: +3
-  + bonus_commercial_email: +3
-  - malus_no_site: -5
-  - malus_dom_tom: -8 (filtré en amont en principe)
-  - malus_effectif_hors_plage: -5 (filtré en amont en principe)
-
-Acceptation :
-  - tier_1/2 : score >= min_score (45)
-  - tier_3 : score >= max(min_score, tier_3.min_score=53)
-"""
+"""Scoring déterministe + filtres durs selon les règles ICP."""
 
 from __future__ import annotations
 
@@ -35,17 +16,11 @@ def _tier_of(naf_code: str, tiers: dict) -> tuple[str, int, int]:
     return "", 0, 0
 
 
-def _detect_pro_area(web: dict, signals: dict) -> bool:
-    description = (web.get("description") or "").lower()
-    keywords = [k.lower() for k in signals.get("pro_area_keywords", [])]
-    return any(k in description for k in keywords)
-
-
-def _detect_commercial_email(emails: list[str], signals: dict) -> bool:
-    prefixes = [p.lower() for p in signals.get("commercial_email_prefixes", [])]
+def _is_commercial_email(emails: list[str], prefixes: list[str]) -> bool:
+    prefixes_lower = [p.lower() for p in prefixes]
     for email in emails or []:
         local = email.split("@", 1)[0].lower()
-        if any(local.startswith(p) for p in prefixes):
+        if any(local.startswith(p) for p in prefixes_lower):
             return True
     return False
 
@@ -65,30 +40,35 @@ def compute_score(row: dict, config: dict) -> tuple[int, dict]:
         breakdown[tier_name] = tier_bonus
 
     web = row.get("web") or {}
+
     if not web.get("site_url"):
         score += rules.get("malus_no_site", -5)
         breakdown["no_site"] = rules.get("malus_no_site", -5)
 
-    if _detect_pro_area(web, web_signals):
+    if web.get("has_pro_area"):
         score += rules.get("bonus_pro_area", 5)
         breakdown["pro_area"] = rules.get("bonus_pro_area", 5)
+
+    if web.get("has_manual_process"):
+        score += rules.get("bonus_manual_signals", 5)
+        breakdown["manual_signals"] = rules.get("bonus_manual_signals", 5)
+
+    if web.get("has_saas_heavy"):
+        score += rules.get("malus_saas_heavy", -10)
+        breakdown["saas_heavy"] = rules.get("malus_saas_heavy", -10)
 
     if web.get("phones"):
         score += rules.get("bonus_phone", 3)
         breakdown["phone"] = rules.get("bonus_phone", 3)
 
-    if _detect_commercial_email(web.get("emails") or [], web_signals):
+    if _is_commercial_email(web.get("emails") or [], web_signals.get("commercial_email_prefixes", [])):
         score += rules.get("bonus_commercial_email", 3)
         breakdown["commercial_email"] = rules.get("bonus_commercial_email", 3)
 
     eff = row.get("effectif_estime", 0)
-    if 50 <= eff <= 100:
+    if 50 <= eff <= 80:
         score += rules.get("bonus_effectif_sweet_spot", 5)
         breakdown["sweet_spot"] = rules.get("bonus_effectif_sweet_spot", 5)
-    hf = config.get("hard_filters", {})
-    if eff and (eff < hf.get("effectif_min", 0) or eff > hf.get("effectif_max", 999)):
-        score += rules.get("malus_effectif_hors_plage", -5)
-        breakdown["effectif_hors_plage"] = rules.get("malus_effectif_hors_plage", -5)
 
     if row.get("department") in (config.get("dom_tom_departments") or []):
         score += rules.get("malus_dom_tom", -8)
@@ -101,37 +81,49 @@ def compute_score(row: dict, config: dict) -> tuple[int, dict]:
 
 
 def filter_acceptable(rows: list[dict], config: dict) -> tuple[list[dict], dict]:
-    """Filtre les leads acceptables selon les seuils ICP.
+    """Applique le scoring + filtres durs (filiale, score min).
 
     Retourne (kept, stats) où stats compte les rejets par raison.
     """
-    min_score = int(config.get("output", {}).get("min_score", 45))
+    min_score = int(config.get("output", {}).get("min_score", 50))
     tiers = config.get("naf_tiers", {})
-    tier_3_min = int((tiers.get("tier_3") or {}).get("min_score", min_score))
+    hard_web = config.get("hard_web_filters", {})
+    exclude_subsidiary = bool(hard_web.get("exclude_if_subsidiary", False))
 
     kept: list[dict] = []
-    stats = {"total": len(rows), "kept": 0, "rejected_low_score": 0, "rejected_tier3_floor": 0}
+    stats = {
+        "total": len(rows),
+        "kept": 0,
+        "rejected_subsidiary": 0,
+        "rejected_low_score": 0,
+        "rejected_tier_floor": 0,
+    }
 
     for row in rows:
+        web = row.get("web") or {}
+        if exclude_subsidiary and web.get("has_subsidiary_mention"):
+            stats["rejected_subsidiary"] += 1
+            continue
+
         score, breakdown = compute_score(row, config)
         row["score"] = score
         row["score_breakdown"] = breakdown
         tier = breakdown.get("__tier__", "")
-        if tier == "tier_3":
-            threshold = max(min_score, tier_3_min)
-            if score < threshold:
-                stats["rejected_tier3_floor"] += 1
-                continue
-        elif score < min_score:
-            stats["rejected_low_score"] += 1
+        tier_floor = int((tiers.get(tier) or {}).get("min_score", 0))
+        threshold = max(min_score, tier_floor)
+        if score < threshold:
+            if score < min_score:
+                stats["rejected_low_score"] += 1
+            else:
+                stats["rejected_tier_floor"] += 1
             continue
         kept.append(row)
 
     kept.sort(key=lambda r: r["score"], reverse=True)
     stats["kept"] = len(kept)
     log.info(
-        "Scoring: kept %d/%d (min_score=%d, tier_3_floor=%d). Rejected: %d low_score, %d tier3_floor",
-        len(kept), len(rows), min_score, tier_3_min,
-        stats["rejected_low_score"], stats["rejected_tier3_floor"],
+        "Scoring: kept %d/%d (min_score=%d). Rejected: %d subsidiary, %d low_score, %d tier_floor",
+        len(kept), len(rows), min_score,
+        stats["rejected_subsidiary"], stats["rejected_low_score"], stats["rejected_tier_floor"],
     )
     return kept, stats

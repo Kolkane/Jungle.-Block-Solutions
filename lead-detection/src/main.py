@@ -57,7 +57,7 @@ def main() -> int:
     log.info("Step 1 done: %d companies in tier filter", len(companies))
 
     log.info("=== Step 2/5 : web enrichment ===")
-    enriched = enrich_web(companies)
+    enriched = enrich_web(companies, config)
     _save("01_web_enriched.json", enriched)
 
     log.info("=== Step 3/5 : deterministic scoring ===")

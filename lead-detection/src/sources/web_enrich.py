@@ -162,7 +162,32 @@ def _find_contact_link(soup: BeautifulSoup, base_url: str) -> str | None:
     return None
 
 
-def fetch_site(url: str) -> dict | None:
+def _scan_signals(text: str, html: str, signals: dict) -> dict:
+    """Scanne le texte et le HTML brut pour détecter les signaux ICP.
+
+    `text` est le texte visible (utilisé pour la plupart des signaux).
+    `html` est le HTML brut (utilisé pour SaaS heavy qui peut être dans des
+    balises script/link sans texte visible).
+    """
+    text_lower = text.lower()
+    html_lower = html.lower()
+    return {
+        "has_subsidiary_mention": any(
+            kw in text_lower for kw in signals.get("subsidiary_keywords", [])
+        ),
+        "has_saas_heavy": any(
+            kw in html_lower for kw in signals.get("saas_heavy_signals", [])
+        ),
+        "has_pro_area": any(
+            kw in text_lower for kw in signals.get("pro_area_keywords", [])
+        ),
+        "has_manual_process": any(
+            kw in text_lower for kw in signals.get("manual_process_signals", [])
+        ),
+    }
+
+
+def fetch_site(url: str, signals: dict | None = None) -> dict | None:
     """Scrape un site : homepage + page contact si trouvée."""
     try:
         r = requests.get(url, headers=HEADERS, timeout=12, allow_redirects=True)
@@ -183,18 +208,23 @@ def fetch_site(url: str) -> dict | None:
     # Page contact pour multiplier les chances d'avoir email/tel
     contact_url = _find_contact_link(soup, site_url)
     contact_text = ""
+    contact_html = ""
     if contact_url and contact_url != site_url:
         try:
             cr = requests.get(contact_url, headers=HEADERS, timeout=10)
             if cr.status_code < 400:
-                contact_text = BeautifulSoup(cr.text, "lxml").get_text(" ", strip=True)
+                contact_html = cr.text
+                contact_text = BeautifulSoup(contact_html, "lxml").get_text(" ", strip=True)
         except Exception:
             pass
 
-    combined = full_text + " " + contact_text
-    emails = _extract_emails(combined, site_domain)
-    phones = _extract_phones(combined)
-    linkedin = _extract_linkedin(html + " " + (contact_text or ""))
+    combined_text = full_text + " " + contact_text
+    combined_html = html + " " + contact_html
+    emails = _extract_emails(combined_text, site_domain)
+    phones = _extract_phones(combined_text)
+    linkedin = _extract_linkedin(combined_html)
+
+    flags = _scan_signals(combined_text, combined_html, signals or {})
 
     return {
         "site_url": site_url,
@@ -203,10 +233,11 @@ def fetch_site(url: str) -> dict | None:
         "emails": emails,
         "phones": phones,
         "linkedin_url": linkedin,
+        **flags,
     }
 
 
-def enrich_one(name: str, city: str, siren: str) -> dict:
+def enrich_one(name: str, city: str, siren: str, signals: dict | None = None) -> dict:
     """Pipeline complet pour une entreprise : recherche + scrape."""
     empty = {
         "site_url": "",
@@ -215,12 +246,16 @@ def enrich_one(name: str, city: str, siren: str) -> dict:
         "emails": [],
         "phones": [],
         "linkedin_url": "",
+        "has_subsidiary_mention": False,
+        "has_saas_heavy": False,
+        "has_pro_area": False,
+        "has_manual_process": False,
     }
     site = find_official_site(name, city, siren)
     if not site:
         return empty
     time.sleep(0.4)  # politesse DDG
-    data = fetch_site(site)
+    data = fetch_site(site, signals=signals)
     if not data:
         return {**empty, "site_url": site, "site_domain": _domain(site)}
     return data
