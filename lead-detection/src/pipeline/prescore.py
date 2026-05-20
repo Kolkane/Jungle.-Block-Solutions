@@ -57,6 +57,10 @@ def compute_score(row: dict, config: dict) -> tuple[int, dict]:
         score += rules.get("malus_saas_heavy", -10)
         breakdown["saas_heavy"] = rules.get("malus_saas_heavy", -10)
 
+    if web.get("has_subsidiary_mention"):
+        score += rules.get("malus_subsidiary", -8)
+        breakdown["subsidiary"] = rules.get("malus_subsidiary", -8)
+
     if web.get("phones"):
         score += rules.get("bonus_phone", 3)
         breakdown["phone"] = rules.get("bonus_phone", 3)
@@ -66,7 +70,7 @@ def compute_score(row: dict, config: dict) -> tuple[int, dict]:
         breakdown["commercial_email"] = rules.get("bonus_commercial_email", 3)
 
     eff = row.get("effectif_estime", 0)
-    if 50 <= eff <= 80:
+    if 50 <= eff <= 120:
         score += rules.get("bonus_effectif_sweet_spot", 5)
         breakdown["sweet_spot"] = rules.get("bonus_effectif_sweet_spot", 5)
 
@@ -121,9 +125,14 @@ def filter_acceptable(rows: list[dict], config: dict) -> tuple[list[dict], dict]
 
     kept.sort(key=lambda r: r["score"], reverse=True)
     stats["kept"] = len(kept)
+    kept_by_tier: dict[str, int] = {}
+    for r in kept:
+        t = (r.get("score_breakdown") or {}).get("__tier__", "")
+        kept_by_tier[t or "_none"] = kept_by_tier.get(t or "_none", 0) + 1
     log.info(
-        "Scoring: kept %d/%d (min_score=%d). Rejected: %d subsidiary, %d low_score, %d tier_floor",
+        "Scoring: kept %d/%d (min_score=%d). Rejected: %d subsidiary, %d low_score, %d tier_floor. Kept by tier: %s",
         len(kept), len(rows), min_score,
         stats["rejected_subsidiary"], stats["rejected_low_score"], stats["rejected_tier_floor"],
+        kept_by_tier,
     )
     return kept, stats

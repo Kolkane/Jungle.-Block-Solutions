@@ -29,8 +29,8 @@ jobs:
         env:
           INSEE_API_KEY: ${{ secrets.INSEE_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SAMPLE_SIZE: "1500"
-          TOP_N: "25"
+          SAMPLE_SIZE: "4000"
+          TOP_N: "30"
         run: python -m src.main
 
       - name: Upload CSV artifact

@@ -213,7 +213,7 @@ def fetch_sample(
     yielded = 0
     seen: set[str] = set()
     pages_seen = 0
-    pages_max = 400
+    pages_max = 800   # élargi pour compenser le filtrage Python
     max_offset = min(total, 10_000) - page_size
     while yielded < sample_size and pages_seen < pages_max:
         offset = random.randint(0, max(0, max_offset))

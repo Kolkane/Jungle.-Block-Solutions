@@ -1,105 +1,140 @@
 # ICP — Ideal Customer Profile pour Jungle.Block Solutions (dev solo)
-# Cible : PME 30-80 salariés, France métropolitaine, secteurs à ROI IA évident,
-# sans DSI interne et sans stack SaaS lourde déjà en place.
+# Version élargie : on accepte plus de leads tout en gardant le tri par qualité.
 
 hard_filters:
-  effectif_min: 30
-  effectif_max: 80
+  effectif_min: 35
+  effectif_max: 200          # élargi (était 30-80) — le scoring fera le tri
   age_minimum_annees: 2
 
-# NAF organisés en 2 tiers (tier 3 retiré : trop équipés en SaaS métier).
+# 3 tiers maintenant — le tier 3 permet de capturer des leads correctes
+# qui ne sont pas en Tier 1/2 mais qui ont de bons signaux web.
 naf_tiers:
   tier_1:
     bonus: 15
     naf_codes:
-      - "46"        # Commerce de gros B2B (devis/réassort/relances manuels)
-      - "49.41A"    # Transport routier de fret interurbain
-      - "49.41B"    # Transport routier de fret de proximité
-      - "52"        # Entreposage et services auxiliaires des transports
+      - "46"        # Commerce de gros B2B — cœur de cible
+      - "49.41A"    # Transport routier fret interurbain
+      - "49.41B"    # Transport routier fret de proximité
+      - "49.42Z"    # Déménagement
+      - "52"        # Entreposage et services auxiliaires transports
+      - "53"        # Activités postales et de courrier
       - "69.20Z"    # Expertise comptable
-      - "70.22Z"    # Conseil pour les affaires et autres conseils de gestion
+      - "70.22Z"    # Conseil pour les affaires
       - "71.12B"    # Ingénierie et études techniques
+      - "73.11Z"    # Agences de publicité
+      - "78"        # Activités liées à l'emploi (intérim, placement)
+      - "80"        # Sécurité privée
+      - "81.21Z"    # Nettoyage courant des bâtiments
+      - "81.22Z"    # Nettoyage industriel
+      - "82"        # Services de soutien aux entreprises (centres d'appels, secrétariat…)
   tier_2:
     bonus: 8
     naf_codes:
       - "21"        # Industrie pharmaceutique
       - "25"        # Travail des métaux
-      - "28"        # Fabrication de machines et équipements
-      - "47.74Z"    # Commerce de détail d'articles médicaux et orthopédiques
+      - "28"        # Fabrication de machines
+      - "29"        # Industrie automobile (équipementiers)
+      - "33"        # Réparation et installation de machines
+      - "38"        # Collecte/traitement déchets (multi-sites, tournées)
+      - "43.21A"    # Travaux d'installation électrique
+      - "43.22A"    # Installation équipements thermiques
+      - "47.74Z"    # Commerce de détail médical
+      - "74"        # Activités spécialisées scientifiques et techniques (design, traduction, photo…)
+      - "77"        # Location et location-bail (matériel, véhicules)
+  tier_3:
+    bonus: 0
+    min_score: 48     # seuil un peu plus permissif que tier_1/2
+    naf_codes:
+      - "10"        # Industries alimentaires
+      - "11"        # Fabrication boissons
+      - "13"        # Textile
+      - "14"        # Habillement
+      - "15"        # Cuir / chaussure
+      - "16"        # Travail du bois
+      - "17"        # Industrie du papier
+      - "18"        # Imprimerie
+      - "20"        # Industrie chimique
+      - "22"        # Caoutchouc / plastiques
+      - "23"        # Autres produits minéraux non métalliques
+      - "24"        # Métallurgie
+      - "26"        # Produits informatiques, électroniques, optiques (hors SSII)
+      - "27"        # Fabrication équipements électriques
+      - "30"        # Autres matériels de transport
+      - "31"        # Fabrication de meubles
+      - "32"        # Autres industries manufacturières
+      - "45.31Z"    # Commerce de gros équipements automobiles
+      - "45.32Z"    # Commerce de détail équipements automobiles
+      - "47.30Z"    # Commerce de détail carburants
+      - "79"        # Voyages, tour-opérateurs B2B
 
-# Refus immédiat : on ne fetch même pas ces entreprises.
+# Refus immédiat.
 naf_exclude_prefixes:
+  - "01"   # Agriculture
+  - "02"   # Sylviculture
+  - "03"   # Pêche
   - "41"   # Construction de bâtiments
   - "42"   # Génie civil
-  - "43"   # Travaux de construction spécialisés
+  - "43.1" # Démolition / préparation sites (artisanat)
   - "55"   # Hébergement
   - "56"   # Restauration
-  - "64"   # Activités des services financiers
+  - "64"   # Activités services financiers
   - "65"   # Assurance
   - "66"   # Activités auxiliaires services financiers
+  - "84"   # Administration publique
   - "85"   # Enseignement
   - "86"   # Santé humaine
   - "87"   # Action sociale avec hébergement
   - "88"   # Action sociale sans hébergement
-  - "96"   # Autres services personnels
-  - "62"   # Programmation informatique (SSII, éditeurs)
-  - "63"   # Services d'information
-  - "84"   # Administration publique
   - "94"   # Organisations associatives
+  - "96"   # Autres services personnels
   - "97"   # Activités des ménages employeurs
   - "99"   # Organisations extra-territoriales
+  - "62"   # Programmation informatique (concurrence)
+  - "63"   # Services d'information (concurrence)
 naf_exclude_exact:
-  - "69.10Z"   # Activités juridiques (notaires, avocats)
+  - "69.10Z"   # Avocats/notaires
 
 dom_tom_departments: ["971", "972", "973", "974", "976"]
 
-# Signaux web exploités par le pré-scoring.
 web_signals:
-  # Détecter "filiale de groupe" → exclusion (DSI groupe bloque).
+  # Filiale = malus, plus exclusion (trop de faux positifs : "Groupe XXX" dans le nom).
   subsidiary_keywords:
     - "filiale de"
     - "filiale du groupe"
     - "appartient au groupe"
-    - "groupe coté"
     - "subsidiary of"
-    - "member of the"
     - "fait partie du groupe"
-    - "rejoint le groupe"
+    - "membre du groupe"
     - "société du groupe"
 
-  # SaaS / ERP / CRM déjà installés → l'entreprise est mature, moins urgent.
-  # On cherche ces noms dans le HTML, footer, mentions légales, etc.
+  # SaaS lourd — restreint aux SIGNAUX FORTS uniquement (les vrais ERP/CRM enterprise).
+  # Retiré : HubSpot (souvent juste un formulaire), Cegid (PME standard), Sage,
+  # Zendesk, Pipedrive (PME standard).
   saas_heavy_signals:
-    - "salesforce"
-    - "hubspot"
-    - "sap.com"
-    - "ariba"
-    - "oracle"
-    - "microsoft dynamics"
-    - "pardot"
+    - "salesforce.com"
+    - "force.com"
+    - "sap.com/fr"
+    - "sap concur"
+    - "microsoft dynamics 365"
+    - "dynamics.com"
+    - "oracle netsuite"
+    - "workday.com"
     - "marketo"
-    - "pipedrive"
-    - "zendesk"
-    - "intercom"
-    - "workday"
-    - "sage business cloud"
-    - "cegid"
-    - "powered by odoo"
+    - "pardot"
 
-  # Présence de "contact commercial" / "espace pro" → entreprise B2B mature.
   pro_area_keywords:
     - "espace pro"
     - "espace client"
     - "espace b2b"
     - "espace partenaire"
+    - "espace revendeur"
     - "extranet"
     - "contact commercial"
     - "service commercial"
-    - "espace revendeur"
 
-  # Vocabulaire qui signale des process manuels traditionnels (fit dev solo).
   manual_process_signals:
-    - "depuis 19"           # "depuis 1985", "depuis 1999"…
+    - "depuis 19"
+    - "depuis 20"
     - "savoir-faire"
     - "tradition"
     - "artisanal"
@@ -108,6 +143,8 @@ web_signals:
     - "nous consulter pour"
     - "sur demande"
     - "contactez-nous pour"
+    - "fait à la main"
+    - "sur-mesure"
 
   commercial_email_prefixes:
     - "commercial"
@@ -119,23 +156,25 @@ web_signals:
     - "info"
     - "achats"
     - "compta"
+    - "adv"
+    - "service-client"
 
-# Scoring déterministe.
 scoring:
   base: 40
   bonus_pro_area: 5
-  bonus_manual_signals: 5       # vocab traditionnel = process à automatiser
-  bonus_effectif_sweet_spot: 5  # 50-80 (cœur de cible dev solo)
+  bonus_manual_signals: 5
+  bonus_effectif_sweet_spot: 5   # 50-120 (élargi)
   bonus_phone: 3
   bonus_commercial_email: 3
   malus_no_site: -5
-  malus_saas_heavy: -10         # déjà bien équipée
+  malus_saas_heavy: -5           # adouci (était -10)
+  malus_subsidiary: -8           # remplace l'exclusion
   malus_dom_tom: -8
 
-# Filtres durs basés sur signaux web : exclusion immédiate.
+# Pas de filtres durs basés sur les signaux web (tout passe par le scoring).
 hard_web_filters:
-  exclude_if_subsidiary: true
+  exclude_if_subsidiary: false   # adouci (était true)
 
 output:
-  top_n: 25
-  min_score: 50
+  top_n: 30                       # un peu plus de leads (était 25)
+  min_score: 42                   # un peu plus permissif (était 50)
