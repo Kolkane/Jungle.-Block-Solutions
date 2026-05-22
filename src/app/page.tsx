@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
@@ -440,6 +441,68 @@ const PRODUCTS: Product[] = [
 ];
 
 function Realizations() {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+
+  const updateState = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanPrev(scrollLeft > 4);
+    setCanNext(scrollLeft + clientWidth < scrollWidth - 4);
+
+    const elRect = el.getBoundingClientRect();
+    let best = 0;
+    let bestDist = Infinity;
+    cardRefs.current.forEach((card, i) => {
+      if (!card) return;
+      const dist = Math.abs(card.getBoundingClientRect().left - elRect.left);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    setActiveIndex(best);
+  }, []);
+
+  useEffect(() => {
+    updateState();
+    const el = scrollerRef.current;
+    if (!el) return;
+    const onScroll = () => updateState();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateState);
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateState);
+    };
+  }, [updateState]);
+
+  const scrollToIndex = (i: number) => {
+    const card = cardRefs.current[i];
+    const el = scrollerRef.current;
+    if (!card || !el) return;
+    const cardRect = card.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    el.scrollTo({
+      left: el.scrollLeft + (cardRect.left - elRect.left),
+      behavior: "smooth",
+    });
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      scrollToIndex(Math.min(activeIndex + 1, PRODUCTS.length - 1));
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      scrollToIndex(Math.max(activeIndex - 1, 0));
+    }
+  };
+
   return (
     <section id="realisations" className="mt-32 scroll-mt-24 md:mt-40">
       <Container>
@@ -458,13 +521,72 @@ function Realizations() {
           </div>
         </MotionReveal>
 
-        <MotionStagger className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {PRODUCTS.map((p) => (
-            <MotionItem key={p.name}>
-              <ProductCard {...p} />
-            </MotionItem>
-          ))}
-        </MotionStagger>
+        <MotionReveal>
+          <div className="mt-10 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => scrollToIndex(Math.max(activeIndex - 1, 0))}
+              disabled={!canPrev}
+              aria-label="Réalisation précédente"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/80 transition hover:border-white/30 hover:bg-white/[0.08] hover:text-white disabled:pointer-events-none disabled:opacity-30"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToIndex(Math.min(activeIndex + 1, PRODUCTS.length - 1))}
+              disabled={!canNext}
+              aria-label="Réalisation suivante"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/80 transition hover:border-white/30 hover:bg-white/[0.08] hover:text-white disabled:pointer-events-none disabled:opacity-30"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            ref={scrollerRef}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Réalisations"
+            tabIndex={0}
+            onKeyDown={onKeyDown}
+            className="mt-4 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 outline-none [-ms-overflow-style:none] [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-white/20 [&::-webkit-scrollbar]:hidden"
+          >
+            {PRODUCTS.map((p, i) => (
+              <div
+                key={p.name}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} sur ${PRODUCTS.length} : ${p.name}`}
+                className="snap-start shrink-0 basis-[85%] sm:basis-[60%] md:basis-[46%] lg:basis-[31%]"
+              >
+                <ProductCard {...p} />
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 flex justify-center gap-2">
+            {PRODUCTS.map((p, i) => (
+              <button
+                key={p.name}
+                type="button"
+                onClick={() => scrollToIndex(i)}
+                aria-label={`Aller à la carte ${i + 1} : ${p.name}`}
+                aria-current={i === activeIndex}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === activeIndex ? "w-8 bg-white/80" : "w-1.5 bg-white/20 hover:bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        </MotionReveal>
       </Container>
     </section>
   );
