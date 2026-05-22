@@ -393,7 +393,7 @@ type Product = {
   desc: string;
   href: string;
   metric?: { value: string; label: string };
-  accent: "indigo" | "yellow" | "emerald";
+  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet";
 };
 
 const PRODUCTS: Product[] = [
@@ -404,6 +404,22 @@ const PRODUCTS: Product[] = [
     href: "https://agentable.fr",
     metric: { value: "10 min", label: "Audit complet" },
     accent: "indigo",
+  },
+  {
+    name: "Rekovly",
+    tag: "IA · Recouvrement",
+    desc: "Premier agent IA de recouvrement pour TPE/PME. Marc, chargé de recouvrement virtuel, relance vos clients en retard 24/7 par email, SMS et courrier recommandé. Compatible Pennylane, Sellsy, Tiime, Axonaut.",
+    href: "https://www.rekovly.com",
+    metric: { value: "24/7", label: "Relances automatisées" },
+    accent: "sky",
+  },
+  {
+    name: "Bastien",
+    tag: "IA · Expertise comptable",
+    desc: "Collaborateur IA pour cabinets d'experts-comptables. Surveille la santé financière des clients PME via les FEC, détecte les difficultés 6 à 12 mois en avance, livre chaque lundi un rapport avec emails pré-rédigés. 100% souverain français.",
+    href: "https://www.veillor.fr",
+    metric: { value: "6-12 mois", label: "D'anticipation" },
+    accent: "violet",
   },
   {
     name: "Veillor_Layer",
@@ -437,12 +453,12 @@ function Realizations() {
             </h2>
             <p className="mt-5 text-base leading-relaxed text-white/65">
               Au-delà des missions clients, j&apos;ai conçu et lancé mes propres produits.
-              Voici trois preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
+              Voici cinq preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
             </p>
           </div>
         </MotionReveal>
 
-        <MotionStagger className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <MotionStagger className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((p) => (
             <MotionItem key={p.name}>
               <ProductCard {...p} />
@@ -460,6 +476,8 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
     indigo: { bg: "bg-indigo-500/15", ring: "ring-indigo-400/30", text: "text-indigo-300" },
     yellow: { bg: "bg-amber-400/15", ring: "ring-amber-300/30", text: "text-amber-300" },
     emerald: { bg: "bg-emerald-500/15", ring: "ring-emerald-400/30", text: "text-emerald-300" },
+    sky: { bg: "bg-sky-500/15", ring: "ring-sky-400/30", text: "text-sky-300" },
+    violet: { bg: "bg-violet-500/15", ring: "ring-violet-400/30", text: "text-violet-300" },
   }[accent];
 
   return (
