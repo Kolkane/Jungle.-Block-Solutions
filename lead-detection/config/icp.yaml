@@ -1,83 +1,96 @@
-# ICP — Ideal Customer Profile pour Jungle.Block Solutions (dev solo)
-# Version élargie : on accepte plus de leads tout en gardant le tri par qualité.
+# ICP — Jungle.Block Solutions (dev solo, IA pour PME services B2B traditionnelles)
+# Orientation : PME services B2B 35-200 salariés qui ont des process tertiaires
+# manuels (devis, ADV, relances, commandes, RH, support). Mix géographique
+# garanti pour ne pas se concentrer dans le Sud-Ouest.
 
 hard_filters:
   effectif_min: 35
-  effectif_max: 200          # élargi (était 30-80) — le scoring fera le tri
+  effectif_max: 200
   age_minimum_annees: 2
 
-# 3 tiers maintenant — le tier 3 permet de capturer des leads correctes
-# qui ne sont pas en Tier 1/2 mais qui ont de bons signaux web.
+# Tiers NAF — orientation SERVICES B2B et négoce, pas fabrication lourde.
 naf_tiers:
   tier_1:
     bonus: 15
     naf_codes:
-      - "46"        # Commerce de gros B2B — cœur de cible
-      - "49.41A"    # Transport routier fret interurbain
-      - "49.41B"    # Transport routier fret de proximité
+      # Services & commerce B2B avec processus tertiaires manuels visibles
+      - "46"        # Commerce de gros B2B (devis, ADV, réassort, relances)
+      - "49.41A"    # Transport routier de fret interurbain
+      - "49.41B"    # Transport routier de fret de proximité
       - "49.42Z"    # Déménagement
-      - "52"        # Entreposage et services auxiliaires transports
+      - "52"        # Entreposage et services auxiliaires transport
       - "53"        # Activités postales et de courrier
       - "69.20Z"    # Expertise comptable
       - "70.22Z"    # Conseil pour les affaires
       - "71.12B"    # Ingénierie et études techniques
-      - "73.11Z"    # Agences de publicité
+      - "73"        # Publicité et études de marché (toute la famille)
+      - "74"        # Activités spécialisées scientifiques et techniques (design, traduction, photo, traduction…)
       - "78"        # Activités liées à l'emploi (intérim, placement)
+      - "79"        # Voyages, agences B2B, tour-opérateurs
       - "80"        # Sécurité privée
       - "81.21Z"    # Nettoyage courant des bâtiments
       - "81.22Z"    # Nettoyage industriel
-      - "82"        # Services de soutien aux entreprises (centres d'appels, secrétariat…)
+      - "82"        # Services de soutien aux entreprises (centres d'appels, secrétariat, organisation salons…)
+
   tier_2:
     bonus: 8
     naf_codes:
-      - "21"        # Industrie pharmaceutique
-      - "25"        # Travail des métaux
-      - "28"        # Fabrication de machines
-      - "29"        # Industrie automobile (équipementiers)
-      - "33"        # Réparation et installation de machines
-      - "38"        # Collecte/traitement déchets (multi-sites, tournées)
-      - "43.21A"    # Travaux d'installation électrique
-      - "43.22A"    # Installation équipements thermiques
+      - "18"        # Imprimerie (PME services avec catalogue + devis)
       - "47.74Z"    # Commerce de détail médical
-      - "74"        # Activités spécialisées scientifiques et techniques (design, traduction, photo…)
-      - "77"        # Location et location-bail (matériel, véhicules)
+      - "77"        # Location et location-bail (matériel B2B, véhicules pro)
+      - "95"        # Réparation d'ordinateurs et biens personnels (services SAV)
+      - "33.12Z"    # Réparation de machines et équipements mécaniques (maintenance B2B)
+      - "33.14Z"    # Réparation d'équipements électriques
+      - "33.20"     # Installation de machines industrielles (sous-traitant industriel, factures B2B)
+
   tier_3:
     bonus: 0
-    min_score: 48     # seuil un peu plus permissif que tier_1/2
+    min_score: 50     # un peu plus exigeant car loin du cœur de cible
     naf_codes:
-      - "10"        # Industries alimentaires
-      - "11"        # Fabrication boissons
-      - "13"        # Textile
-      - "14"        # Habillement
-      - "15"        # Cuir / chaussure
-      - "16"        # Travail du bois
-      - "17"        # Industrie du papier
-      - "18"        # Imprimerie
-      - "20"        # Industrie chimique
-      - "22"        # Caoutchouc / plastiques
-      - "23"        # Autres produits minéraux non métalliques
-      - "24"        # Métallurgie
-      - "26"        # Produits informatiques, électroniques, optiques (hors SSII)
-      - "27"        # Fabrication équipements électriques
-      - "30"        # Autres matériels de transport
-      - "31"        # Fabrication de meubles
-      - "32"        # Autres industries manufacturières
-      - "45.31Z"    # Commerce de gros équipements automobiles
-      - "45.32Z"    # Commerce de détail équipements automobiles
-      - "47.30Z"    # Commerce de détail carburants
-      - "79"        # Voyages, tour-opérateurs B2B
+      - "26"        # Produits électroniques (hors SSII) — souvent SAV/maintenance B2B
+      - "27"        # Équipements électriques — distribution B2B
+      - "45.31Z"    # Commerce de gros équipements automobiles (B2B)
+      - "45.32Z"    # Commerce de détail équipements automobiles (concessionnaires multi-marques)
+      - "47.30Z"    # Commerce de détail carburants (réseaux multi-stations)
+      - "21"        # Industrie pharmaceutique (PME distrib/labo, pas grand pharma)
 
-# Refus immédiat.
+# Refus immédiat — on retire complètement les "constructeurs" et industries lourdes
+# qui n'ont pas le profil "services B2B tertiaires" recherché.
 naf_exclude_prefixes:
   - "01"   # Agriculture
   - "02"   # Sylviculture
   - "03"   # Pêche
+  - "10"   # Industries alimentaires (fabricant, pas distributeur)
+  - "11"   # Boissons (fabricant)
+  - "13"   # Textile (fabricant)
+  - "14"   # Habillement (fabricant)
+  - "15"   # Cuir / chaussure
+  - "16"   # Travail du bois
+  - "17"   # Papier
+  - "19"   # Cokéfaction / raffinage
+  - "20"   # Chimie
+  - "22"   # Caoutchouc / plastique
+  - "23"   # Autres produits minéraux non métalliques
+  - "24"   # Métallurgie
+  - "25"   # Travail des métaux (fabricant)
+  - "28"   # Fabrication de machines (constructeur)
+  - "29"   # Industrie automobile (constructeur)
+  - "30"   # Autres matériels de transport
+  - "31"   # Fabrication de meubles
+  - "32"   # Autres industries manufacturières
+  - "35"   # Énergie
+  - "36"   # Eau
+  - "37"   # Assainissement
+  - "38"   # Déchets
+  - "39"   # Dépollution
   - "41"   # Construction de bâtiments
   - "42"   # Génie civil
-  - "43.1" # Démolition / préparation sites (artisanat)
+  - "43"   # Travaux de construction spécialisés (tous : install électrique, thermique…)
   - "55"   # Hébergement
   - "56"   # Restauration
-  - "64"   # Activités services financiers
+  - "62"   # Programmation informatique (concurrence)
+  - "63"   # Services d'information (concurrence)
+  - "64"   # Activités financières
   - "65"   # Assurance
   - "66"   # Activités auxiliaires services financiers
   - "84"   # Administration publique
@@ -85,19 +98,44 @@ naf_exclude_prefixes:
   - "86"   # Santé humaine
   - "87"   # Action sociale avec hébergement
   - "88"   # Action sociale sans hébergement
+  - "90"   # Création artistique
+  - "91"   # Bibliothèques, musées
+  - "92"   # Jeux de hasard
+  - "93"   # Sport et loisirs
   - "94"   # Organisations associatives
   - "96"   # Autres services personnels
-  - "97"   # Activités des ménages employeurs
+  - "97"   # Ménages employeurs
   - "99"   # Organisations extra-territoriales
-  - "62"   # Programmation informatique (concurrence)
-  - "63"   # Services d'information (concurrence)
 naf_exclude_exact:
   - "69.10Z"   # Avocats/notaires
 
 dom_tom_departments: ["971", "972", "973", "974", "976"]
 
+# QUOTAS GÉOGRAPHIQUES — garantir un mix entre Île-de-France et reste France.
+# Si un bucket atteint son quota max, on rejette les nouveaux leads de ce bucket
+# et on continue à fetcher pour remplir l'autre.
+geo_quotas:
+  ile_de_france:
+    departments: ["75", "77", "78", "91", "92", "93", "94", "95"]
+    target_pct: 40           # objectif minimum 40% des leads
+  metropoles_majeures:
+    departments: ["69", "13", "33", "31", "44", "59", "67", "06", "76", "37", "21", "38"]
+    target_pct: 30           # Lyon, Marseille, Bordeaux, Toulouse, Nantes, Lille…
+  autres:
+    departments: []           # tout le reste de la France métropolitaine
+    target_pct: 30
+
+# Bonus géo dans le scoring (pour les leads acceptés dans plusieurs buckets,
+# privilégier les zones à fort potentiel commercial).
+geo_bonus:
+  ile_de_france:
+    departments: ["75", "92", "93", "94"]
+    bonus: 5
+  metropoles:
+    departments: ["69", "13", "33", "31", "44", "59"]
+    bonus: 3
+
 web_signals:
-  # Filiale = malus, plus exclusion (trop de faux positifs : "Groupe XXX" dans le nom).
   subsidiary_keywords:
     - "filiale de"
     - "filiale du groupe"
@@ -107,9 +145,6 @@ web_signals:
     - "membre du groupe"
     - "société du groupe"
 
-  # SaaS lourd — restreint aux SIGNAUX FORTS uniquement (les vrais ERP/CRM enterprise).
-  # Retiré : HubSpot (souvent juste un formulaire), Cegid (PME standard), Sage,
-  # Zendesk, Pipedrive (PME standard).
   saas_heavy_signals:
     - "salesforce.com"
     - "force.com"
@@ -163,18 +198,17 @@ scoring:
   base: 40
   bonus_pro_area: 5
   bonus_manual_signals: 5
-  bonus_effectif_sweet_spot: 5   # 50-120 (élargi)
+  bonus_effectif_sweet_spot: 5
   bonus_phone: 3
   bonus_commercial_email: 3
   malus_no_site: -5
-  malus_saas_heavy: -5           # adouci (était -10)
-  malus_subsidiary: -8           # remplace l'exclusion
+  malus_saas_heavy: -5
+  malus_subsidiary: -8
   malus_dom_tom: -8
 
-# Pas de filtres durs basés sur les signaux web (tout passe par le scoring).
 hard_web_filters:
-  exclude_if_subsidiary: false   # adouci (était true)
+  exclude_if_subsidiary: false
 
 output:
-  top_n: 30                       # un peu plus de leads (était 25)
-  min_score: 42                   # un peu plus permissif (était 50)
+  top_n: 30
+  min_score: 42

@@ -174,6 +174,24 @@ def _match_tier(naf_code: str, tiers: dict | None) -> str | None:
     return None
 
 
+def _geo_bucket(department: str, geo_quotas: dict | None) -> str | None:
+    """Retourne le nom du bucket géo dans lequel tombe le département.
+
+    Le bucket avec liste de departments vide (`autres`) joue le rôle de fallback.
+    """
+    if not geo_quotas:
+        return "_default"
+    fallback = None
+    for name, info in geo_quotas.items():
+        depts = info.get("departments", [])
+        if not depts:
+            fallback = name
+            continue
+        if department in depts:
+            return name
+    return fallback
+
+
 def fetch_sample(
     api_key: str,
     effectif_min: int,
@@ -185,15 +203,12 @@ def fetch_sample(
     sample_size: int,
     page_size: int = 100,
     naf_tiers: dict | None = None,
+    geo_quotas: dict | None = None,
 ) -> Iterator[Company]:
-    """Stream un échantillon de PME ciblées par tier NAF.
+    """Stream un échantillon de PME ciblées par tier NAF + quota géographique.
 
-    Filtres appliqués côté Python (la query Sirene v3.11 reste minimale) :
-    - état administratif actif
-    - tranche d'effectif dans la plage
-    - NAF non exclu (préfixe ou exact)
-    - département pas DOM-TOM
-    - NAF dans un des tiers cibles (si fournis)
+    Si `geo_quotas` est fourni avec des `target_pct`, on rejette les leads dont le
+    bucket géo a déjà atteint son quota (calculé à partir de `sample_size`).
     """
     q = _build_query(age_min_years)
     log.info("Sirene query: %s", q)
@@ -208,12 +223,23 @@ def fetch_sample(
     max_tranche = _effectif_to_tranche(effectif_max)
 
     tier_counts: dict[str, int] = {name: 0 for name in (naf_tiers or {})}
-    rejected = {"inactive": 0, "tranche": 0, "naf_excluded": 0, "dom_tom": 0, "no_tier": 0}
+
+    geo_caps: dict[str, int] = {}
+    geo_counts: dict[str, int] = {}
+    if geo_quotas:
+        for name, info in geo_quotas.items():
+            pct = int(info.get("target_pct", 0))
+            geo_caps[name] = max(1, sample_size * pct // 100)
+            geo_counts[name] = 0
+        log.info("Geo caps: %s", geo_caps)
+
+    rejected = {"inactive": 0, "tranche": 0, "naf_excluded": 0, "dom_tom": 0,
+                "no_tier": 0, "geo_full": 0}
 
     yielded = 0
     seen: set[str] = set()
     pages_seen = 0
-    pages_max = 800   # élargi pour compenser le filtrage Python
+    pages_max = 800
     max_offset = min(total, 10_000) - page_size
     while yielded < sample_size and pages_seen < pages_max:
         offset = random.randint(0, max(0, max_offset))
@@ -258,16 +284,24 @@ def fetch_sample(
             if tier is None:
                 rejected["no_tier"] += 1
                 continue
+            if geo_quotas:
+                bucket = _geo_bucket(company.department, geo_quotas)
+                if bucket is None:
+                    continue
+                if geo_counts.get(bucket, 0) >= geo_caps.get(bucket, 0):
+                    rejected["geo_full"] += 1
+                    continue
+                geo_counts[bucket] = geo_counts.get(bucket, 0) + 1
             if naf_tiers:
                 tier_counts[tier] = tier_counts.get(tier, 0) + 1
             yield company
             yielded += 1
         if pages_seen % 20 == 0:
-            log.info("fetch_sample progress: %d kept after %d pages, tiers=%s, rejected=%s",
-                     yielded, pages_seen, tier_counts, rejected)
+            log.info("fetch_sample progress: %d kept after %d pages, tiers=%s, geo=%s, rejected=%s",
+                     yielded, pages_seen, tier_counts, geo_counts, rejected)
         time.sleep(2.1)
-    log.info("fetch_sample done: %d kept after %d pages, tiers=%s, rejected=%s",
-             yielded, pages_seen, tier_counts, rejected)
+    log.info("fetch_sample done: %d kept after %d pages, tiers=%s, geo=%s, rejected=%s",
+             yielded, pages_seen, tier_counts, geo_counts, rejected)
 
 
 if __name__ == "__main__":

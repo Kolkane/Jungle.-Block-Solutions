@@ -78,6 +78,14 @@ def compute_score(row: dict, config: dict) -> tuple[int, dict]:
         score += rules.get("malus_dom_tom", -8)
         breakdown["dom_tom"] = rules.get("malus_dom_tom", -8)
 
+    dept = row.get("department", "")
+    for geo_name, geo_info in (config.get("geo_bonus") or {}).items():
+        if dept in geo_info.get("departments", []):
+            bonus = geo_info.get("bonus", 0)
+            score += bonus
+            breakdown[f"geo_{geo_name}"] = bonus
+            break
+
     score = max(0, min(score, 100))
     breakdown["__total__"] = score
     breakdown["__tier__"] = tier_name

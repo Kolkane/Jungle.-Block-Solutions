@@ -24,7 +24,8 @@ def collect(config: dict, sample_size: int) -> list[Company]:
             dom_tom_departments=config.get("dom_tom_departments", []),
             sample_size=sample_size,
             naf_tiers=config.get("naf_tiers"),
+            geo_quotas=config.get("geo_quotas"),
         )
     )
-    log.info("Collected %d companies from Sirene (passed tier filter)", len(companies))
+    log.info("Collected %d companies from Sirene (passed tier + geo filters)", len(companies))
     return companies
