@@ -7,7 +7,8 @@ import ChatTicket from "@/components/ChatTicket";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { MotionReveal, MotionStagger, MotionItem } from "@/components/MotionReveal";
 
-const CALENDLY = "https://calendly.com/fnr-vincent-pro/audit-strategique";
+const PHONE_DISPLAY = "06 81 28 54 33";
+const PHONE_HREF = "tel:+33681285433";
 const LINKEDIN_COMPANY = "https://www.linkedin.com/company/jungle-block-solutions";
 const EMAIL = "fnr.vincent.pro@gmail.com";
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -61,15 +62,13 @@ function SiteHeader() {
               Contact
             </a>
             <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={PHONE_HREF}
               className="group inline-flex items-center gap-2 rounded-xl bg-[hsl(var(--jbs-yellow))] px-4 py-2 text-sm font-semibold text-black transition hover:brightness-95"
             >
-              Réserver un audit
-              <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.57.57 1 1 0 011 1v3.5a1 1 0 01-1 1C10.85 21.01 2.99 13.15 2.99 3.5a1 1 0 011-1H7.5a1 1 0 011 1 11.36 11.36 0 00.57 3.57 1 1 0 01-.25 1.02l-2.2 2.2z" />
               </svg>
+              {PHONE_DISPLAY}
             </a>
           </div>
         </div>
@@ -131,15 +130,13 @@ function Hero() {
             className="mt-9 flex flex-wrap items-center justify-center gap-3"
           >
             <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={PHONE_HREF}
               className="group inline-flex items-center gap-2 rounded-xl bg-[hsl(var(--jbs-yellow))] px-6 py-3 text-sm font-semibold text-black shadow-[0_0_0_1px_rgba(251,191,36,0.4),0_20px_60px_-20px_rgba(251,191,36,0.5)] transition hover:brightness-95"
             >
-              Réserver un audit stratégique
-              <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.57.57 1 1 0 011 1v3.5a1 1 0 01-1 1C10.85 21.01 2.99 13.15 2.99 3.5a1 1 0 011-1H7.5a1 1 0 011 1 11.36 11.36 0 00.57 3.57 1 1 0 01-.25 1.02l-2.2 2.2z" />
               </svg>
+              Appeler : {PHONE_DISPLAY}
             </a>
             <a
               href="#methode"
@@ -751,21 +748,19 @@ function ContactSection() {
                 On en discute ?
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/70">
-                30 minutes pour comprendre votre contexte et identifier si nous pouvons travailler
+                Un appel pour comprendre votre contexte et identifier si nous pouvons travailler
                 ensemble. Aucun engagement, juste une conversation utile.
               </p>
 
               <div className="mt-9 flex flex-wrap gap-3">
                 <a
-                  href={CALENDLY}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={PHONE_HREF}
                   className="group inline-flex items-center gap-2 rounded-xl bg-[hsl(var(--jbs-yellow))] px-6 py-3 text-sm font-semibold text-black shadow-[0_0_0_1px_rgba(251,191,36,0.4),0_20px_60px_-20px_rgba(251,191,36,0.5)] transition hover:brightness-95"
                 >
-                  Réserver 30 min sur Calendly
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                    <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.57.57 1 1 0 011 1v3.5a1 1 0 01-1 1C10.85 21.01 2.99 13.15 2.99 3.5a1 1 0 011-1H7.5a1 1 0 011 1 11.36 11.36 0 00.57 3.57 1 1 0 01-.25 1.02l-2.2 2.2z" />
                   </svg>
+                  {PHONE_DISPLAY}
                 </a>
                 <a
                   href={`mailto:${EMAIL}`}
