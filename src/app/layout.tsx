@@ -245,7 +245,7 @@ const FAQ_JSONLD = {
       name: "Quel est le délai pour un premier livrable ?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Entre 72 heures et 7 jours après le cadrage initial selon la complexité de la mission. Un audit stratégique de 30 minutes (gratuit) est disponible sur Calendly pour cadrer le besoin.",
+        text: "Entre 72 heures et 7 jours après le cadrage initial selon la complexité de la mission. Un premier échange téléphonique (gratuit) au 06 81 28 54 33 permet de cadrer le besoin.",
       },
     },
     {
@@ -269,7 +269,7 @@ const FAQ_JSONLD = {
       name: "Comment contacter Jungle.Block Solutions ?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Réservation directe d'un audit stratégique de 30 minutes (gratuit) sur https://calendly.com/fnr-vincent-pro/audit-strategique. Email : fnr.vincent.pro@gmail.com. LinkedIn entreprise : https://www.linkedin.com/company/jungle-block-solutions.",
+        text: "Par téléphone au 06 81 28 54 33. Email : fnr.vincent.pro@gmail.com. LinkedIn entreprise : https://www.linkedin.com/company/jungle-block-solutions.",
       },
     },
   ],

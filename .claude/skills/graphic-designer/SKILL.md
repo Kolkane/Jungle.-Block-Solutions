@@ -54,9 +54,9 @@ When composing or reviewing a section, use these mental templates:
 - **Méthodologie:** numbered steps, horizontal on desktop / vertical on mobile, connecting line, each step has icon + title + one-sentence desc.
 - **Valeurs:** 2 to 4 cards max. Each card has a glyph, a 2-word title, a single-sentence punch.
 - **Réalisations:** mini-gallery, 2 or 3 cards, each = thumb + product name + 1-liner + outbound link with arrow icon. NOT marketing pages for those products.
-- **Social proof:** LinkedIn redirect with strong teaser ("Découvrez le détail des missions"). Calendly CTA stays prominent.
+- **Social proof:** LinkedIn redirect with strong teaser ("Découvrez le détail des missions"). Phone CTA stays prominent.
 - **Ticket / Chat:** placed AFTER trust is built (méthodologie + valeurs + réalisations), not in the hero.
-- **Contact final:** 1 strong CTA + email + LinkedIn + Calendly.
+- **Contact final:** 1 strong CTA (phone number, tel: link) + email + LinkedIn.
 
 ## What to refuse / fix on sight
 
