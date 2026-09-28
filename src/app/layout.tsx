@@ -34,6 +34,8 @@ export const metadata: Metadata = {
     "Bayonne",
     "Vincent Fournier",
     "Jungle.Block Solutions",
+    "Imbrin",
+    "origination M&A",
   ],
   alternates: { canonical: "/" },
   robots: {

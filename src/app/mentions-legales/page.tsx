@@ -1,6 +1,6 @@
 export const metadata = {
   title: "Mentions légales",
-  description: "Mentions légales de Jungle.Block Solutions, société française basée à Bayonne.",
+  description: "Mentions légales de Jungle.Block Solutions, entreprise individuelle basée à Bayonne.",
 };
 
 export default function MentionsLegales() {
@@ -11,11 +11,13 @@ export default function MentionsLegales() {
         <section>
           <h2 className="text-white font-semibold text-base mb-2">Éditeur du site</h2>
           <p>Vincent Raymond Jacques Fournier<br/>
-          Entrepreneur Individuel (EI)<br/>
+          Entreprise individuelle (EI) · Régime micro-entreprise<br/>
           Nom commercial : Jungle.Block Solutions<br/>
+          SIREN : 995 216 090<br/>
           SIRET : 99521609000010<br/>
           Adresse : Bayonne, France<br/>
           Email : fnr.vincent.pro@gmail.com</p>
+          <p>Imbrin est une marque de Jungle.Block Solutions.</p>
         </section>
         <section>
           <h2 className="text-white font-semibold text-base mb-2">Hébergement</h2>

@@ -396,6 +396,13 @@ type Product = {
 
 const PRODUCTS: Product[] = [
   {
+    name: "Imbrin",
+    tag: "Origination · M&A",
+    desc: "Origination de cibles pour cabinets M&A. Détection de signaux de transmission sur les PME françaises, dossiers sourcés et vérifiés avant livraison.",
+    href: "https://imbrin.fr",
+    accent: "yellow",
+  },
+  {
     name: "Agentable",
     tag: "GEO · IA",
     desc: "Audit GEO automatisé pour PME : mesure de visibilité dans les LLM (ChatGPT, Perplexity, Gemini) et recommandations actionnables.",
@@ -513,7 +520,7 @@ function Realizations() {
             </h2>
             <p className="mt-5 text-base leading-relaxed text-white/65">
               Au-delà des missions clients, j&apos;ai conçu et lancé mes propres produits.
-              Voici cinq preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
+              Voici six preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
             </p>
           </div>
         </MotionReveal>
@@ -631,19 +638,21 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
       <h3 className="mt-5 text-2xl font-semibold tracking-tight">{name}</h3>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-white/65">{desc}</p>
 
-      {metric && (
-        <div className="mt-6 flex items-end justify-between border-t border-white/10 pt-5">
+      <div className="mt-6 flex items-end justify-between border-t border-white/10 pt-5">
+        {metric ? (
           <div>
             <div className="text-2xl font-semibold tracking-tight">{metric.value}</div>
             <div className="mt-1 text-[11px] uppercase tracking-wide text-white/45">
               {metric.label}
             </div>
           </div>
-          <div className="text-xs text-white/40 group-hover:text-white/70 transition-colors">
-            {isExternal ? "Visiter →" : "En savoir plus →"}
-          </div>
+        ) : (
+          <div />
+        )}
+        <div className="text-xs text-white/40 group-hover:text-white/70 transition-colors">
+          {isExternal ? "Visiter →" : "En savoir plus →"}
         </div>
-      )}
+      </div>
     </motion.a>
   );
 }
@@ -785,7 +794,7 @@ function ContactSection() {
               </div>
 
               <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
-                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Bayonne, France</div>
+                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur d&apos;<a href="https://imbrin.fr" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin</a></div>
                 <div className="flex flex-wrap gap-5">
                   <a href="/mentions-legales" className="hover:text-white/70 transition">Mentions légales</a>
                   <a href="/confidentialite" className="hover:text-white/70 transition">Confidentialité</a>
