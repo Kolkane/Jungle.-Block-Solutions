@@ -6,7 +6,6 @@ import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { MotionReveal, MotionStagger, MotionItem } from "@/components/MotionReveal";
-import { FacturationTexte, LienJuridique } from "@/components/Facturation";
 
 const PHONE_DISPLAY = "06 81 28 54 33";
 const PHONE_HREF = "tel:+33681285433";
@@ -14,13 +13,13 @@ const LINKEDIN_COMPANY = "https://www.linkedin.com/company/jungle-block-solution
 const EMAIL = "fnr.vincent.pro@gmail.com";
 const CUIBONO_URL = "https://www.cuibono.io";
 const IMBRIN_URL = "https://imbrin.fr";
+const CUIBONO_JURIDIQUE = "https://www.cuibono.io/juridique";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Home() {
   return (
     <div>
       <SiteHeader />
-      <NosProduits />
       <Hero />
       <Methodology />
       <Values />
@@ -78,99 +77,6 @@ function SiteHeader() {
         </div>
       </Container>
     </header>
-  );
-}
-
-/* ─────────────────────────────  NOS PRODUITS  ───────────────────────────── */
-
-// En tête de page, sans animation : un client qui arrive depuis sa facture ou son relevé
-// doit lire tout de suite que CuiBono et Imbrin Research sont édités ici.
-function NosProduits() {
-  return (
-    <section id="produits" aria-labelledby="produits-titre" className="scroll-mt-24 pt-12 md:pt-16">
-      <Container>
-        <h2 id="produits-titre" className="text-2xl font-semibold tracking-tight md:text-3xl">
-          Nos produits
-        </h2>
-
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <CarteProduit
-            nom="CuiBono"
-            phrase="Qui prend le contrôle des PME de votre marché, et depuis quand."
-            href={CUIBONO_URL}
-            domaine="www.cuibono.io"
-            logo={<LogoCuiBono />}
-          />
-          <CarteProduit
-            nom="Imbrin Research"
-            phrase={"Origination sell-side pour les cabinets M&A."}
-            href={IMBRIN_URL}
-            domaine="imbrin.fr"
-            logo={
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src="/produits/imbrin-embleme-clair.png" alt="" width={40} height={40} className="h-10 w-10" />
-            }
-          />
-        </div>
-
-        <div className="mt-4 rounded-2xl border border-white/10 p-6">
-          <h3 className="text-base font-semibold">Facturation</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/70 md:text-base">
-            <FacturationTexte />
-          </p>
-          <p className="mt-3 text-sm">
-            <LienJuridique className="text-white/80 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white/70" />
-          </p>
-        </div>
-      </Container>
-    </section>
-  );
-}
-
-function CarteProduit({
-  nom,
-  phrase,
-  href,
-  domaine,
-  logo,
-}: {
-  nom: string;
-  phrase: string;
-  href: string;
-  domaine: string;
-  logo: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25"
-    >
-      <div className="flex items-center gap-3">
-        <span className="grid h-10 w-10 flex-none place-items-center">{logo}</span>
-        <h3 className="text-xl font-semibold tracking-tight">{nom}</h3>
-      </div>
-      <p className="mt-4 flex-1 text-base leading-relaxed text-white/75">{phrase}</p>
-      <span className="mt-5 text-sm text-white/60 underline decoration-white/30 underline-offset-4 transition group-hover:text-white group-hover:decoration-white/70">
-        {domaine}
-      </span>
-    </a>
-  );
-}
-
-// Le logo de CuiBono, tel que son dépôt le dessine (Logo de Commun.tsx) sur sa surface papier : fond #F4F3EF,
-// barre basse au tampon papier #BD3E10. Le dépôt n'a pas de déclinaison claire, et sur le bleu nuit la barre
-// haute (#3B3B43) disparaissait : le logo est donc posé sur une pastille papier, comme l'emblème d'Imbrin.
-function LogoCuiBono() {
-  return (
-    <span className="grid h-10 w-10 place-items-center rounded-full bg-[#F4F3EF]">
-      <svg viewBox="0 0 26 22" className="h-5 w-6" aria-hidden="true">
-        <path fill="#3B3B43" d="M6 1h19l-5 5H1z" />
-        <path fill="#8D8D96" d="M6 8.5h19l-5 5H1z" />
-        <path fill="#BD3E10" d="M6 16h19l-5 5H1z" />
-      </svg>
-    </span>
   );
 }
 
@@ -488,10 +394,18 @@ type Product = {
   desc: string;
   href: string;
   metric?: { value: string; label: string };
-  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet";
+  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet" | "orange";
 };
 
 const PRODUCTS: Product[] = [
+  {
+    name: "CuiBono",
+    tag: "Registre · Data",
+    desc: "Qui prend le contrôle des PME de votre marché, et depuis quand. Chaque fait avec sa pièce BODACC ou RNE.",
+    href: CUIBONO_URL,
+    metric: { value: "J+1", label: "Après le BODACC" },
+    accent: "orange",
+  },
   {
     name: "Imbrin",
     tag: "Origination · M&A",
@@ -617,7 +531,7 @@ function Realizations() {
             </h2>
             <p className="mt-5 text-base leading-relaxed text-white/65">
               Au-delà des missions clients, j&apos;ai conçu et lancé mes propres produits.
-              Voici six preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
+              Voici sept preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
             </p>
           </div>
         </MotionReveal>
@@ -701,6 +615,8 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
     emerald: { bg: "bg-emerald-500/15", ring: "ring-emerald-400/30", text: "text-emerald-300" },
     sky: { bg: "bg-sky-500/15", ring: "ring-sky-400/30", text: "text-sky-300" },
     violet: { bg: "bg-violet-500/15", ring: "ring-violet-400/30", text: "text-violet-300" },
+    // L'orange de la marque CuiBono (#FF5B1F), pour sa carte.
+    orange: { bg: "bg-orange-500/15", ring: "ring-orange-400/30", text: "text-orange-300" },
   }[accent];
 
   return (
@@ -898,6 +814,11 @@ function ContactSection() {
                   <a href="/cgu" className="hover:text-white/70 transition">CGU</a>
                 </div>
               </div>
+              {/* Pour le client CuiBono qui lit CUIBONO sur son relevé. Rien sur Imbrin, qui a sa propre facturation. */}
+              <p className="mt-4 text-xs text-white/40">
+                CuiBono est édité par Jungle.Block Solutions, SIREN 995&nbsp;216&nbsp;090. Le libellé CUIBONO apparaît sur votre relevé.{" "}
+                <a href={CUIBONO_JURIDIQUE} target="_blank" rel="noopener noreferrer" className="underline decoration-white/20 underline-offset-2 hover:text-white/70 transition">www.cuibono.io/juridique</a>
+              </p>
             </div>
           </div>
         </MotionReveal>
