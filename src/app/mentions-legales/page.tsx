@@ -1,3 +1,5 @@
+import { FacturationTexte, LienJuridique } from "@/components/Facturation";
+
 export const metadata = {
   title: "Mentions légales",
   description: "Mentions légales de Jungle.Block Solutions, entreprise individuelle basée à Bayonne.",
@@ -18,6 +20,11 @@ export default function MentionsLegales() {
           Adresse : Bayonne, France<br/>
           Email : fnr.vincent.pro@gmail.com</p>
           <p>Imbrin est une marque de Jungle.Block Solutions.</p>
+        </section>
+        <section>
+          <h2 className="text-white font-semibold text-base mb-2">Facturation</h2>
+          <p><FacturationTexte /></p>
+          <p className="mt-2"><LienJuridique className="underline underline-offset-4 hover:text-white transition" /></p>
         </section>
         <section>
           <h2 className="text-white font-semibold text-base mb-2">Hébergement</h2>

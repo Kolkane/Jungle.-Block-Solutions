@@ -6,17 +6,21 @@ import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { MotionReveal, MotionStagger, MotionItem } from "@/components/MotionReveal";
+import { FacturationTexte, LienJuridique } from "@/components/Facturation";
 
 const PHONE_DISPLAY = "06 81 28 54 33";
 const PHONE_HREF = "tel:+33681285433";
 const LINKEDIN_COMPANY = "https://www.linkedin.com/company/jungle-block-solutions";
 const EMAIL = "fnr.vincent.pro@gmail.com";
+const CUIBONO_URL = "https://www.cuibono.io";
+const IMBRIN_URL = "https://imbrin.fr";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Home() {
   return (
     <div>
       <SiteHeader />
+      <NosProduits />
       <Hero />
       <Methodology />
       <Values />
@@ -74,6 +78,95 @@ function SiteHeader() {
         </div>
       </Container>
     </header>
+  );
+}
+
+/* ─────────────────────────────  NOS PRODUITS  ───────────────────────────── */
+
+// En tête de page, sans animation : un client qui arrive depuis sa facture ou son relevé
+// doit lire tout de suite que CuiBono et Imbrin Research sont édités ici.
+function NosProduits() {
+  return (
+    <section id="produits" aria-labelledby="produits-titre" className="scroll-mt-24 pt-12 md:pt-16">
+      <Container>
+        <h2 id="produits-titre" className="text-2xl font-semibold tracking-tight md:text-3xl">
+          Nos produits
+        </h2>
+
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <CarteProduit
+            nom="CuiBono"
+            phrase="Qui prend le contrôle des PME de votre marché, et depuis quand."
+            href={CUIBONO_URL}
+            domaine="www.cuibono.io"
+            logo={<LogoCuiBono />}
+          />
+          <CarteProduit
+            nom="Imbrin Research"
+            phrase={"Origination sell-side pour les cabinets M&A."}
+            href={IMBRIN_URL}
+            domaine="imbrin.fr"
+            logo={
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src="/produits/imbrin-embleme-clair.png" alt="" width={40} height={40} className="h-10 w-10" />
+            }
+          />
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-white/10 p-6">
+          <h3 className="text-base font-semibold">Facturation</h3>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/70 md:text-base">
+            <FacturationTexte />
+          </p>
+          <p className="mt-3 text-sm">
+            <LienJuridique className="text-white/80 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white/70" />
+          </p>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function CarteProduit({
+  nom,
+  phrase,
+  href,
+  domaine,
+  logo,
+}: {
+  nom: string;
+  phrase: string;
+  href: string;
+  domaine: string;
+  logo: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:border-white/25"
+    >
+      <div className="flex items-center gap-3">
+        <span className="grid h-10 w-10 flex-none place-items-center">{logo}</span>
+        <h3 className="text-xl font-semibold tracking-tight">{nom}</h3>
+      </div>
+      <p className="mt-4 flex-1 text-base leading-relaxed text-white/75">{phrase}</p>
+      <span className="mt-5 text-sm text-white/60 underline decoration-white/30 underline-offset-4 transition group-hover:text-white group-hover:decoration-white/70">
+        {domaine}
+      </span>
+    </a>
+  );
+}
+
+// Le logo de CuiBono, tel que son dépôt le dessine (Logo de Commun.tsx), avec les teintes de son pied sombre.
+function LogoCuiBono() {
+  return (
+    <svg viewBox="0 0 26 22" className="h-[26px] w-[31px]" aria-hidden="true">
+      <path fill="#3B3B43" d="M6 1h19l-5 5H1z" />
+      <path fill="#8D8D96" d="M6 8.5h19l-5 5H1z" />
+      <path fill="#FF5B1F" d="M6 16h19l-5 5H1z" />
+    </svg>
   );
 }
 
@@ -794,7 +887,7 @@ function ContactSection() {
               </div>
 
               <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
-                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur d&apos;<a href="https://imbrin.fr" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin</a></div>
+                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur de <a href={CUIBONO_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">CuiBono</a> et d&apos;<a href={IMBRIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin Research</a></div>
                 <div className="flex flex-wrap gap-5">
                   <a href="/mentions-legales" className="hover:text-white/70 transition">Mentions légales</a>
                   <a href="/confidentialite" className="hover:text-white/70 transition">Confidentialité</a>
