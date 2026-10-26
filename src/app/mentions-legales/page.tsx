@@ -12,14 +12,22 @@ export default function MentionsLegales() {
       <div className="space-y-6 text-gray-300 text-sm leading-relaxed">
         <section>
           <h2 className="text-white font-semibold text-base mb-2">Éditeur du site</h2>
-          <p>Vincent Raymond Jacques Fournier<br/>
-          Entreprise individuelle (EI) · Régime micro-entreprise<br/>
-          Nom commercial : Jungle.Block Solutions<br/>
-          SIREN : 995 216 090<br/>
-          SIRET : 99521609000010<br/>
-          Adresse : Bayonne, France<br/>
-          Email : fnr.vincent.pro@gmail.com</p>
+          {/* Éditeur, SIREN, adresse, directeur de la publication et contact : repris mot pour mot de
+              www.cuibono.io/juridique (relevé le 26/10/2026), pour que les deux sites disent la même chose. */}
+          <p>Jungle.Block Solutions<br/>
+          SIREN 995 216 090<br/>
+          64 chemin de Tresbarats</p>
+          <p>Entreprise individuelle (EI) · Régime micro-entreprise<br/>
+          SIRET : 99521609000010</p>
           <p>Imbrin est une marque de Jungle.Block Solutions.</p>
+        </section>
+        <section>
+          <h2 className="text-white font-semibold text-base mb-2">Directeur de la publication</h2>
+          <p>Vincent Fournier</p>
+        </section>
+        <section>
+          <h2 className="text-white font-semibold text-base mb-2">Contact</h2>
+          <p><a href="mailto:contact@cuibono.io" className="underline underline-offset-4 hover:text-white transition">contact@cuibono.io</a></p>
         </section>
         <section>
           <h2 className="text-white font-semibold text-base mb-2">Facturation</h2>
