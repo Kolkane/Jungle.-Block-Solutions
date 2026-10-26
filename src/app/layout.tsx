@@ -239,7 +239,7 @@ const FAQ_JSONLD = {
       name: "Comment se déroule une mission type ?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Trois étapes : (1) Audit — immersion, cartographie des flux, diagnostic 360°, analyse de la stack. (2) Identification — isolation des points de friction, priorisation des leviers d'impact, roadmap actionnable. (3) Mise en œuvre — conception et livraison de la solution sur-mesure, itérations, mise en production.",
+        text: "Trois étapes : (1) Audit : immersion, cartographie des flux, diagnostic 360°, analyse de la stack. (2) Identification : isolation des points de friction, priorisation des leviers d'impact, roadmap actionnable. (3) Mise en œuvre : conception et livraison de la solution sur-mesure, itérations, mise en production.",
       },
     },
     {
