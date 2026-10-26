@@ -31,6 +31,12 @@ export default function MentionsLegales() {
           <p><a href="mailto:fnr.vincent.pro@gmail.com" className="underline underline-offset-4 hover:text-white transition">fnr.vincent.pro@gmail.com</a></p>
         </section>
         <section>
+          {/* Même ligne qu'au pied de page de l'accueil. CuiBono seul : Imbrin a sa propre facturation. */}
+          <h2 className="text-white font-semibold text-base mb-2">Facturation</h2>
+          <p>CuiBono est édité par Jungle.Block Solutions, SIREN 995&nbsp;216&nbsp;090. Le libellé CUIBONO apparaît sur votre relevé.</p>
+          <p className="mt-2"><a href="https://www.cuibono.io/juridique" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-white transition">www.cuibono.io/juridique</a></p>
+        </section>
+        <section>
           <h2 className="text-white font-semibold text-base mb-2">Hébergement</h2>
           {/* Adresse publiée par Vercel sur vercel.com/legal (conditions, confidentialité, DMCA, DPA), relevée le 26/10/2026. */}
           <p>Ce site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA.</p>
