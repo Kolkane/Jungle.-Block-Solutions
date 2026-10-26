@@ -16,7 +16,8 @@ export default function MentionsLegales() {
               partout ailleurs ici), pas celui de cuibono.io. */}
           <p>Vincent Raymond Jacques Fournier, entrepreneur individuel (Jungle.Block Solutions)<br/>
           SIREN 995 216 090<br/>
-          64 chemin de Tresbarats, 40230, Tyrosse</p>
+          {/* La commune ne se coupe pas sur ses traits d'union ; le texte reste celui de cuibono.io. */}
+          64 chemin de Tresbarats, 40230 <span className="whitespace-nowrap">Saint-Vincent-de-Tyrosse</span></p>
           <p>Entreprise individuelle (EI) · Régime micro-entreprise<br/>
           SIRET : 99521609000010</p>
           <p>Imbrin est une marque de Jungle.Block Solutions.</p>
