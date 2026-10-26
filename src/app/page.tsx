@@ -159,14 +159,18 @@ function CarteProduit({
   );
 }
 
-// Le logo de CuiBono, tel que son dépôt le dessine (Logo de Commun.tsx), avec les teintes de son pied sombre.
+// Le logo de CuiBono, tel que son dépôt le dessine (Logo de Commun.tsx) sur sa surface papier : fond #F4F3EF,
+// barre basse au tampon papier #BD3E10. Le dépôt n'a pas de déclinaison claire, et sur le bleu nuit la barre
+// haute (#3B3B43) disparaissait : le logo est donc posé sur une pastille papier, comme l'emblème d'Imbrin.
 function LogoCuiBono() {
   return (
-    <svg viewBox="0 0 26 22" className="h-[26px] w-[31px]" aria-hidden="true">
-      <path fill="#3B3B43" d="M6 1h19l-5 5H1z" />
-      <path fill="#8D8D96" d="M6 8.5h19l-5 5H1z" />
-      <path fill="#FF5B1F" d="M6 16h19l-5 5H1z" />
-    </svg>
+    <span className="grid h-10 w-10 place-items-center rounded-full bg-[#F4F3EF]">
+      <svg viewBox="0 0 26 22" className="h-5 w-6" aria-hidden="true">
+        <path fill="#3B3B43" d="M6 1h19l-5 5H1z" />
+        <path fill="#8D8D96" d="M6 8.5h19l-5 5H1z" />
+        <path fill="#BD3E10" d="M6 16h19l-5 5H1z" />
+      </svg>
+    </span>
   );
 }
 
