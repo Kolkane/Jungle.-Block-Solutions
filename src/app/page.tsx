@@ -11,6 +11,9 @@ const PHONE_DISPLAY = "06 81 28 54 33";
 const PHONE_HREF = "tel:+33681285433";
 const LINKEDIN_COMPANY = "https://www.linkedin.com/company/jungle-block-solutions";
 const EMAIL = "fnr.vincent.pro@gmail.com";
+const CUIBONO_URL = "https://www.cuibono.io";
+const IMBRIN_URL = "https://imbrin.fr";
+const CUIBONO_JURIDIQUE = "https://www.cuibono.io/juridique";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Home() {
@@ -391,10 +394,18 @@ type Product = {
   desc: string;
   href: string;
   metric?: { value: string; label: string };
-  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet";
+  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet" | "orange";
 };
 
 const PRODUCTS: Product[] = [
+  {
+    name: "CuiBono",
+    tag: "Registre · Data",
+    desc: "Qui prend le contrôle des PME de votre marché, et depuis quand. Chaque fait avec sa pièce BODACC ou RNE.",
+    href: CUIBONO_URL,
+    metric: { value: "J+1", label: "Après le BODACC" },
+    accent: "orange",
+  },
   {
     name: "Imbrin",
     tag: "Origination · M&A",
@@ -520,7 +531,7 @@ function Realizations() {
             </h2>
             <p className="mt-5 text-base leading-relaxed text-white/65">
               Au-delà des missions clients, j&apos;ai conçu et lancé mes propres produits.
-              Voici six preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
+              Voici sept preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
             </p>
           </div>
         </MotionReveal>
@@ -604,6 +615,8 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
     emerald: { bg: "bg-emerald-500/15", ring: "ring-emerald-400/30", text: "text-emerald-300" },
     sky: { bg: "bg-sky-500/15", ring: "ring-sky-400/30", text: "text-sky-300" },
     violet: { bg: "bg-violet-500/15", ring: "ring-violet-400/30", text: "text-violet-300" },
+    // L'orange de la marque CuiBono (#FF5B1F), pour sa carte.
+    orange: { bg: "bg-orange-500/15", ring: "ring-orange-400/30", text: "text-orange-300" },
   }[accent];
 
   return (
@@ -794,13 +807,18 @@ function ContactSection() {
               </div>
 
               <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
-                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur d&apos;<a href="https://imbrin.fr" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin</a></div>
+                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur de <a href={CUIBONO_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">CuiBono</a> et d&apos;<a href={IMBRIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin Research</a></div>
                 <div className="flex flex-wrap gap-5">
                   <a href="/mentions-legales" className="hover:text-white/70 transition">Mentions légales</a>
                   <a href="/confidentialite" className="hover:text-white/70 transition">Confidentialité</a>
                   <a href="/cgu" className="hover:text-white/70 transition">CGU</a>
                 </div>
               </div>
+              {/* Pour le client CuiBono qui lit CUIBONO sur son relevé. Rien sur Imbrin, qui a sa propre facturation. */}
+              <p className="mt-4 text-xs text-white/40">
+                CuiBono est édité par Jungle.Block Solutions, SIREN 995&nbsp;216&nbsp;090. Le libellé CUIBONO apparaît sur votre relevé.{" "}
+                <a href={CUIBONO_JURIDIQUE} target="_blank" rel="noopener noreferrer" className="underline decoration-white/20 underline-offset-2 hover:text-white/70 transition">www.cuibono.io/juridique</a>
+              </p>
             </div>
           </div>
         </MotionReveal>

@@ -22,7 +22,7 @@ const OBJECTIVES = [
   "Autre",
 ] as const;
 
-const TIMELINES = ["Urgent", "1–3 mois", "Plus tard"] as const;
+const TIMELINES = ["Urgent", "1 à 3 mois", "Plus tard"] as const;
 
 export default function ChatTicket({
   recipientEmail = "fnr.vincent.pro@gmail.com",
