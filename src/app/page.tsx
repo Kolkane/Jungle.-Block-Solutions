@@ -13,6 +13,7 @@ const LINKEDIN_COMPANY = "https://www.linkedin.com/company/jungle-block-solution
 const EMAIL = "fnr.vincent.pro@gmail.com";
 const CUIBONO_URL = "https://www.cuibono.io";
 const IMBRIN_URL = "https://imbrin.fr";
+const SCANOTOP_URL = "https://scanotop.fr";
 const CUIBONO_JURIDIQUE = "https://www.cuibono.io/juridique";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -807,7 +808,7 @@ function ContactSection() {
               </div>
 
               <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row md:items-center md:justify-between">
-                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur de <a href={CUIBONO_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">CuiBono</a> et d&apos;<a href={IMBRIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin Research</a></div>
+                <div>© {new Date().getFullYear()} Jungle.Block Solutions · Entreprise individuelle · SIREN 995 216 090 · Bayonne, France · Éditeur de <a href={CUIBONO_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">CuiBono</a>, <a href={SCANOTOP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Scanotop</a> et <a href={IMBRIN_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition">Imbrin Research</a></div>
                 <div className="flex flex-wrap gap-5">
                   <a href="/mentions-legales" className="hover:text-white/70 transition">Mentions légales</a>
                   <a href="/confidentialite" className="hover:text-white/70 transition">Confidentialité</a>
