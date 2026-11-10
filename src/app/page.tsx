@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
 import HeroBackdrop from "@/components/HeroBackdrop";
@@ -392,16 +391,13 @@ function ValueCard({
 
 type Product = {
   name: string;
-  tag?: string;
+  tag: string;
   // Phrase courte sous le nom (Scanotop).
   line?: string;
-  // Symbole du produit, à la place de l'étiquette (fichier copié tel quel dans public/produits/).
-  logo?: string;
   desc: string;
   href: string;
   metric?: { value: string; label: string };
-  // Sans accent : ni étiquette colorée ni halo (Scanotop, dont la charte exclut tout dégradé).
-  accent?: "indigo" | "yellow" | "emerald" | "sky" | "violet" | "orange";
+  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet" | "orange" | "marine";
 };
 
 const PRODUCTS: Product[] = [
@@ -415,10 +411,12 @@ const PRODUCTS: Product[] = [
   },
   {
     name: "Scanotop",
+    tag: "Toitures · Data",
     line: "Le toit, le propriétaire, le numéro.",
-    logo: "/produits/scanotop-symbole.svg",
-    desc: "Prospection toiture par zone pour les métiers de l'enveloppe du bâtiment : toitures plates et sombres mesurées sur données IGN, occupant, propriétaire probable et numéro, livrés en liste de travail. Un service Imbrin, développé et édité par Jungle.Block Solutions.",
+    desc: "Prospection toiture par zone : toitures plates et sombres mesurées sur données IGN, occupant, propriétaire probable et numéro, en liste de travail. Un service Imbrin.",
     href: "https://scanotop.fr",
+    metric: { value: "20 km", label: "Par zone exclusive" },
+    accent: "marine",
   },
   {
     name: "Imbrin",
@@ -621,9 +619,9 @@ function Realizations() {
   );
 }
 
-function ProductCard({ name, tag, line, logo, desc, href, metric, accent }: Product) {
+function ProductCard({ name, tag, line, desc, href, metric, accent }: Product) {
   const isExternal = href.startsWith("http");
-  const accentMap = accent && {
+  const accentMap = {
     indigo: { bg: "bg-indigo-500/15", ring: "ring-indigo-400/30", text: "text-indigo-300" },
     yellow: { bg: "bg-amber-400/15", ring: "ring-amber-300/30", text: "text-amber-300" },
     emerald: { bg: "bg-emerald-500/15", ring: "ring-emerald-400/30", text: "text-emerald-300" },
@@ -631,6 +629,8 @@ function ProductCard({ name, tag, line, logo, desc, href, metric, accent }: Prod
     violet: { bg: "bg-violet-500/15", ring: "ring-violet-400/30", text: "text-violet-300" },
     // L'orange de la marque CuiBono (#FF5B1F), pour sa carte.
     orange: { bg: "bg-orange-500/15", ring: "ring-orange-400/30", text: "text-orange-300" },
+    // Le marine de Scanotop (#22263e, teinte oklch 276) aux clartés des nuances 500, 400 et 300 de Tailwind.
+    marine: { bg: "bg-[oklch(58.5%_0.07_276)]/15", ring: "ring-[oklch(67.3%_0.065_276)]/30", text: "text-[oklch(78.5%_0.055_276)]" },
   }[accent];
 
   return (
@@ -643,22 +643,12 @@ function ProductCard({ name, tag, line, logo, desc, href, metric, accent }: Prod
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-7 backdrop-blur transition-colors hover:border-white/20"
     >
       {/* glow */}
-      {accentMap && (
-        <div className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full ${accentMap.bg} blur-3xl opacity-60 transition-opacity group-hover:opacity-100`} />
-      )}
+      <div className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full ${accentMap.bg} blur-3xl opacity-60 transition-opacity group-hover:opacity-100`} />
 
       <div className="flex items-center justify-between">
-        {logo ? (
-          // Filet clair : le carré marine se lit à peine sur le bleu nuit de la carte.
-          // -my-2 : le symbole occupe la hauteur d'une étiquette, le nom reste aligné sur les autres cartes.
-          <Image src={logo} alt="" width={40} height={40} unoptimized className="-my-2 h-10 w-10 ring-1 ring-white/20" />
-        ) : accentMap && tag ? (
-          <span className={`inline-flex items-center justify-center rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium tracking-wide ${accentMap.text} ring-1 ${accentMap.ring}`}>
-            {tag}
-          </span>
-        ) : (
-          <span />
-        )}
+        <span className={`inline-flex items-center justify-center rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium tracking-wide ${accentMap.text} ring-1 ${accentMap.ring}`}>
+          {tag}
+        </span>
         {isExternal && (
           <svg
             viewBox="0 0 24 24"
