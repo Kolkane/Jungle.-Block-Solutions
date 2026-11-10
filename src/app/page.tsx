@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import Container from "@/components/Container";
 import ChatTicket from "@/components/ChatTicket";
 import HeroBackdrop from "@/components/HeroBackdrop";
@@ -390,11 +391,16 @@ function ValueCard({
 
 type Product = {
   name: string;
-  tag: string;
+  tag?: string;
+  // Phrase courte sous le nom (Scanotop).
+  line?: string;
+  // Symbole du produit, à la place de l'étiquette (fichier copié tel quel dans public/produits/).
+  logo?: string;
   desc: string;
   href: string;
   metric?: { value: string; label: string };
-  accent: "indigo" | "yellow" | "emerald" | "sky" | "violet" | "orange";
+  // Sans accent : ni étiquette colorée ni halo (Scanotop, dont la charte exclut tout dégradé).
+  accent?: "indigo" | "yellow" | "emerald" | "sky" | "violet" | "orange";
 };
 
 const PRODUCTS: Product[] = [
@@ -405,6 +411,13 @@ const PRODUCTS: Product[] = [
     href: CUIBONO_URL,
     metric: { value: "J+1", label: "Après le BODACC" },
     accent: "orange",
+  },
+  {
+    name: "Scanotop",
+    line: "Le toit, le propriétaire, le numéro.",
+    logo: "/produits/scanotop-symbole.svg",
+    desc: "Prospection toiture par zone pour les métiers de l'enveloppe du bâtiment : toitures plates et sombres mesurées sur données IGN, occupant, propriétaire probable et numéro, livrés en liste de travail. Un service Imbrin, développé et édité par Jungle.Block Solutions.",
+    href: "https://scanotop.fr",
   },
   {
     name: "Imbrin",
@@ -531,7 +544,7 @@ function Realizations() {
             </h2>
             <p className="mt-5 text-base leading-relaxed text-white/65">
               Au-delà des missions clients, j&apos;ai conçu et lancé mes propres produits.
-              Voici sept preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
+              Voici huit preuves concrètes de ma capacité à passer de l&apos;idée au produit en production.
             </p>
           </div>
         </MotionReveal>
@@ -607,9 +620,9 @@ function Realizations() {
   );
 }
 
-function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
+function ProductCard({ name, tag, line, logo, desc, href, metric, accent }: Product) {
   const isExternal = href.startsWith("http");
-  const accentMap = {
+  const accentMap = accent && {
     indigo: { bg: "bg-indigo-500/15", ring: "ring-indigo-400/30", text: "text-indigo-300" },
     yellow: { bg: "bg-amber-400/15", ring: "ring-amber-300/30", text: "text-amber-300" },
     emerald: { bg: "bg-emerald-500/15", ring: "ring-emerald-400/30", text: "text-emerald-300" },
@@ -629,12 +642,22 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-7 backdrop-blur transition-colors hover:border-white/20"
     >
       {/* glow */}
-      <div className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full ${accentMap.bg} blur-3xl opacity-60 transition-opacity group-hover:opacity-100`} />
+      {accentMap && (
+        <div className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full ${accentMap.bg} blur-3xl opacity-60 transition-opacity group-hover:opacity-100`} />
+      )}
 
       <div className="flex items-center justify-between">
-        <span className={`inline-flex items-center justify-center rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium tracking-wide ${accentMap.text} ring-1 ${accentMap.ring}`}>
-          {tag}
-        </span>
+        {logo ? (
+          // Filet clair : le carré marine se lit à peine sur le bleu nuit de la carte.
+          // -my-2 : le symbole occupe la hauteur d'une étiquette, le nom reste aligné sur les autres cartes.
+          <Image src={logo} alt="" width={40} height={40} unoptimized className="-my-2 h-10 w-10 ring-1 ring-white/20" />
+        ) : accentMap && tag ? (
+          <span className={`inline-flex items-center justify-center rounded-full ${accentMap.bg} px-3 py-1 text-[11px] font-medium tracking-wide ${accentMap.text} ring-1 ${accentMap.ring}`}>
+            {tag}
+          </span>
+        ) : (
+          <span />
+        )}
         {isExternal && (
           <svg
             viewBox="0 0 24 24"
@@ -649,6 +672,7 @@ function ProductCard({ name, tag, desc, href, metric, accent }: Product) {
       </div>
 
       <h3 className="mt-5 text-2xl font-semibold tracking-tight">{name}</h3>
+      {line && <p className="mt-2 text-sm font-medium text-white/85">{line}</p>}
       <p className="mt-3 flex-1 text-sm leading-relaxed text-white/65">{desc}</p>
 
       <div className="mt-6 flex items-end justify-between border-t border-white/10 pt-5">
